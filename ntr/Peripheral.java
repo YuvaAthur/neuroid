@@ -5,7 +5,7 @@ import java.lang.*;
 import java.util.*;
 import java.io.*;
 //import java.rmi.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.*;
 
 // $Id$
 /**

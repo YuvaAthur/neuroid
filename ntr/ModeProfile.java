@@ -1,8 +1,8 @@
 
 package neuroidnet.ntr;
 
-import neuroidnet.ntr.plots.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.utils.*;
 
 import java.util.*;
 
@@ -27,9 +27,7 @@ public class ModeProfile extends Profile  {
     abstract class ProfileTask implements TaskWithReturn {
 	Profile profile = new Profile();
 
-	public ProfileTask() {
-	    Iteration.loop(entrySet(), this);
-	}
+	public ProfileTask() { }
 
 	public void job(Object o) {
 	    Map.Entry entry = (Map.Entry)o;
@@ -39,7 +37,7 @@ public class ModeProfile extends Profile  {
 
 	abstract double getVar(Neuroid.Mode mode);
 
-	public Object getValue() { return profile; }
+	public Object getValue() { UninterruptedIteration.loop(entrySet(), this); return profile; }
 	
 	public Profile getProfile() { return (Profile)getValue(); }
     }

@@ -1,39 +1,54 @@
+- general:
+	+ make an interface that step()s [utils.Simulation]
 - naming:
-	- create a NeuroidId class that holds name, id for neuroids.
-		Add this to the watchList in Network.
+	- create a NeuroidId class that holds name, id for neuroids?
+		- Add this to the watchList in Network.
 	- make watchList a Set.
 	- in bsh: before any loading, extract the watchSet of previous net and add it to the loaded one
-	- add an id to Synapse according to place in Neuroid.synapses Vector
-	- change all names! neuroid should just mention its number and area name !
-- calculate new probabilities and change threshold? (in network.build?)
-	- alternatively: make adaptive threshold? (see the new electrical circuit model)
-- remove debug switch from neuroid
-- move Mode to its own class and make each state a new class. make this algorithm stand in its own package, i.e. UMT
-- move neuroinet independent stuff in neuroinet.ntr.plots.* to utils.plots.* out of neuroidnet!
-	- document and put them on home page for open use (also iterators move'em out)
-	- write package.html, imporve doumentation to include examples
+	+ add an id to Synapse according to place in Neuroid.synapses Vector
+	+ change all names! neuroid should just mention its number and area name !
+		+ toString: name & id
+		+ change getStatus to getProperties
+		+ getStatus returns transient state
+		+ put all of these in an interface and explain
+- Neuroids:
+	- make a SRMNeuroid and move everything out of Neuroid
+		- then make the new adaptiveTNeuroid
+	+ put step inside Neuroid.Mode?
+	X move Mode to its own class and make each state a new class. 
+		- keep Mode under neuroid, but extend neuroid and extend Mode inside
+		- make new algorithms stand in their own packages, i.e. UMT
+	- remove debug switch from neuroid
+	- calculate new probabilities and change threshold? (in network.build?)
+		- alternatively: make adaptive threshold? (see the new electrical circuit model)
+- packages: 
+	- move plot related classes in neuroidnet.ntr to neuroidnet.ntr.plots
+	+ move neuroinet independent stuff in neuroinet.ntr.plots.* to utils.plots.* out of neuroidnet!
+	+ document and put them on home page for open use (also iterators move'em out)
+	+ write package.html, improve documentation to include examples
 - periphery
-	- put concept-area into peripheral object? does it need its step() called?
+	X put concept-area into peripheral object? does it need its step() called? [yes]
 	+ make a single sensory area 
 	+ move Concept related files to periphery
 		+ move ConceptArea to periphery package
 		+ ArtificialConcept?
 		+ ConceptSaturatedException
-- throw FoundException in Utils.Task to optimize iterations for search 
-- extend the Vectors that holds neuroids, etc. so that they show up in organizational descriptions
++ throw FoundException in Utils.Task to optimize iterations for search 
+X extend the Vectors that holds neuroids, etc. so that they show up in organizational descriptions
 	- correct way would've been to use templatized types of vectors which doesn't exist in Java
 		they're working on it, see bug on "parameterized types"
 - graphs
 	+ add the notion of window number to grapher,
-		- or better associate each plot with its own window 
-	- add canned multiplots, e.g. for neuroid: pot, conf, threshold, etc.
+		+ or better associate each plot with its own window (created PlotHandle)
+	- add SuperimposedPlot
 	- add multiplots
 		- separate frames, or superimposed with different legends
 		- make spike plot more like a plot to use the generalized calls from Grapher
+		- add canned multiplots, e.g. for neuroid: pot, conf, threshold, etc.
 	+ GNUPlot
-		- add setOutputFile() method to grapher to send output as (E)PS
+		+ add setOutputFile() method to grapher to send output as (E)PS [writeEPS()]
 	+ put title on matlab graph
-		- there's a bug in associating the correct legend
+		- there's a bug in associating the correct legend [wait for SuperimposedPlot]
 	+ modify to produce gnuplot graphs optionally. 
 - make debugger-style simulator
 	- make a beanshell script to bootstrap bsh.Console with a `neuroidal' environment
@@ -58,7 +73,6 @@
 	+ burst firing, due to primitive refractory effect? [yes] no, infinite weights
 	+ sumOfCurrentWeights overflow? [no]
 - area name as a concept? or area representing neuroids?
-- put step inside Neuroid.Mode?
 - really use SRM or forward-euler is sufficient?
 	- can we mix SRM and diff eqs? I need adaptive threshold
 - fix ConcurrentModificationException by waiting for all threads to finish at the end.

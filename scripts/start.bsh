@@ -9,4 +9,4 @@ save(network, "net.data");
 
 // do a exploratory run
 network.advanceTime(until);
-print (network.getStatus());
+print (network.getProperties());

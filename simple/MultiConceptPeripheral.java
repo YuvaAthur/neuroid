@@ -3,7 +3,7 @@ import neuroidnet.ntr.*;
 import neuroidnet.remote.*;
 import java.util.*;
 //import java.rmi.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.*;
 
 /**
  * Two areas: input and circuit.

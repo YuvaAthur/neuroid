@@ -1,12 +1,12 @@
-import neuroidnet.ntr.plots.*;
+import edu.ull.cgunay.utils.plots.*;
 import neuroidnet.ntr.*;
 
 //reloadClasses();
 
 until = 30;
-w3 = 22;
-w3_1 = 23;
-w2 = 40;
-w2_1 = 71;
-w1 = 85; 
-w1_1 = 35;
+w3 = 68;
+w3_1 = 96;
+w2 = 4;
+w2_1 = 9;
+w1 = 38; 
+w1_1 = 11;

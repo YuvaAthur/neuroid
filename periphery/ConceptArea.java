@@ -1,7 +1,7 @@
 package neuroidnet.periphery;
 
 import neuroidnet.ntr.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.*;
 import java.util.*;
 
 // $Id$
@@ -45,35 +45,29 @@ public class ConceptArea extends Area
      *
      * @return the description to be printed out as a <code>String</code> value
      */
-    public String getStatus() {
-	String retval = super.getStatus() + "\n";
-	
-	TaskWithReturn neuroidsToStringTask = new StringTask() {
+    public String getProperties() {
+	return
+	    super.getProperties() + "\n" +
+	    new StringTask() {
 		public void job(Object o) {
-		    this.retval += "" + ((ArtificialConcept)o).getStatus() + "\n";
+		    this.retval += "" + ((ArtificialConcept)o).getProperties() + "\n";
 		}
-	    };
-	
-	Iteration.loop(neuroids.iterator(), neuroidsToStringTask);
-	
-	retval += (String)neuroidsToStringTask.getValue();
-
-	return retval;
+	    }.getString(neuroids);
     }
 
     /**
      * Dump synaptic activity of concepts contained to output (matlab file?). Called by:
      * <p>TO DO: 
+     * @deprecated Use plots instead.
      * @see Network#finale
      */
     public String dumpData() {
-	String retval =
+	return
 	    "%% Matlab script created by the Neuroidal network\n\n" +
 	    "lastTime = " + time + ";\n" + 
 	    "numberOfConcepts = " + neuroids.size() + ";" +
-	    "figure;\n\n";
-	
-	TaskWithReturn toStringTask = new StringTask() {
+	    "figure;\n\n" +
+	    new StringTask() {
 		int id = 0;
 		
 		public void job(Object o) {
@@ -88,14 +82,7 @@ public class ConceptArea extends Area
 			"text(0, 0.5, '" + o + "');\n\n";
 		    id++;
 		}
-	    };
-	
-	Iteration.loop(neuroids.iterator(), toStringTask);
-	
-	retval += (String)toStringTask.getValue();
-
-	return retval;
-	
+	    }.getString(neuroids);	
     }
 
     /**

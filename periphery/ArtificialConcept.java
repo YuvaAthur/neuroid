@@ -1,7 +1,7 @@
 package neuroidnet.periphery;
 
 import neuroidnet.ntr.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.*;
 
 import java.lang.*;
 import java.util.*;
@@ -19,7 +19,7 @@ import java.util.*;
  */
 
 public class ArtificialConcept extends Neuroid
-    implements Concept, Comparable, DumpsData {
+    implements Concept, Comparable, DumpsData, Expressive {
 
     /**
      * Name of the concept
@@ -66,15 +66,17 @@ public class ArtificialConcept extends Neuroid
 	this.conceptSet = conceptSet;
 
 	// Create a name for the concept by concatanating causing concept names
-	TaskWithReturn toStringTask = new StringTask("[ ") {
+	name = new StringTask("{ ", " }") {
 		// concept names separated by comma
+		boolean first = true;
 		public void job(Object o) {
-		    retval += ((ArtificialConcept)o).getName() + ", "; 
+		    if (!first)
+			super.job(", ");
+		    else 
+			first = false;
+		    super.job(((ArtificialConcept)o).getName()); 
 		}
-	    };
-	
-	Iteration.loop(conceptSet.iterator(), toStringTask);
-	name = (String) toStringTask.getValue()  + " ]";
+	    }.getString(conceptSet);
 
 	init2();
     }
@@ -149,42 +151,40 @@ public class ArtificialConcept extends Neuroid
     //public static int id = 0; OBSOLETE
 
     /**
-     * Describe concept in more detail, including static properties.
-     * TODO: make an interface that requires this method
-     * TODO: this method looks very similar in all, util'ize it?
-     *
-     * @return a <code>String</code> value
-     */
-    public String getStatus() {
-	String retval = this + " {\n";
-	
-	// TODO: make this following class common with the one in Network.toString()
-	TaskWithReturn toStringTask = new StringTask() {
-		public void job(Object o) {
-		    this.retval += "\t" + ((Synapse)o).getSrcNeuroid() + "\n";
-		}
-	    };
-	
-	Iteration.loop(synapses.iterator(), toStringTask);
-	
-	retval += (String)toStringTask.getValue() + "}\n";
-
-	return retval;
-    }
-
-    
-    /**
      * Describe concept.
-     * <p>TODO: remove unneccessary info?
      * @return <description>
      */
     public String toString() {
 	/*return "Concept #" + hashCode() + ", u = " +
 	    numberFormat.format(potential) + ", name: " + name;*/
-	return "Concept: " + name + "(" + synapses.size()
+	return "Concept: " + name;
+    }
+
+    /**
+     * Add concept set size to result of <code>toString()</code>.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getStatus() {
+	return this + "(" + synapses.size()
 	    /*+ "/" + area.getReplication()*/ + ")";
     }
 
+    /**
+     * Describe concept in more detail, including static properties.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getProperties() {
+	return
+	    this.getStatus() + 
+	    new StringTask(" {\n", "}\n") {
+		public void job(Object o) {
+		    super.job("\t" + ((Synapse)o).getSrcNeuroid().getStatus() + "\n");
+		}
+	    }.getString(synapses);
+    }
+    
     /**
      * Required for implementing the Comparable interface for use in TreeMap implementation
      * in ConceptArea.

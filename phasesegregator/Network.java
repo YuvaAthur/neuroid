@@ -1,7 +1,7 @@
 package neuroidnet.phasesegregator;
 
 import neuroidnet.ntr.*;
-import neuroidnet.ntr.plots.*;
+import edu.ull.cgunay.utils.plots.*;
 import neuroidnet.periphery.*;
 //import remote.*;
 
@@ -39,7 +39,7 @@ public class Network extends neuroidnet.ntr.Network {
 	    timeConstantM = 10,
 	    refractoryTimeConstant = 10,
 	    threshold,
-	    nuBoost = 4.0;	// nu parameter to increase probability of connection
+	    nuBoost = 6.0;	// nu parameter to increase probability of connection
 	
 	int numberOfMedialAreas = 3,
 	    numberOfItemsPerArea = 3,
@@ -128,7 +128,8 @@ public class Network extends neuroidnet.ntr.Network {
 	    NeuroidProfile profile = n.getProfile();
 	    Plot plot = new MembranePotentialPlot("trial", null, profile);
 	    Grapher grapher = new GNUPlot();
-	    System.out.println("Grapher response: " + grapher.display(plot));
+	    System.out.println("Grapher response: ");
+	    grapher.display(plot, System.out);
 
 	    network.finale();
 	    System.exit(0);

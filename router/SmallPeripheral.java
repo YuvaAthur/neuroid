@@ -4,7 +4,7 @@ import neuroidnet.remote.*;
 import neuroidnet.periphery.*;
 import java.util.*;
 //import java.rmi.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.*;
 
 /**
  * 3 <code>SensoryArea</code>s and 3 medial <code>Area</code>s.

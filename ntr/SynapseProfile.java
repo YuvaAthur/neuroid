@@ -1,8 +1,8 @@
 
 package neuroidnet.ntr;
 
-import neuroidnet.utils.*;
-import neuroidnet.ntr.plots.*;
+import edu.ull.cgunay.utils.*;
+import edu.ull.cgunay.utils.plots.*;
 
 import java.io.*;
 

@@ -1,7 +1,7 @@
 
 package neuroidnet.ntr;
 
-import neuroidnet.ntr.plots.*;
+import edu.ull.cgunay.utils.plots.*;
 
 // $Id$
 /**

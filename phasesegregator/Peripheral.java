@@ -4,7 +4,7 @@ import neuroidnet.remote.*;
 import neuroidnet.periphery.*;
 import java.util.*;
 //import java.rmi.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.*;
 
 /**
  * Creates inputs in one <code>SensoryArea</code> that projects to

@@ -1,8 +1,8 @@
 
 package neuroidnet.ntr;
 
-import neuroidnet.utils.*;
-import neuroidnet.ntr.plots.*;
+import edu.ull.cgunay.utils.*;
+import edu.ull.cgunay.utils.plots.*;
 
 import java.io.*;
 import java.util.*;
@@ -89,7 +89,7 @@ public class NeuroidProfile implements Serializable {
 	this.neuroid = neuroid;
 
 	// iterate on all synapses and set their watches, then take their profiles
-	Iteration.loop(neuroid.synapses, new Task() {
+	UninterruptedIteration.loop(neuroid.synapses, new Task() {
 		public void job(Object o) {
 		    Synapse s = ((Synapse)o);
 		    s.setWatch(true);

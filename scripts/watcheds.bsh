@@ -1,19 +1,19 @@
 source("preamble.bsh");
 
 n3 = network.getNeuroid("M3", w3);
-print (n3.getStatus());
+print (n3.getProperties());
 
 n3_1 = network.getNeuroid("M3", w3_1);
-print (n3_1.getStatus());
+print (n3_1.getProperties());
 
 n2 = network.getNeuroid("M2", w2);
-print (n2.getStatus());
+print (n2.getProperties());
 
 n2_1 = network.getNeuroid("M2", w2_1);
-print (n2_1.getStatus());
+print (n2_1.getProperties());
 
 n1 = network.getNeuroid("M1", w1);
-print (n1.getStatus());
+print (n1.getProperties());
 
 n1_1 = network.getNeuroid("M1", w1_1);
-print (n1_1.getStatus());
+print (n1_1.getProperties());

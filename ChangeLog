@@ -1,3 +1,14 @@
+2002-05-02  Cengiz Gunay  <cengiz@ull.edu>
+
+	* ntr/Expressive.java (Repository): Changed entity names to conform to new
+	Expressive interface. Shortened names to look good on dumps and plots. 
+
+	* ntr (Message): Removed subpackage plots to outside of this project:
+	edu.ull.cgunay.utils.plots
+
+	* (Repository): Removed neuroidnet.ntr.plots and neuroidnet.utils package to
+	external project edu.ull.cgunay.utils.
+
 2002-04-24  Cengiz Gunay  <cengiz@ull.edu>
 
 	* utils (Repository): Improved documentation and made major changes in Iteration and 
