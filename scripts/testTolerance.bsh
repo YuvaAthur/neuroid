@@ -6,6 +6,8 @@
 
 testTolerance() {
     void run() {
+	init();
+
 	startTime = System.currentTimeMillis();
 
 	for (timeConstantM = fromTimeConstantM;
@@ -54,33 +56,49 @@ testTolerance() {
 		  maxTrials + " Trials, " + numberOfObjects + " Objects");
     }
 
+    void batch() {
+	startTime = System.currentTimeMillis();
+
+	for (int i = 0; i < 3; i++) {
+	    super.numberOfMedialAreas = 2 + i;
+	    super.maxTrials = 10;
+	    run();
+	}
+
+	print("Total experiment time: " +
+	      (System.currentTimeMillis() - startTime)/60000 + " mins");
+    }
+
+    void init() {
+	super.correctProfile = new Profile();
+	super.spuriousProfile = new Profile();
+
+	super.calcTimeConstantM = (numberOfMedialAreas) * timeConstantS;
+
+	super.fromTimeConstantM = calcTimeConstantM - 2 * timeConstantS;
+	super.toTimeConstantM = 2 * calcTimeConstantM;
+
+	super.idString =
+	    "tolerance-" + fromTimeConstantM + "to" + toTimeConstantM + "-"
+	    + maxTrials + "trials-" + numberOfObjects + "objects-"
+	    + numberOfMedialAreas + "layers";
+    }
+
 
     // Save me, save you
     nsh.tolerance = this;
 
     setAccessibility(true);
 
-    correctProfile = new Profile();
-    spuriousProfile = new Profile();
-
+    // Properties
     maxTrials = 2; //10;
     numberOfMedialAreas = 2;
     numberOfObjects = 5;
     timeConstantS = 7;
     delay = 3;
+    dataPoints = 10;
 
     //segregation = timeConstantS + 2*timeConstantM + delay;
 
-    calcTimeConstantM = (numberOfMedialAreas/* + 1*/) * timeConstantS;
-
-    fromTimeConstantM = calcTimeConstantM - 2 * timeConstantS;
-    toTimeConstantM = 2 * calcTimeConstantM;
-
-    dataPoints = 2; //10;
-
-    idString =
-	"tolerance-" + fromTimeConstantM + "to" + toTimeConstantM + "-"
-	+ maxTrials + "trials-" /* + segregation + "phi-" + timeConstantM + "taum-" */
-	+ numberOfObjects + "objects-" + numberOfMedialAreas + "layers";
 
 }

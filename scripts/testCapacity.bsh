@@ -5,10 +5,9 @@
  */
 
 
-// TODO: put some init vars here, and make separate simplified initializers
-// calling this one.
 testCapacity() {
     void run() {
+	init();
 
 	startTime = System.currentTimeMillis();
 
@@ -62,30 +61,47 @@ testCapacity() {
 	combinedProfilePlot(super);
     }
 
+    void batch() {
+	startTime = System.currentTimeMillis();
+
+	for (int i = 0; i < 3; i++) {
+	    super.numberOfMedialAreas = 2 + i;
+	    super.maxTrials = 10;
+	    run();
+	}
+
+	print("Total experiment time: " +
+	      (System.currentTimeMillis() - startTime)/60000 + " mins");
+    }
+
+    void init() {
+	super.correctProfile = new Profile();
+	super.spuriousProfile = new Profile();
+
+	super.timeConstantM = (numberOfMedialAreas)*timeConstantS;
+	super.segregation = timeConstantS + 2*timeConstantM + delay;
+
+	super.idString =
+	    "capacity-" + fromObjects + "to" + toObjects + "-"
+	    + maxTrials + "trials-" + segregation + "phi-" + timeConstantM + "taum-" 
+	    + numberOfMedialAreas + "layers";
+
+    }
 
     // Save me, save you
     nsh.capacity = this;
 
     setAccessibility(true);
 
-    correctProfile = new Profile();
-    spuriousProfile = new Profile();
-
     maxTrials = 2; //10
     numberOfMedialAreas = 2;
     timeConstantS = 7;
     delay = 3;
-    timeConstantM = (numberOfMedialAreas)*timeConstantS;
-    segregation = timeConstantS + 2*timeConstantM + delay;
 
     fromObjects = 1;
     toObjects = 20;
 
     calcObjects = 10;
 
-    idString =
-	"capacity-" + fromObjects + "to" + toObjects + "-"
-	+ maxTrials + "trials-" + segregation + "phi-" + timeConstantM + "taum-" 
-	+ numberOfMedialAreas + "layers";
 
 }

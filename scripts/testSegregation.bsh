@@ -6,11 +6,13 @@
 
 testSegregation() {
     void run() {
+	init();
+
 	startTime = System.currentTimeMillis();
 
 	for (segregation = fromSegregation;
 	     segregation < toSegregation;
-	     segregation += timeConstantM) {
+	     segregation += (toSegregation - fromSegregation) / dataPoints) {
 
 	    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
 	    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
@@ -52,29 +54,48 @@ testSegregation() {
 		  timeConstantM);
     }
 
+    void batch() {
+	startTime = System.currentTimeMillis();
+
+	for (int i = 0; i < 3; i++) {
+	    super.numberOfMedialAreas = 2 + i;
+	    super.maxTrials = 10;
+	    run();
+	}
+
+	print("Total experiment time: " +
+	      (System.currentTimeMillis() - startTime)/60000 + " mins");
+    }
+
+    void init() {
+	super.correctProfile = new Profile();
+	super.spuriousProfile = new Profile();
+
+	super.timeConstantM = (numberOfMedialAreas)*timeConstantS;
+
+	super.fromSegregation = timeConstantS;
+	super.toSegregation = 2*(timeConstantS + 2*timeConstantM + delay);
+
+	super.calcSegregation = timeConstantS + 2*timeConstantM + delay;
+
+	super.idString =
+	    "segregation-" + fromSegregation + "to" + toSegregation + "-"
+	    + maxTrials + "trials-" + timeConstantM + "taum-"
+	    + numberOfObjects + "objects-" + numberOfMedialAreas + "layers";
+
+    }
+
     // Save me, save you
     nsh.segregation = this;
 
     setAccessibility(true);
 
-    correctProfile = new Profile();
-    spuriousProfile = new Profile();
-
+    // Properties
     maxTrials = 2; //10;
     numberOfMedialAreas = 2;
     numberOfObjects = 5;
     timeConstantS = 7;
-    timeConstantM = (numberOfMedialAreas/* + 1*/)*timeConstantS;
     delay = 3;
-
-    fromSegregation = timeConstantS;
-    toSegregation = 2*(timeConstantS + 2*timeConstantM + delay);
-
-    calcSegregation = timeConstantS + 2*timeConstantM + delay;
-
-    idString =
-	"segregation-" + fromSegregation + "to" + toSegregation + "-"
-	+ maxTrials + "trials-" + timeConstantM + "taum-"
-	+ numberOfObjects + "objects-" + numberOfMedialAreas + "layers";
+    dataPoints = 10;
 
 }
