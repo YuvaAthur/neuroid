@@ -1,4 +1,4 @@
-import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.plots.*;
 import edu.ull.cgunay.utils.*;
 import neuroidnet.ntr.*;
 
@@ -7,24 +7,24 @@ nsh = object();
 
 print(	"NeuroidNetShell by Cengiz Gunay running on BeanShell\n"); 
 
-start() { super.source("start.bsh"); }
-stats() { super.source("stats.bsh"); }
-testCapacity() { super.source("testCapacity.bsh"); }
-testTolerance() { super.source("testTolerance.bsh"); }
-testSegregation() { super.source("testSegregation.bsh"); }
-post() { super.source("postExplore.bsh"); }
-watcheds() { super.source("watcheds.bsh"); }
-prof() { super.network = load("net.withprofile.data"); watcheds(); }
-spike(n) { super.n = n; super.source("spike.bsh"); }
-wplot(n,s) { super.n = n; super.s = s; super.source("wplot.bsh"); }
-synActs(n) { super.n = n; super.source("synActs.bsh"); }
-gnuplot() { super.grapher = new GNUPlot(); }
+start() { global.source("start.bsh"); }
+stats() { global.source("stats.bsh"); }
+testCapacity() { global.source("testCapacity.bsh"); }
+testTolerance() { global.source("testTolerance.bsh"); }
+testSegregation() { global.source("testSegregation.bsh"); }
+post() { global.source("postExplore.bsh"); }
+watcheds() { global.source("watcheds.bsh"); }
+prof() { global.network = load("net.withprofile.data"); watcheds(); }
+spike(n) { global.n = n; global.source("spike.bsh"); }
+wplot(n,s) { global.n = n; global.s = s; global.source("wplot.bsh"); }
+synActs(n) { global.n = n; global.source("synActs.bsh"); }
+gnuplot() { global.grapher = new GNUPlot(); }
 matlab() { nsh.grapher = new MatLab(); }
 display(plot) { return grapher.display(plot, null); }
-obsyn() { super.source("obsyn.bsh"); }
+obsyn() { global.source("obsyn.bsh"); }
 getNeuroid(s,i) { return network.getNeuroid(s,i); }
 getNeuroid(n) { return network.getNeuroid(n); }
-chain() { super.source("chain.bsh"); }
+chain() { global.source("chain.bsh"); }
 printProfile(p) {
   Task t = new Task() {
     void job(Object o) {

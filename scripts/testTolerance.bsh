@@ -13,7 +13,7 @@ correctProfile = new Profile();
 spuriousProfile = new Profile();
 
 maxTrials = 10;
-numberOfMedialAreas = 4;
+numberOfMedialAreas = 2;
 numberOfObjects = 5;
 timeConstantS = 7;
 delay = 3;

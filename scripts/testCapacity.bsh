@@ -4,63 +4,94 @@
  * statistically significant performance results.
  */
 
-setAccessibility(true);
 
-source("preamble.bsh");
-source("stats.bsh");
+// put some init vars here, and make separate simplified initializers
+// calling this one.
+testCapacity() {
 
-correctProfile = new Profile();
-spuriousProfile = new Profile();
+    // Save me, save you
+    nsh.capacity = this;
 
-maxTrials = 10;
-numberOfMedialAreas = 4;
-timeConstantS = 7;
-delay = 3;
-timeConstantM = (numberOfMedialAreas/* + 1*/)*timeConstantS;
-segregation = timeConstantS + 2*timeConstantM + delay;
+    setAccessibility(true);
 
-fromObjects = 1;
-toObjects = 20;
+    source("preamble.bsh");
 
-calcObjects = 10;
+    // Extending the capabilities, i.e. subclassing
+    source("stats.bsh");
 
-startTime = System.currentTimeMillis();
+    correctProfile = new Profile();
+    spuriousProfile = new Profile();
 
-for (numberOfObjects = fromObjects; numberOfObjects < toObjects; numberOfObjects+=3) {
+    maxTrials = 2;
+    numberOfMedialAreas = 2;
+    timeConstantS = 7;
+    delay = 3;
+    timeConstantM = (numberOfMedialAreas)*timeConstantS;
+    segregation = timeConstantS + 2*timeConstantM + delay;
 
-    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
-    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
+    fromObjects = 1;
+    toObjects = 20;
 
-    for (numberOfTrials = 0; numberOfTrials < maxTrials; numberOfTrials++) {
-	runOnce(numberOfObjects, numberOfMedialAreas, timeConstantM, Double.NaN);
-	meanQc += qc;
-	meanQs += qs;
-	minQc = Math.min(minQc, qc);
-	minQs = Math.min(minQs, qs);
-	maxQc = Math.max(maxQc, qc);
-	maxQs = Math.max(maxQs, qs);
-    }
-    meanQc /= maxTrials;
-    meanQs /= maxTrials;
+    calcObjects = 10;
 
-    correctProfile.put(new Double(numberOfObjects), new ErrorValue(meanQc, minQc, maxQc));
-    spuriousProfile.put(new Double(numberOfObjects), new ErrorValue(meanQs, minQs, maxQs));
+    idString =
+	"capacity-" + fromObjects + "to" + toObjects + "-"
+	+ maxTrials + "trials-" + segregation + "phi-" + timeConstantM + "taum-" 
+	+ numberOfMedialAreas + "layers";
+
+    void run() {
+
+	startTime = System.currentTimeMillis();
+
+	for (numberOfObjects = fromObjects; numberOfObjects < toObjects; numberOfObjects+=3) {
+
+	    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
+	    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
+
+	    for (numberOfTrials = 0; numberOfTrials < maxTrials; numberOfTrials++) {
+		runOnce(numberOfObjects, numberOfMedialAreas, timeConstantM, Double.NaN);
+		meanQc += qc;
+		meanQs += qs;
+		minQc = Math.min(minQc, qc);
+		minQs = Math.min(minQs, qs);
+		maxQc = Math.max(maxQc, qc);
+		maxQs = Math.max(maxQs, qs);
+	    }
+	    meanQc /= maxTrials;
+	    meanQs /= maxTrials;
+
+	    correctProfile.put(new Double(numberOfObjects), new ErrorValue(meanQc, minQc, maxQc));
+	    spuriousProfile.put(new Double(numberOfObjects), new ErrorValue(meanQs, minQs, maxQs));
      
-} // end of for (numberOfObjects = 1; numberOfObjects < 5; numberOfObjects++)
+	} // end of for (numberOfObjects = 1; numberOfObjects < 5; numberOfObjects++)
 
-idString =
-    "capacity-" + fromObjects + "to" + toObjects + "-"
-    + maxTrials + "trials-" + segregation + "phi-" + timeConstantM + "taum-" 
-    /*+ numberOfObjects + "objects-" */+ numberOfMedialAreas + "layers";
+	print("Elapsed experiment time: " +
+	      ((double)System.currentTimeMillis() - startTime)/60000 +
+	      " mins");
 
-datas = new Vector(combinedProfilePlot(correctProfile, spuriousProfile, idString));
+	saveProfiles();
+	save(super, idString + ".data");
+    }
 
-data = new Grapher.VerticalBar(nsh.grapher, "Predicted capacity",
-			       calcObjects, new Range(0, 1));
-datas.add(data);
+    //datas = new Vector(combinedProfilePlot(correctProfile, spuriousProfile, idString));
 
-datasPlot(datas, idString, "Number of Objects", "Quality",
-	  "Performance with " + numberOfMedialAreas + " Layers over " +
-	  maxTrials + " Trials,  \\tau_m = " + timeConstantM);
+    // Called by combinedProfilePlot
+    void createPlot(java.util.List datas) {
 
-print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime)/60000 + " mins");
+	data = new Grapher.VerticalBar(nsh.grapher, "Predicted capacity",
+				       calcObjects, new Range(0, 1));
+	datas.add(data);
+
+	datasPlot(datas, idString, "Number of Objects", "Quality",
+		  "Performance with " + numberOfMedialAreas + " Layers over " +
+		  maxTrials + " Trials,  \\tau_m = " + timeConstantM);
+
+    }
+
+    // Runs everything
+    void runAll() {
+	run();
+	combinedProfilePlot();
+    }
+
+}

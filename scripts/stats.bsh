@@ -44,23 +44,29 @@ void runOnce(int numberOfObjects, int numberOfMedialAreas,
     network.stop();		// Release threads
 }
 
-java.util.List combinedProfilePlot(Profile correctProfile, Profile spuriousProfile,
-			 String idString) {
+void saveProfiles() {
     print("correct concept qualities = " + correctProfile);
     print("spurious concept quality = " + spuriousProfile);
 
     save(correctProfile, "profile-correct-" + idString + ".data");
     save(spuriousProfile, "profile-spurious-" + idString + ".data");
+}
+
+// Profile correctProfile, Profile spuriousProfile, idString
+void combinedProfilePlot() {
     
+    // do not start grapher
     if (nsh.grapher == null || nsh.grapher == void)
-	matlab();
+	return;
+    //matlab();
 
     correctData = new Grapher.ErrorData(nsh.grapher, "Correct concepts", correctProfile);
     spuriousData = new Grapher.ErrorData(nsh.grapher, "Spurious concepts", spuriousProfile);
 
     Grapher.Data[] datas = {correctData, spuriousData};
 
-    return Arrays.asList(datas);
+    // Polymorphism here
+    createPlot(Arrays.asList(datas));
 }
 
 void datasPlot(java.util.List datas, String idString, String xLabel, String yLabel, String title) {

@@ -1,3 +1,7 @@
+//trace_2003-03-10_23:03:18
+// --------------------
+//trace_2003-03-09_16:07:52
+// --------------------
 //trace_2002-11-24_17:29:44
 // --------------------
 //trace_2002-11-24_14:54:53
@@ -42,7 +46,7 @@
 // the epsp's magnitude is larger.
 
 // Two Layer test with three objects segregated by 2 * sigma = 14 msec
-import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.plots.*;
 import edu.ull.cgunay.utils.*;
 import neuroidnet.ntr.*;
 

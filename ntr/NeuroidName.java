@@ -1,6 +1,8 @@
 
 package neuroidnet.ntr;
 
+import java.io.Serializable;
+
 // $Id$
 /**
  * Identifier for accessing a neuroid in a network.
@@ -12,7 +14,7 @@ package neuroidnet.ntr;
  * @version $Revision$ for this file.
  */
 
-public class NeuroidName implements Comparable {
+public class NeuroidName implements Comparable, Serializable {
 
     final String areaName;
     
