@@ -3,7 +3,7 @@ package neuroidnet.ntr;
 import neuroidnet.ntr.*;
 import neuroidnet.periphery.*;
 import neuroidnet.remote.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.*;
 
 import java.util.*;
 import java.io.*;
@@ -27,12 +27,12 @@ import java.lang.*;
  * @version $Revision$
  * @since 1.0
  */
-abstract public class Network implements DebuggerInterface, Serializable {
+abstract public class Network implements DebuggerInterface, Serializable, Expressive {
     /**
      * All <code>Area</code>s contained in <code>Network</code>.
      * @see Area
      */
-    protected Vector areas = new Vector();
+    final protected Vector areas = new Vector();
 
     /**
      * Peripheral control device
@@ -90,14 +90,25 @@ abstract public class Network implements DebuggerInterface, Serializable {
     
     /**
      * Defines what do to every step given Area object.
-     * @see Area
+     * That is, <code>Task</code> object that will run <code>Area.step()</code>
+     * for all areas contained.
+     * @see AreaInt
      */
-    Task stepTask;
+    Task stepArea = new Task() {
+		public void job(Object o) {
+		    try {
+			((AreaInt)o).step(); // Done in parallel!!!
+		    } catch (java.rmi.RemoteException e) { 
+			e.printStackTrace();
+			throw new RuntimeException("Cannot call remote Area.step()");
+		    }
+		}
+	    };
 
     /**
      * Lock variable and thread controller for event dispatching to remote (or local) areas.
      */
-    volatile ParallelTask pT;
+    volatile Simulation simulateAreas;
 
     /**
      * Flag to mean multi thread usage.
@@ -111,27 +122,6 @@ abstract public class Network implements DebuggerInterface, Serializable {
      */
     public void addArea(Area area) {
 	areas.add(area);
-    }
-
-    /** class that searches for an area with matching name */
-    public class TaskWPR implements TaskWithReturn {
-	Area area = null;
-	String name;
-	    
-	/**
-	 * Creates a new <code>TaskWPR</code> instance.
-	 *
-	 * @param name Area name to be matched.
-	 */
-	public TaskWPR(String name) { this.name = name; }
-
-	public void job(Object o)  {
-	    Area a = (Area) o;
-	    if (a.getName().equals(name)) 
-		area = a;
-	}
-
-	public Object getValue() { return area; }
     }
 
     Vector watchList = new Vector();
@@ -159,17 +149,20 @@ abstract public class Network implements DebuggerInterface, Serializable {
      * @param name a <code>String</code> value
      * @return an <code>Area</code> value
      */
-    public Area getArea(String name) throws NameNotFoundException {
+    public Area getArea(final String name) throws NameNotFoundException {
 
-	TaskWPR nameCompareTask = new TaskWPR(name);
-	Iteration.loop(areas, nameCompareTask);
-
-	Area retval = (Area) nameCompareTask.getValue();
-
-	if (retval == null) 
-	    throw new NameNotFoundException("Error: Cannot find Area with name '" + name + "'");
-
-	return retval;
+	try {
+	    Iteration.loop(areas, new Task() {
+		public void job(Object o) throws TaskException {
+		    if (((Area)o).getName().equals(name)) 
+			throw new BreakOutOfIterationException(o);
+		}
+	    });	     
+	} catch (BreakOutOfIterationException e) {
+	    return (Area)e.getValue();
+	} // end of try-catch
+	
+	throw new NameNotFoundException("Error: Cannot find Area with name '" + name + "'");
     }
 
 
@@ -221,41 +214,10 @@ abstract public class Network implements DebuggerInterface, Serializable {
      * @see Area
      */
     public void step() {
-	if (isConcurrent) 
-	    pStep();
-	else 
-	    Iteration.loop(areas.iterator(), stepTask);	     
-    }
-
-    void pStep() {
-	synchronized (pT) {
-	    pT.reset();
-	    try {
-		while (pT.waitcount < areas.size()) {
-		    //System.out.println("Waiting for others to wait!");
-		    pT.wait(10);
-		}
-	    } catch (InterruptedException e) {
-		System.out.println("interrupted!!!" + e);
-		e.printStackTrace();
-	    }
-
-	    pT.notifyAll();
-	    //System.out.println("notified all!");
-
-	    try {
-		//System.out.println("Waiting for others to finish!");
-		//pT.wait();		// Give up lock, become first one in queue!
-
-		while (pT.runcount > 0) {
-		    //System.out.println("Waiting for others to finish!");
-		    pT.wait(10);
-		}
-	    } catch (InterruptedException e) {
-		System.out.println("interrupted!!!" + e);
-		e.printStackTrace();
-	    }
-	}
+	//	if (isConcurrent) 
+	simulateAreas.step();
+/*	else 
+	    UninterruptedIteration.loop(areas, stepArea);*/
     }
 
     /**
@@ -277,9 +239,18 @@ abstract public class Network implements DebuggerInterface, Serializable {
      * Return brief info about the <code>network</code>.
      *
      * @return a <code>String</code> value
-     */
+     */ 
     public String toString() {
 	return getClass().getName();
+    }
+
+    /**
+     * Adds time from <code>conceptArea</code>.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getStatus() {
+	return this + " at time=" + conceptArea.time;
     }
 
     /**
@@ -287,26 +258,22 @@ abstract public class Network implements DebuggerInterface, Serializable {
      *
      * @return a <code>String</code> value
      */
-    public String getStatus() {
-	String retval = new String();
-
-	retval += "Peripheral: " + peripheral + "\n";
-	//retval += "ConceptArea: \n" + conceptArea.getStatus();
-
-	TaskWithReturn areasToStringTask =
+    public String getProperties() {
+	return
+	    getStatus() + " {\n" +
+	    "Peripheral: " + peripheral + "\n" +
 	    new StringTask() {
 		public void job(Object o) {
-		    this.retval += "" + ((Area)o).getStatus() + "\n";
+		    super.job(((Area)o).getProperties() + "\n");
 		}
-	    };
-	
-	Iteration.loop(areas.iterator(), areasToStringTask);
-	
-	retval += (String)areasToStringTask.getValue();
-
-	return retval;
+	    }.getString(areas) + "}\n";
     }
 
+    /**
+     * Simulate network for given duration starting from current state.
+     *
+     * @param msecs a <code>double</code> value to simulate this network
+     */
     public void advanceTime(double msecs) {
 	double untilTime = 30.0;
 	long startTime = System.currentTimeMillis();
@@ -317,14 +284,18 @@ abstract public class Network implements DebuggerInterface, Serializable {
 	    peripheral.step();		// step deltaT and initiates peripheral actions
 	}
 	double elapsed = System.currentTimeMillis() - startTime;
-	System.out.println("Elapsed time: " + elapsed + " msecs (1 simulation msec = " + elapsed/msecs + " msecs).");
+	System.out.println("Elapsed time: " + elapsed + " msecs (1 simulation msec = " +
+			   elapsed/msecs + " msecs).");
     }
 
     /**
-     * Sets deltaT and then 
+     * Creates a new <code>Network</code> instance.
+     *
+     * @param deltaT a <code>double</code> value, time increments for each simulation step.
+     * @param isConcurrent a <code>boolean</code> value, indicating if the network
+     * should be simulated in distributed fashion.
      * @see Network#build
      * @see Network#simulation
-     * @param deltaT a <code>double</code> value
      */
     public Network(double deltaT, boolean isConcurrent) {
 	this.deltaT = deltaT;
@@ -335,21 +306,8 @@ abstract public class Network implements DebuggerInterface, Serializable {
 	conceptArea = new ConceptArea(this);
 	areas.add(conceptArea);
 
-	// the Task object that will run Area.step() for all areas contained
-	stepTask = new Task() {
-		public void job(Object o) {
-		    if (o instanceof Area)
-			((Area)o).step();
-		    else {
-			try {
-			    ((AreaInt)o).step(); // Should be done in parallel!!!
-			} catch (java.rmi.RemoteException e) { 
-			    e.printStackTrace();
-			    throw new RuntimeException("Cannot call remote Area.step()");
-			}
-		    } // end of else
-		}
-	    };
+
+	//stepArea;
 
 	// The following are removed for the debug shell version, should be called explicitly 
 	// from any extending class.
@@ -387,45 +345,37 @@ abstract public class Network implements DebuggerInterface, Serializable {
      * @see #simulation
      */
     public void run () {
-	if (isConcurrent) {
-	    pT = new ParallelTask(areas) {
-		    public void init() {
-			// iterate over elements and associate threads
-			for (Iterator i = this.a.iterator(); i.hasNext(); ) {
-			    new Thread(new Objective(this, stepTask, i.next())).start();
-			} // end of for (Iterator i = a.iterator(); i.hasNext(); )
+	if (isConcurrent) 
+	    simulateAreas = new ParallelTask(areas, stepArea);
+	else 		// Sequential version, single thread
+	    simulateAreas = new Simulation() {
+		    public void step() {
+			UninterruptedIteration.loop(areas, stepArea);
 		    }
 		};
 
-	    build();		// creates areas and connections
-	    pT.init();		// create & start threads
-	    //simulation();
-	    
-	} else {		// Sequential version, single thread
-	    build();
-	    //simulation();	    
-	} // end of if-else (isConcurrent)
+	build();		// creates areas and connections
+	simulateAreas.init();	// create & start threads for concurrent version
     }
 
     /**
      * To be called after everthing else is done. Prints out the network status on standard output
      * and calls conceptArea.dumpData() to create a MatLab script for viewing spike activity.
-     * TODO: should call getStatus instead of toString.
      * @see Network#toString
      * @see conceptArea#dumpData
      */
     public void finale () {
-	System.out.println("Network status: \n" + this.getStatus());
+	System.out.println("Network status: \n" + this.getProperties());
 
 	// Create Matlab script about concept spike activity
-	String scriptname = "spikes.m";
+	/*String scriptname = "spikes.m";
 	try {
 	    PrintWriter matlabScript = new PrintWriter(new FileWriter(scriptname)); 
 	    matlabScript.print(conceptArea.dumpData());
 	    matlabScript.close();
 	} catch (IOException e) {
 	    System.out.println("Error writing matlab script " + scriptname + ": " + e);
-	}
+	}*/
 
 	System.exit(0);
     }
