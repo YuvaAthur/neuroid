@@ -1,10 +1,10 @@
-package PhaseSegregator;
-import Base.*;
-import Remote.*;
-import periphery.*;
+package neuroidnet.PhaseSegregator;
+import neuroidnet.ntr.*;
+import neuroidnet.Remote.*;
+import neuroidnet.periphery.*;
 import java.util.*;
 //import java.rmi.*;
-import Utils.*;
+import neuroidnet.Utils.*;
 
 /**
  * Creates inputs in one <code>SensoryArea</code> that projects to
@@ -19,12 +19,12 @@ import Utils.*;
  * @version $Revision$ for this file
  */
 
-public class Peripheral extends Base.Peripheral {
-    Base.Area[] inputAreas;
+public class Peripheral extends neuroidnet.ntr.Peripheral {
+    neuroidnet.ntr.Area[] inputAreas;
     int numberOfItemsPerArea;
     SensoryArea sensoryArea;
     
-    public Peripheral (Base.Network network, Base.Area[] inputAreas,
+    public Peripheral (neuroidnet.ntr.Network network, neuroidnet.ntr.Area[] inputAreas,
 		       int numberOfItemsPerArea) {
 	super(network);
 	this.inputAreas = inputAreas;

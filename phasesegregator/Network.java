@@ -1,6 +1,6 @@
-package PhaseSegregator;
-import Base.*;
-import periphery.*;
+package neuroidnet.PhaseSegregator;
+import neuroidnet.ntr.*;
+import neuroidnet.periphery.*;
 //import Remote.*;
 /**
  * Builds a network to test theoretical phase segregation properties.
@@ -13,8 +13,8 @@ import periphery.*;
  * @version $Revision$ for this file
  */
 
-public class  Network extends Base.Network {
-    PhaseSegregator.Peripheral peripheral; //
+public class  Network extends neuroidnet.ntr.Network {
+    Peripheral peripheral; //note that it's a PhaseSegregator.Peripheral
 
     public Network (boolean isConcurrent) { // 
 	super(0.01, isConcurrent);		// sets deltaT
@@ -75,7 +75,7 @@ public class  Network extends Base.Network {
 	} // end of for
 
 	peripheral =
-	    new PhaseSegregator.Peripheral(this, inputAreas, numberOfItemsPerArea);
+	    new Peripheral(this, inputAreas, numberOfItemsPerArea);
     }
 
     /**
@@ -86,7 +86,7 @@ public class  Network extends Base.Network {
      * check for illusory conjunctions 
      *	(dump list of Concepts and firing times, to matlab file)
      * @deprecated See <code>advanceTime</code>
-     * @see Base.Network#advanceTime
+     * @see ntr.Network#advanceTime
      */
 /*
     public void simulation() {
@@ -112,7 +112,7 @@ public class  Network extends Base.Network {
      * @param args a <code>String[]</code> value
      */
     public static void main (String[] args) {
-	Base.Network network = new PhaseSegregator.Network(false); // Single threaded!
+	neuroidnet.ntr.Network network = new Network(false); // Single threaded!
 	network.run();
 	network.advanceTime(30.00); // Run net for 30 msecs
 	network.finale();
