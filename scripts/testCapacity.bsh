@@ -9,20 +9,24 @@ setAccessibility(true);
 source("preamble.bsh");
 source("stats.bsh");
 
-minCorrectProfile = new Profile();
-maxCorrectProfile = new Profile();
-meanCorrectProfile = new Profile();
-minSpuriousProfile = new Profile();
-maxSpuriousProfile = new Profile();
-meanSpuriousProfile = new Profile();
+correctProfile = new Profile();
+spuriousProfile = new Profile();
 
-maxTrials = 1;
-maxObjects = 5;
+maxTrials = 2; //10;
 numberOfMedialAreas = 2;
-timeConstantM = 21;
+timeConstantS = 7;
+delay = 3;
+timeConstantM = (numberOfMedialAreas/* + 1*/)*timeConstantS;
+segregation = timeConstantS + 2*timeConstantM + delay;
+
+fromObjects = 1;
+toObjects = 20;
+
+calcObjects = 10;
+
 startTime = System.currentTimeMillis();
 
-for (numberOfObjects = 1; numberOfObjects < maxObjects; numberOfObjects+=2) {
+for (numberOfObjects = fromObjects; numberOfObjects < toObjects; numberOfObjects+=3) {
 
     meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
     meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
@@ -39,39 +43,24 @@ for (numberOfObjects = 1; numberOfObjects < maxObjects; numberOfObjects+=2) {
     meanQc /= maxTrials;
     meanQs /= maxTrials;
 
-    minCorrectProfile.put(new Double(numberOfObjects + 0.0), new ProfilableDouble(minQc));
-    maxCorrectProfile.put(new Double(numberOfObjects + 0.0), new ProfilableDouble(maxQc));
-    meanCorrectProfile.put(new Double(numberOfObjects + 0.0), new ProfilableDouble(meanQc));
-    minSpuriousProfile.put(new Double(numberOfObjects + 0.0), new ProfilableDouble(minQs));
-    maxSpuriousProfile.put(new Double(numberOfObjects + 0.0), new ProfilableDouble(maxQs));
-    meanSpuriousProfile.put(new Double(numberOfObjects + 0.0), new ProfilableDouble(meanQs));
-
+    correctProfile.put(new Double(numberOfObjects), new ErrorValue(meanQc, minQc, maxQc));
+    spuriousProfile.put(new Double(numberOfObjects), new ErrorValue(meanQs, minQs, maxQs));
      
 } // end of for (numberOfObjects = 1; numberOfObjects < 5; numberOfObjects++)
 
-print("correct concept qualities = " + meanCorrectProfile);
-print("spurious concept quality = " + meanSpuriousProfile);
+idString =
+    "capacity-" + fromObjects + "to" + toObjects + "-"
+    + maxTrials + "trials-" + segregation + "phi-" + timeConstantM + "taum-" 
+    /*+ numberOfObjects + "objects-" */+ numberOfMedialAreas + "layers";
 
-matlab();
-correctPlots = new LinkedList();
-correctPlots.add(new ProfilePlot("Min", null, minCorrectProfile));
-correctPlots.add(new ProfilePlot("Max", null, maxCorrectProfile));
-correctPlots.add(plot = new ProfilePlot("Mean", null, meanCorrectProfile));
-plot.setXLabel("Number of Objects");
-plot.setYLabel("Quality");
-h1 = grapher.superposedPlot("Performance of Correct Concepts with " + numberOfMedialAreas + " Layers over " + maxTrials + " Trials, \\tau_m = " + timeConstantM, correctPlots, null);
-//plot.setTitle();
-/*
-display(plot);*/
+datas = new Vector(combinedProfilePlot(correctProfile, spuriousProfile, idString));
 
-spuriousPlots = new LinkedList();
-spuriousPlots.add(new ProfilePlot("Min", null, minSpuriousProfile));
-spuriousPlots.add(new ProfilePlot("Max", null, maxSpuriousProfile));
-spuriousPlots.add(plot = new ProfilePlot("Mean", null, meanSpuriousProfile));
-plot.setXLabel("Number of Objects");
-plot.setYLabel("Quality");
-h2 = grapher.superposedPlot("Performance of Spurious Concepts with " + numberOfMedialAreas + " Layers over " + maxTrials + " Trials, \\tau_m = " + timeConstantM, spuriousPlots, null);
+data = new Grapher.VerticalBar(nsh.grapher, "Predicted capacity",
+			       calcObjects, new Range(0, 1));
+datas.add(data);
 
-print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime) + " msec");
+datasPlot(datas, idString, "Number of Objects", "Quality",
+	  "Performance with " + numberOfMedialAreas + " Layers over " +
+	  maxTrials + " Trials, \\tau_m = " + timeConstantM);
 
-combinedProfilePlot("Number of Objects", ", \\tau_m = " + timeConstantM);
+print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime)/60000 + " mins");

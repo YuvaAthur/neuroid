@@ -12,16 +12,22 @@ source("stats.bsh");
 correctProfile = new Profile();
 spuriousProfile = new Profile();
 
-maxTrials = 10;
+maxTrials = 2; //10;
 numberOfMedialAreas = 2;
-numberOfObjects = 5;
+numberOfObjects = 2; //5;
 timeConstantS = 7;
-timeConstantM = (numberOfMedialAreas + 1)*timeConstantS;
+timeConstantM = (numberOfMedialAreas/* + 1*/)*timeConstantS;
 delay = 3;
+
+fromSegregation = timeConstantS;
+toSegregation = 2*(timeConstantS + 2*timeConstantM + delay);
+
+calcSegregation = timeConstantS + 2*timeConstantM + delay;
+
 startTime = System.currentTimeMillis();
 
-for (segregation = timeConstantS;
-     segregation < 2*(timeConstantS + 2*timeConstantM + delay);
+for (segregation = fromSegregation;
+     segregation < toSegregation;
      segregation += timeConstantM) {
 
     meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
@@ -45,24 +51,22 @@ for (segregation = timeConstantS;
      
 } // end of for 
 
-print("correct concept qualities = " + correctProfile);
-print("spurious concept quality = " + spuriousProfile);
+idString =
+    "segregation-" + fromSegregation + "to" + toSegregation + "-"
+    + maxTrials + "trials-" + timeConstantM + "taum-"
+    + numberOfObjects + "objects-" + numberOfMedialAreas + "layers";
 
-if (grapher == null || grapher == void)
-    matlab();
 
-correctData = new Grapher.ErrorData(grapher, "Correct concepts", correctProfile);
-spuriousData = new Grapher.ErrorData(grapher, "Spurious concepts", spuriousProfile);
+datas = new Vector(combinedProfilePlot(correctProfile, spuriousProfile, idString));
 
-Grapher.Data[] datas = {correctData, spuriousData};
+data = new Grapher.VerticalBar(nsh.grapher, "Calculated \\Phi",
+			       calcSegregation, new Range(0, 1));
+datas.add(data);
 
-p = new SuperposedDataPlot(null, datas);
-p.setTitle("Performance with " + numberOfMedialAreas + " Layers over " +
-	   maxTrials + " Trials, " + numberOfObjects + " Objects, and \\tau_m = " +
-	   timeConstantM);
-p.setXLabel("Segregation \\Phi");
-p.setYLabel("Quality");
+datasPlot(datas, idString, "Segregation \\Phi", "Quality",
+	  "Performance with " + numberOfMedialAreas + " Layers over " +
+	  maxTrials + " Trials, " + numberOfObjects + " Objects, and  \\tau_m = " +
+	  timeConstantM);
 
-h = grapher.display(p, null);
 
-print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime) + " msec");
+print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime)/60000 + " mins");

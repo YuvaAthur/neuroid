@@ -12,12 +12,23 @@ source("stats.bsh");
 correctProfile = new Profile();
 spuriousProfile = new Profile();
 
-maxTrials = 10;
+maxTrials = 2; //10;
 numberOfMedialAreas = 2;
-numberOfObjects = 5;
+numberOfObjects = 2; //5;
+timeConstantS = 7;
+delay = 3;
+
+//segregation = timeConstantS + 2*timeConstantM + delay;
+
+fromTimeConstantM = timeConstantS;
+toTimeConstantM = (numberOfMedialAreas/* + 1*/) * 2 * timeConstantS;
+
+calcTimeConstantM = (numberOfMedialAreas/* + 1*/) * timeConstantS;
+
 startTime = System.currentTimeMillis();
 
-for (timeConstantM = 7; timeConstantM < (numberOfMedialAreas + 1) * 2 * 7; timeConstantM += 7) {
+for (timeConstantM = fromTimeConstantM;
+     timeConstantM < toTimeConstantM; timeConstantM += timeConstantS) {
 
     meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
     meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
@@ -36,27 +47,23 @@ for (timeConstantM = 7; timeConstantM < (numberOfMedialAreas + 1) * 2 * 7; timeC
 
     correctProfile.put(new Double(timeConstantM), new ErrorValue(meanQc, minQc, maxQc));
     spuriousProfile.put(new Double(timeConstantM), new ErrorValue(meanQs, minQs, maxQs));
-
      
-} // end of for (numberOfObjects = 1; numberOfObjects < 5; numberOfObjects++)
+} // end of for 
 
-print("correct concept qualities = " + correctProfile);
-print("spurious concept quality = " + spuriousProfile);
+idString =
+    "tolerance-" + fromTimeConstantM + "to" + toTimeConstantM + "-"
+    + maxTrials + "trials-" /* + segregation + "phi-" + timeConstantM + "taum-" */
+    + numberOfObjects + "objects-" + numberOfMedialAreas + "layers";
 
-if (grapher == null || grapher == void)
-    matlab();
+datas = new Vector(combinedProfilePlot(correctProfile, spuriousProfile, idString));
 
-correctData = new Grapher.ErrorData(grapher, "Correct concepts", correctProfile);
-spuriousData = new Grapher.ErrorData(grapher, "Spurious concepts", spuriousProfile);
+data = new Grapher.VerticalBar(nsh.grapher, "Calculated \\tau_m",
+			       calcTimeConstantM, new Range(0, 1));
+datas.add(data);
 
-Grapher.Data[] datas = {correctData, spuriousData};
+datasPlot(datas, idString, 
+	  "Membrane Time Constant \\tau_m", "Quality",
+	  "Performance with " + numberOfMedialAreas + " Layers over " +
+	  maxTrials + " Trials, " + numberOfObjects + " Objects");
 
-p = new SuperposedDataPlot(null, datas);
-p.setTitle("Performance with " + numberOfMedialAreas + " Layers over " +
-	   maxTrials + " Trials, " + numberOfObjects + " Objects");
-p.setXLabel("Membrane Time Constant \\tau_m");
-p.setYLabel("Quality");
-
-h = grapher.display(p, null);
-
-print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime) + " msec");
+print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime)/60000 + " mins");

@@ -2,6 +2,9 @@ import edu.ull.cgunay.utils.plots.*;
 import edu.ull.cgunay.utils.*;
 import neuroidnet.ntr.*;
 
+// The neuroinet shell namespace
+nsh = object();
+
 print(	"NeuroidNetShell by Cengiz Gunay running on BeanShell\n"); 
 
 start() { super.source("start.bsh"); }
@@ -16,7 +19,7 @@ spike(n) { super.n = n; super.source("spike.bsh"); }
 wplot(n,s) { super.n = n; super.s = s; super.source("wplot.bsh"); }
 synActs(n) { super.n = n; super.source("synActs.bsh"); }
 gnuplot() { super.grapher = new GNUPlot(); }
-matlab() { super.grapher = new MatLab(); }
+matlab() { nsh.grapher = new MatLab(); }
 display(plot) { return grapher.display(plot, null); }
 obsyn() { super.source("obsyn.bsh"); }
 getNeuroid(s,i) { return network.getNeuroid(s,i); }

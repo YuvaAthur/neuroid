@@ -1,37 +1,18 @@
-//trace_2002-11-17_18:16:45
+//trace_2002-11-24_14:54:53
 // --------------------
-//trace_2002-11-17_14:30:47
+// fixed taum calc, and results seem promising. Ready to collect stats.
+// also displays a predicted/calculated value for the profiled variable.
+//trace_2002-11-17_19:11:22
 // --------------------
-//trace_2002-11-16_18:45:58
-// --------------------
-//trace_2002-11-16_18:08:17
-// --------------------
-//trace_2002-11-15_18:51:11
-// --------------------
-//trace_2002-11-15_18:22:35
-// --------------------
-//trace_2002-10-23_17:12:11
-// --------------------
-//trace_2002-10-22_13:22:13
-// --------------------
-//trace_2002-10-22_12:44:23
-// --------------------
-//trace_2002-10-21_14:17:31
-// --------------------
-//trace_2002-10-21_14:09:15
-// --------------------
-//trace_2002-10-21_14:00:26
-// --------------------
+// working on getting testTolerance, etc.
+// realized that taum calc maybe too large by taus, need to correct.
+// legend shows both solid lines, one should be dashed.
 //trace_2002-10-21_13:18:33
 // --------------------
 // Needs working on superposedPlot
 //trace_2002-10-21_12:30:28
 // --------------------
 // Labeling of graphs was improved. Working on superposedPlot
-//trace_2002-10-20_23:14:18
-// --------------------
-//trace_2002-10-20_22:44:27
-// --------------------
 //trace_2002-10-20_18:23:42
 // --------------------
 // Got meaningful results with automated evaluation of resulting
@@ -45,12 +26,6 @@
 // --------------------
 // Got some automated results for 3 objects in a 2-layer
 // network. Still lacks automatic evaluation.
-//trace_2002-10-20_15:07:08
-// --------------------
-//trace_2002-10-20_12:14:19
-// --------------------
-//trace_2002-10-20_12:11:30
-// --------------------
 // trace_2002-10-20_12:05:15
 // --------------------
 // Solution: synapse-activity-w/o-weight/mean-activity > 0.7 to be potentiated.

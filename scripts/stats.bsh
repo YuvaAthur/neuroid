@@ -44,22 +44,38 @@ void runOnce(int numberOfObjects, int numberOfMedialAreas,
     network.stop();		// Release threads
 }
 
-void combinedProfilePlot(String xlabel, String titleExtra) {
-    correctPlots = new LinkedList();
-    correctPlots.add(new ProfilePlot("Correct Max", null, maxCorrectProfile));
-    correctPlots.add(plot = new ProfilePlot("Correct Mean", null, meanCorrectProfile));
-    correctPlots.add(new ProfilePlot("Correct Min", null, minCorrectProfile));
-    correctPlots.add(new ProfilePlot("Spurious Max", null, maxSpuriousProfile));
-    correctPlots.add(new ProfilePlot("Spurious Mean", null, meanSpuriousProfile));
-    correctPlots.add(plot = new ProfilePlot("Spurious Min", null, minSpuriousProfile));
-    //plot.setXLabel("Membrane Time Constant \\tau_m");
-    plot.setXLabel(xlabel);
-    plot.setYLabel("Quality");
-    this.caller.h3 = grapher.superposedPlot("Performance of Concepts with " + numberOfMedialAreas + " Layers over " + maxTrials + " Trials" + titleExtra, correctPlots, null);
+java.util.List combinedProfilePlot(Profile correctProfile, Profile spuriousProfile,
+			 String idString) {
+    print("correct concept qualities = " + correctProfile);
+    print("spurious concept quality = " + spuriousProfile);
+
+    save(correctProfile, "profile-correct-" + idString + ".data");
+    save(spuriousProfile, "profile-spurious-" + idString + ".data");
+    
+    if (nsh.grapher == null || nsh.grapher == void)
+	matlab();
+
+    correctData = new Grapher.ErrorData(nsh.grapher, "Correct concepts", correctProfile);
+    spuriousData = new Grapher.ErrorData(nsh.grapher, "Spurious concepts", spuriousProfile);
+
+    Grapher.Data[] datas = {correctData, spuriousData};
+
+    return Arrays.asList(datas);
+}
+
+void datasPlot(java.util.List datas, String idString, String xLabel, String yLabel, String title) {
+
+    this.caller.p = new SuperposedDataPlot(null, datas);
+    this.caller.p.setTitle(title);
+    this.caller.p.setXLabel(xLabel);
+    this.caller.p.setYLabel(yLabel);
+
+    this.caller.h = nsh.grapher.display(this.caller.p, null);
+    this.caller.h.writeEPS("plot-" + idString + ".eps");
 
 }
 
-initProfile(list) {
+void initProfile(list) {
     task = new Task() {
 	    void job(Object variable) {
 		String[] allP = { "min", "max", "mean"};
