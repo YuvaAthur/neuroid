@@ -17,6 +17,10 @@ void runOnce(testObject) {
 	network.threshold = testObject.threshold;
     print("threshold = " + network.threshold + ", " + testObject.threshold);
 
+    if (testObject.nuBoost != void && testObject.nuBoost != null)
+	network.nuBoost = testObject.nuBoost;
+    print("nuBoost = " + network.nuBoost + ", " + testObject.nuBoost);
+
     network.run();
     peripheral = new neuroidnet.phasesegregator.StatisticalInputSequence(network);
     peripheral.numberOfObjects = testObject.numberOfObjects;

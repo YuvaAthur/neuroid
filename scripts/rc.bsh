@@ -38,11 +38,13 @@ printProfile(p) {
 source("preamble.bsh");
 source("stats.bsh");
 source("testCapacity.bsh");
+source("testBoost.bsh");
 source("testTolerance.bsh");
 source("testSegregation.bsh");
 
 // Initialize the tests
 testCapacity();
+testBoost();
 testTolerance();
 testSegregation();
 

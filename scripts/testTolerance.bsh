@@ -16,7 +16,7 @@ testTolerance() {
 
 	    // Calculated according to timeConstantM
 	    super.segregation = getSegregation(super);
-	    super.threshold = 2 * getMaxEPSP(super);
+	    super.threshold = 1.5 * getMaxEPSP(super);
 
 	    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
 	    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
@@ -63,7 +63,7 @@ testTolerance() {
     void batch() {
 	startTime = System.currentTimeMillis();
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 	    super.numberOfMedialAreas = 2 + i;
 	    super.maxTrials = 10;
 	    run();
