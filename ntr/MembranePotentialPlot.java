@@ -89,7 +89,7 @@ public class MembranePotentialPlot extends Plot {
 		     mul(geq(refParams[0], "0"),
 			 neg(exp(neg(div("t", refParams[1])))))) +
 	    def_func("body" + ++bodySuffix, params,
-		     add(new StringTask("0") {
+		     add(new StringTask("0") { // add synapse activity including weights
 			     public void job(Object o) {
 				 Plot plot = ((Plot)o);
 				 
@@ -98,10 +98,11 @@ public class MembranePotentialPlot extends Plot {
 			     }
 			 }.getString(plots),
 			 mul(profile(neuroidProfile.getModeProfile().getThresholdProfile(),
-				     range),
+				     range), // refractory effect multiplied by threshold profile
 			     new StringTask("0") {
 				 String refTCStr =
-				     "" + neuroidProfile.getNeuroid().getRefractoryTimeConstant();
+				     "" + ((SRMNeuroid)neuroidProfile.getNeuroid()).
+				     getRefractoryTimeConstant();
 				 public void job(Object o) {
 				     double time = ((Double)o).doubleValue();
 				     if (time >= range.getStart() && time <= range.getEnd()) {

@@ -8,8 +8,12 @@ import java.util.*;
 
 // $Id$
 /**
- * <code>Profile</code> of <code>Mode</code> objects.
+ * <code>Profile</code> of <code>Mode</code> objects.  
  *
+ * <P>TODO: Make a method that takes a string argument as the property
+ * name and uses reflection to lookup values of it in
+ * <code>Mode</code> (or especially its subclasses) instances to
+ * create a profile.
  *
  * <p>Created: Sat Apr 13 15:31:40 2002
  * <p>Modified: $Date$
@@ -48,21 +52,21 @@ public class ModeProfile extends Profile  {
 	    }.getProfile();
     }
 
-    public Profile getFitnessProfile() {
-	return new ProfileTask() {
-		double getVar(Neuroid.Mode mode) { return mode.getFitnessCounter(); }
-	    }.getProfile();
-    }    
-
     public Profile getThresholdProfile() {
 	return new ProfileTask() {
 		double getVar(Neuroid.Mode mode) { return mode.getThreshold(); }
 	    }.getProfile();
     }
 
+    public Profile getFitnessProfile() {
+	return new ProfileTask() {
+		double getVar(Neuroid.Mode mode) { return ((SRMNeuroid.Mode)mode).getFitnessCounter(); }
+	    }.getProfile();
+    }    
+
     public Profile getSuggestedThresholdProfile() {
 	return new ProfileTask() {
-		double getVar(Neuroid.Mode mode) { return mode.getSuggestedThreshold(); }
+		double getVar(Neuroid.Mode mode) { return ((SRMNeuroid.Mode)mode).getSuggestedThreshold(); }
 	    }.getProfile();
     }
 
@@ -70,13 +74,13 @@ public class ModeProfile extends Profile  {
 	return new ProfilePlot("State", null, getStateProfile());
     }
 
-    public Plot getFitnessPlot() {
-	return new ProfilePlot("Fitness", null, getFitnessProfile());
-    }    
-
     public Plot getThresholdPlot() {
 	return new ProfilePlot("Threshold", null, getThresholdProfile());
     }
+
+    public Plot getFitnessPlot() {
+	return new ProfilePlot("Fitness", null, getFitnessProfile());
+    }    
 
     public Plot getSuggestedThresholdPlot() {
 	return new ProfilePlot("SuggestedThreshold", null, getSuggestedThresholdProfile());
