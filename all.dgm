@@ -2,7 +2,7 @@ LIAR1
 #(#JVDiagramSpec 
 	#name: 'all' 
 	#creationDateSeconds: 3163729641 
-	#modificationDateSeconds: 3163738898 
+	#modificationDateSeconds: 3182397155 
 	#author: #(#AD2Identity 
 		#nickName: '' 
 		#name: '' 
@@ -52,37 +52,63 @@ LIAR1
 			#negativeBits: 0 
 			#individuals: #() ) ) 
 	#classes: #(
-		#(#'Utils.TaskWithReturn' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/TaskWithReturn.java' 866 449 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Base.Neuroid$SynapseActivityTask' 
-					#attribute: '#implements' 
-					#lineLayout: #(#(#Point 924 478 ) #(#Point 970 478 ) ) ) ) ) #(#'Simple.RemoteNetwork' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Simple/RemoteNetwork.java' 344 663 1 nil ) 
-		#(#'Base.ConceptArea' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/ConceptArea.java' 333 221 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Base.Network' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 349 264 ) #(#Point 438 516 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) 
-		#(#'Base.Synapse' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Synapse.java' 305 415 1 nil 
+		#(#'Remote.Area' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Remote/Area.java' 149 271 1 nil 
 			#layouts: #(
 				#(#JVLayoutSpec #'Remote.Synapse' 
-					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 313 458 ) #(#Point 313 520 ) ) ) 
+					#attribute: '«creates»' 
+					#lineLayout: #(#(#Point 162 314 ) #(#Point 292 520 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Base.Concept' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Concept.java' 432 240 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.ArtificialConcept' 
+					#attribute: '#implements' 
+					#lineLayout: #(#(#Point 469 271 ) #(#Point 511 272 ) ) ) 
 				#(#JVLayoutSpec #'Base.Neuroid' 
-					#attribute: 'destNeuroid' 
-					#lineLayout: #(#(#Point 343 417 ) #(#Point 566 168 ) ) 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 453 240 ) #(#Point 531 168 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Base.AxonArbor' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/AxonArbor.java' 888 574 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: 'destArea' 
+					#lineLayout: #(#(#Point 844 587 ) #(#Point 242 227 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Remote.Synapse' 
+					#attribute: 'destSynapseTemplate' 
+					#lineLayout: #(#(#Point 844 599 ) #(#Point 349 553 ) ) 
 					#symbol: #plain ) 
 				#(#JVLayoutSpec #'Base.Neuroid' 
 					#attribute: 'srcNeuroid' 
-					#lineLayout: #(#(#Point 324 415 ) #(#Point 546 168 ) ) 
+					#lineLayout: #(#(#Point 863 574 ) #(#Point 573 168 ) ) 
 					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Remote.Synapse' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 298 458 ) #(#Point 298 520 ) ) 
-					#symbol: #littleStrokedArrow ) 
 				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 881 574 ) #(#Point 591 168 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 881 574 ) #(#Point 273 210 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Remote.Synapse' 
 					#attribute: '«uses, creates»' 
-					#lineLayout: #(#(#Point 304 415 ) #(#Point 529 165 ) ) 
+					#lineLayout: #(#(#Point 844 584 ) #(#Point 349 538 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) #(#'Remote.AreaController' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Remote/AreaController.java' 1064 574 1 nil ) 
+		#(#'PhaseSegregator.Network' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/PhaseSegregator/Network.java' 571 649 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'PhaseSegregator.Peripheral' 
+					#attribute: 'peripheral' 
+					#lineLayout: #(#(#Point 545 692 ) #(#Point 255 941 ) ) 
+					#symbol: #plain ) ) ) 
+		#(#'Utils.Task' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/Task.java' 727 438 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Utils.TaskWithReturn' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 763 471 ) #(#Point 807 474 ) ) ) ) ) 
+		#(#'periphery.SensoryArea' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/periphery/SensoryArea.java' 242 351 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.Network' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 279 394 ) #(#Point 488 511 ) ) 
 					#symbol: #littleStrokedArrow ) ) ) 
 		#(#'Base.Peripheral' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Peripheral.java' 230 798 1 nil 
 			#layouts: #(
@@ -97,31 +123,206 @@ LIAR1
 					#lineLayout: #(#(#Point 230 841 ) #(#Point 231 941 ) ) ) 
 				#(#JVLayoutSpec #'Base.Network' 
 					#attribute: 'network' 
-					#lineLayout: #(#(#Point 255 798 ) #(#Point 430 559 ) ) 
+					#lineLayout: #(#(#Point 262 798 ) #(#Point 512 554 ) ) 
 					#symbol: #plain ) 
 				#(#JVLayoutSpec #'Base.Network' 
 					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 218 798 ) #(#Point 400 550 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) #(#'periphery.SensoryArea' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/periphery/SensoryArea.java' 246 292 1 nil ) #(#'Remote.AreaController' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Remote/AreaController.java' 996 574 1 nil ) #(#'PhaseSegregator.Network' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/PhaseSegregator/Network.java' 571 649 1 nil ) 
+					#lineLayout: #(#(#Point 219 798 ) #(#Point 488 536 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Remote.SynapseInt' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Remote/SynapseInt.java' 147 511 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Remote.Synapse' 
+					#attribute: '#implements' 
+					#lineLayout: #(#(#Point 191 549 ) #(#Point 261 549 ) ) ) 
+				#(#JVLayoutSpec #'Remote.Synapse' 
+					#attribute: '«creates»' 
+					#lineLayout: #(#(#Point 191 534 ) #(#Point 261 534 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Simple.MultiConceptPeripheral' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Simple/MultiConceptPeripheral.java' 348 881 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 345 881 ) #(#Point 239 227 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Remote.AreaInt' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 345 881 ) #(#Point 244 132 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Network' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 358 881 ) #(#Point 514 554 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) #(#'Simple.RemoteNetwork' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Simple/RemoteNetwork.java' 344 663 1 nil ) 
+		#(#'PhaseSegregator.Peripheral' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/PhaseSegregator/Peripheral.java' 231 941 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'periphery.SensoryArea' 
+					#attribute: 'sensoryAreas' 
+					#lineLayout: #(#(#Point 231 941 ) #(#Point 241 394 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: 'inputAreas' 
+					#lineLayout: #(#(#Point 239 941 ) #(#Point 242 227 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 224 941 ) #(#Point 227 227 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Network' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 245 941 ) #(#Point 509 554 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Remote.AreaInt' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Remote/AreaInt.java' 241 71 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.AxonArbor' 
+					#attribute: '«creates»' 
+					#lineLayout: #(#(#Point 280 132 ) #(#Point 860 574 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: '#implements' 
+					#lineLayout: #(#(#Point 246 132 ) #(#Point 244 184 ) ) ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 285 107 ) #(#Point 529 141 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Synapse' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 246 132 ) #(#Point 301 415 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
 		#(#'Base.Input' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Input.java' 433 110 1 nil 
 			#layouts: #(
 				#(#JVLayoutSpec #'Base.Neuroid' 
 					#attribute: '#implements' 
-					#lineLayout: #(#(#Point 471 142 ) #(#Point 529 144 ) ) ) ) ) #(#'Utils.ParallelTask' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/ParallelTask.java' 930 747 1 nil ) 
+					#lineLayout: #(#(#Point 470 142 ) #(#Point 529 144 ) ) ) ) ) 
 		#(#'periphery.SensoryConcept' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/periphery/SensoryConcept.java' 572 356 1 nil 
 			#layouts: #(
 				#(#JVLayoutSpec #'Base.Network' 
 					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 553 399 ) #(#Point 455 516 ) ) 
+					#lineLayout: #(#(#Point 565 399 ) #(#Point 531 511 ) ) 
 					#symbol: #littleStrokedArrow ) ) ) 
-		#(#'Remote.AreaInt' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Remote/AreaInt.java' 148 349 1 nil 
+		#(#'Base.Network' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Network.java' 525 511 1 nil 
 			#layouts: #(
-				#(#JVLayoutSpec #'Remote.Area' 
-					#attribute: '#implements' 
-					#lineLayout: #(#(#Point 149 349 ) #(#Point 152 255 ) ) ) 
+				#(#JVLayoutSpec #'PhaseSegregator.Network' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 531 554 ) #(#Point 564 649 ) ) ) 
+				#(#JVLayoutSpec #'Utils.Task' 
+					#attribute: 'stepTask' 
+					#lineLayout: #(#(#Point 562 520 ) #(#Point 691 479 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Peripheral' 
+					#attribute: 'peripheral' 
+					#lineLayout: #(#(#Point 534 554 ) #(#Point 271 811 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Peripheral' 
+					#attribute: '«uses, creates»' 
+					#lineLayout: #(#(#Point 491 554 ) #(#Point 241 798 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Simple.RemoteNetwork' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 498 554 ) #(#Point 369 663 ) ) ) 
+				#(#JVLayoutSpec #'Simple.Network' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 517 554 ) #(#Point 453 762 ) ) ) 
+				#(#JVLayoutSpec #'Base.ConceptArea' 
+					#attribute: 'conceptArea' 
+					#lineLayout: #(#(#Point 496 511 ) #(#Point 337 323 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Utils.ParallelTask' 
+					#attribute: 'pT' 
+					#lineLayout: #(#(#Point 562 554 ) #(#Point 894 747 ) ) 
+					#symbol: #plain ) 
 				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: '«creates»' 
+					#lineLayout: #(#(#Point 526 511 ) #(#Point 564 168 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: '«uses, creates»' 
+					#lineLayout: #(#(#Point 525 511 ) #(#Point 273 225 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Simple.Network' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Simple/Network.java' 447 762 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Simple.MultiConceptPeripheral' 
+					#attribute: 'peripheral' 
+					#lineLayout: #(#(#Point 429 805 ) #(#Point 365 881 ) ) 
+					#symbol: #plain ) ) ) #(#'Base.Neuroid$Mode' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Neuroid.java' 1087 644 1 nil ) #(#'Utils.TaskWithParam' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/TaskWithParam.java' 930 652 1 nil ) 
+		#(#'Base.Synapse' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Synapse.java' 305 415 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Remote.Synapse' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 313 458 ) #(#Point 313 520 ) ) ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: 'destNeuroid' 
+					#lineLayout: #(#(#Point 342 417 ) #(#Point 566 168 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: 'srcNeuroid' 
+					#lineLayout: #(#(#Point 324 415 ) #(#Point 546 168 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: '«uses, creates»' 
+					#lineLayout: #(#(#Point 304 415 ) #(#Point 529 165 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Remote.Synapse' 
 					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 192 354 ) #(#Point 529 167 ) ) 
+					#lineLayout: #(#(#Point 298 458 ) #(#Point 298 520 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Simple.Peripheral' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Simple/Peripheral.java' 152 875 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Remote.AreaInt' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 154 875 ) #(#Point 237 132 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Network' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 173 875 ) #(#Point 502 554 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 155 875 ) #(#Point 232 227 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Utils.TaskWithReturn' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/TaskWithReturn.java' 866 449 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.Neuroid$SynapseActivityTask' 
+					#attribute: '#implements' 
+					#lineLayout: #(#(#Point 925 478 ) #(#Point 969 478 ) ) ) 
+				#(#JVLayoutSpec #'Base.Network$TaskWPR' 
+					#attribute: '#implements' 
+					#lineLayout: #(#(#Point 865 449 ) #(#Point 857 254 ) ) ) ) ) 
+		#(#'Utils.Iteration' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/Iteration.java' 784 652 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Utils.Task' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 778 652 ) #(#Point 736 499 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Utils.TaskWithParam' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 819 675 ) #(#Point 873 678 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Base.Neuroid$SynapseActivityTask' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Neuroid.java' 1047 447 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.Synapse' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 969 473 ) #(#Point 342 438 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: 'toplevel' 
+					#lineLayout: #(#(#Point 1003 447 ) #(#Point 598 168 ) ) 
+					#symbol: #plain ) ) ) 
+		#(#'Utils.Objective' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/Objective.java' 907 820 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Utils.Task' 
+					#attribute: 'task' 
+					#lineLayout: #(#(#Point 889 820 ) #(#Point 734 499 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Utils.Task' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 905 820 ) #(#Point 750 499 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Utils.ParallelTask' 
+					#attribute: 'lock' 
+					#lineLayout: #(#(#Point 921 820 ) #(#Point 931 790 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Utils.ParallelTask' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 906 820 ) #(#Point 915 790 ) ) 
 					#symbol: #littleStrokedArrow ) ) ) 
 		#(#'Remote.Synapse' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Remote/Synapse.java' 305 520 1 nil 
 			#layouts: #(
@@ -133,247 +334,97 @@ LIAR1
 					#attribute: '«uses»' 
 					#lineLayout: #(#(#Point 319 520 ) #(#Point 551 168 ) ) 
 					#symbol: #littleStrokedArrow ) ) ) 
-		#(#'Remote.Area' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Remote/Area.java' 153 212 1 nil 
+		#(#'periphery.SensoryNeuroid' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/periphery/SensoryNeuroid.java' 736 126 1 nil 
 			#layouts: #(
-				#(#JVLayoutSpec #'Remote.Synapse' 
-					#attribute: '«creates»' 
-					#lineLayout: #(#(#Point 164 255 ) #(#Point 295 520 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) 
-		#(#'Simple.Network' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Simple/Network.java' 447 762 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Simple.MultiConceptPeripheral' 
-					#attribute: 'peripheral' 
-					#lineLayout: #(#(#Point 429 805 ) #(#Point 365 881 ) ) 
-					#symbol: #plain ) ) ) 
-		#(#'Base.AxonArbor' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/AxonArbor.java' 893 572 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Remote.Synapse' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 853 589 ) #(#Point 349 545 ) ) 
-					#symbol: #littleStrokedArrow ) 
-				#(#JVLayoutSpec #'Base.Neuroid' 
-					#attribute: 'neuroid' 
-					#lineLayout: #(#(#Point 878 572 ) #(#Point 582 168 ) ) 
-					#symbol: #plain ) ) ) 
-		#(#'Utils.Iteration' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/Iteration.java' 784 652 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Utils.TaskWithParam' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 821 675 ) #(#Point 874 679 ) ) 
-					#symbol: #littleStrokedArrow ) 
-				#(#JVLayoutSpec #'Utils.Task' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 778 652 ) #(#Point 736 499 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) 
-		#(#'Simple.MultiConceptPeripheral' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Simple/MultiConceptPeripheral.java' 348 881 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Remote.AreaInt' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 340 881 ) #(#Point 160 410 ) ) 
-					#symbol: #littleStrokedArrow ) 
-				#(#JVLayoutSpec #'Base.Concept' 
-					#attribute: 'a' 
-					#lineLayout: #(#(#Point 358 881 ) #(#Point 435 301 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Base.Concept' 
-					#attribute: 'b' 
-					#lineLayout: #(#(#Point 343 881 ) #(#Point 420 301 ) ) 
-					#symbol: #plain ) 
 				#(#JVLayoutSpec #'Base.Area' 
 					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 345 881 ) #(#Point 243 168 ) ) 
-					#symbol: #littleStrokedArrow ) 
-				#(#JVLayoutSpec #'Base.Network' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 353 881 ) #(#Point 432 559 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) 
-		#(#'Utils.Task' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/Task.java' 727 438 1 nil 
+					#lineLayout: #(#(#Point 677 154 ) #(#Point 273 201 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) #(#'Utils.ParallelTask' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/ParallelTask.java' 930 747 1 nil ) 
+		#(#'Base.Network$TaskWPR' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Network.java' 857 211 1 nil 
 			#layouts: #(
-				#(#JVLayoutSpec #'Utils.TaskWithReturn' 
-					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 764 471 ) #(#Point 809 474 ) ) ) ) ) 
-		#(#'Remote.SynapseInt' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Remote/SynapseInt.java' 151 498 1 nil 
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: 'area' 
+					#lineLayout: #(#(#Point 778 229 ) #(#Point 273 207 ) ) 
+					#symbol: #plain ) ) ) 
+		#(#'Base.Area' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Area.java' 236 184 1 nil 
 			#layouts: #(
-				#(#JVLayoutSpec #'Remote.Synapse' 
-					#attribute: '#implements' 
-					#lineLayout: #(#(#Point 195 539 ) #(#Point 261 545 ) ) ) 
-				#(#JVLayoutSpec #'Remote.Synapse' 
-					#attribute: '«creates»' 
-					#lineLayout: #(#(#Point 195 524 ) #(#Point 261 530 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) 
-		#(#'Base.Concept' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Concept.java' 432 240 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Base.ArtificialConcept' 
-					#attribute: '#implements' 
-					#lineLayout: #(#(#Point 470 271 ) #(#Point 512 272 ) ) ) 
-				#(#JVLayoutSpec #'Base.Neuroid' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 453 240 ) #(#Point 531 168 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) 
-		#(#'Base.Neuroid$SynapseActivityTask' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Neuroid.java' 1047 447 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Base.Synapse' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 970 473 ) #(#Point 343 438 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) 
-		#(#'Base.Area' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Area.java' 240 125 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Base.ConceptArea' 
-					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 261 168 ) #(#Point 313 221 ) ) ) 
-				#(#JVLayoutSpec #'periphery.SensoryArea' 
-					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 241 168 ) #(#Point 245 292 ) ) ) 
-				#(#JVLayoutSpec #'Remote.Synapse' 
-					#attribute: '«uses, creates»' 
-					#lineLayout: #(#(#Point 244 168 ) #(#Point 302 520 ) ) 
-					#symbol: #littleStrokedArrow ) 
 				#(#JVLayoutSpec #'Remote.Area' 
 					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 218 168 ) #(#Point 174 212 ) ) ) 
-				#(#JVLayoutSpec #'Base.Concept' 
-					#attribute: 'concept' 
-					#lineLayout: #(#(#Point 274 168 ) #(#Point 395 246 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Base.Neuroid' 
-					#attribute: 'inhibitoryInterNeuroid' 
-					#lineLayout: #(#(#Point 278 154 ) #(#Point 529 154 ) ) 
-					#symbol: #plain ) 
+					#lineLayout: #(#(#Point 213 227 ) #(#Point 169 271 ) ) ) 
+				#(#JVLayoutSpec #'Base.AxonArbor' 
+					#attribute: '«uses, creates»' 
+					#lineLayout: #(#(#Point 271 227 ) #(#Point 852 574 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'periphery.SensoryArea' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 236 227 ) #(#Point 240 351 ) ) ) 
+				#(#JVLayoutSpec #'Remote.AreaInt' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 229 184 ) #(#Point 231 132 ) ) 
+					#symbol: #littleStrokedArrow ) 
 				#(#JVLayoutSpec #'Base.Network' 
 					#attribute: 'network' 
-					#lineLayout: #(#(#Point 243 168 ) #(#Point 418 516 ) ) 
+					#lineLayout: #(#(#Point 234 227 ) #(#Point 488 513 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Network' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 254 227 ) #(#Point 505 511 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Remote.Synapse' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 240 227 ) #(#Point 301 520 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.ConceptArea' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 256 227 ) #(#Point 307 280 ) ) ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: 'inhibitoryInterNeuroid' 
+					#lineLayout: #(#(#Point 273 206 ) #(#Point 529 160 ) ) 
 					#symbol: #plain ) 
 				#(#JVLayoutSpec #'Base.Neuroid' 
 					#attribute: '«uses, creates»' 
-					#lineLayout: #(#(#Point 278 125 ) #(#Point 529 125 ) ) 
-					#symbol: #littleStrokedArrow ) 
-				#(#JVLayoutSpec #'Base.Network' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 259 168 ) #(#Point 435 516 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) #(#'Base.Neuroid$Mode' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Neuroid.java' 752 566 1 nil ) #(#'Base.ResynapseException' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/ResynapseException.java' 760 745 1 nil ) 
+					#lineLayout: #(#(#Point 231 184 ) #(#Point 529 131 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
 		#(#'Base.ArtificialConcept' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/ArtificialConcept.java' 571 252 1 nil 
 			#layouts: #(
+				#(#JVLayoutSpec #'periphery.SensoryConcept' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 571 295 ) #(#Point 572 356 ) ) ) 
+				#(#JVLayoutSpec #'Base.Network' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 567 295 ) #(#Point 528 511 ) ) 
+					#symbol: #littleStrokedArrow ) 
 				#(#JVLayoutSpec #'Base.Synapse' 
 					#attribute: 'excitatorySynapse' 
 					#lineLayout: #(#(#Point 535 295 ) #(#Point 339 415 ) ) 
 					#symbol: #plain ) 
-				#(#JVLayoutSpec #'periphery.SensoryConcept' 
-					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 571 295 ) #(#Point 572 356 ) ) ) 
 				#(#JVLayoutSpec #'Base.Neuroid' 
 					#attribute: '«uses»' 
 					#lineLayout: #(#(#Point 578 252 ) #(#Point 574 168 ) ) 
-					#symbol: #littleStrokedArrow ) 
-				#(#JVLayoutSpec #'Base.Network' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 560 295 ) #(#Point 448 516 ) ) 
 					#symbol: #littleStrokedArrow ) ) ) 
-		#(#'Base.Network' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Network.java' 437 516 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Simple.RemoteNetwork' 
-					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 423 559 ) #(#Point 357 663 ) ) ) 
-				#(#JVLayoutSpec #'Base.ConceptArea' 
-					#attribute: 'conceptArea' 
-					#lineLayout: #(#(#Point 422 516 ) #(#Point 333 264 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Base.Peripheral' 
-					#attribute: 'peripheral' 
-					#lineLayout: #(#(#Point 449 559 ) #(#Point 270 803 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Base.Peripheral' 
-					#attribute: '«uses, creates»' 
-					#lineLayout: #(#(#Point 412 559 ) #(#Point 236 798 ) ) 
-					#symbol: #littleStrokedArrow ) 
-				#(#JVLayoutSpec #'PhaseSegregator.Network' 
-					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 459 559 ) #(#Point 550 649 ) ) ) 
-				#(#JVLayoutSpec #'Utils.ParallelTask' 
-					#attribute: 'pT' 
-					#lineLayout: #(#(#Point 475 555 ) #(#Point 886 747 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Simple.Network' 
-					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 438 559 ) #(#Point 446 762 ) ) ) 
-				#(#JVLayoutSpec #'Utils.Task' 
-					#attribute: 'stepTask' 
-					#lineLayout: #(#(#Point 475 528 ) #(#Point 690 477 ) ) 
-					#symbol: #plain ) ) ) 
 		#(#'Base.Neuroid' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Neuroid.java' 566 125 1 nil 
 			#layouts: #(
 				#(#JVLayoutSpec #'Base.Concept' 
 					#attribute: 'concept' 
-					#lineLayout: #(#(#Point 553 168 ) #(#Point 470 246 ) ) 
+					#lineLayout: #(#(#Point 553 168 ) #(#Point 469 246 ) ) 
 					#symbol: #plain ) 
+				#(#JVLayoutSpec #'periphery.SensoryNeuroid' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 603 146 ) #(#Point 677 147 ) ) ) 
 				#(#JVLayoutSpec #'Base.Area' 
 					#attribute: 'area' 
-					#lineLayout: #(#(#Point 529 168 ) #(#Point 278 168 ) ) 
+					#lineLayout: #(#(#Point 570 168 ) #(#Point 273 221 ) ) 
 					#symbol: #plain ) 
 				#(#JVLayoutSpec #'Base.Area' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 529 139 ) #(#Point 278 139 ) ) 
+					#attribute: '«uses, creates»' 
+					#lineLayout: #(#(#Point 529 145 ) #(#Point 273 191 ) ) 
 					#symbol: #littleStrokedArrow ) 
 				#(#JVLayoutSpec #'Base.ArtificialConcept' 
 					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 559 168 ) #(#Point 563 252 ) ) ) 
-				#(#JVLayoutSpec #'periphery.SensoryNeuroid' 
-					#attribute: '#inheritance' 
-					#lineLayout: #(#(#Point 604 146 ) #(#Point 678 147 ) ) ) ) ) 
-		#(#'Simple.Peripheral' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Simple/Peripheral.java' 152 875 1 nil 
+					#lineLayout: #(#(#Point 559 168 ) #(#Point 563 252 ) ) ) ) ) #(#'Base.ResynapseException' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/ResynapseException.java' 760 745 1 nil ) 
+		#(#'Base.ConceptArea' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/ConceptArea.java' 329 280 1 nil 
 			#layouts: #(
-				#(#JVLayoutSpec #'Remote.AreaInt' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 152 875 ) #(#Point 148 410 ) ) 
-					#symbol: #littleStrokedArrow ) 
-				#(#JVLayoutSpec #'Base.Concept' 
-					#attribute: 'a' 
-					#lineLayout: #(#(#Point 170 875 ) #(#Point 426 301 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Base.Concept' 
-					#attribute: 'b' 
-					#lineLayout: #(#(#Point 153 875 ) #(#Point 410 301 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Base.Area' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 154 875 ) #(#Point 237 168 ) ) 
-					#symbol: #littleStrokedArrow ) 
 				#(#JVLayoutSpec #'Base.Network' 
 					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 169 875 ) #(#Point 420 559 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) #(#'periphery.SensoryNeuroid' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/periphery/SensoryNeuroid.java' 736 126 1 nil ) #(#'Base.Peripheral$Concept' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Base/Peripheral.java' 770 819 1 nil ) 
-		#(#'Utils.Objective' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/Objective.java' 907 820 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Utils.ParallelTask' 
-					#attribute: 'lock' 
-					#lineLayout: #(#(#Point 921 820 ) #(#Point 931 790 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Utils.ParallelTask' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 906 820 ) #(#Point 915 790 ) ) 
-					#symbol: #littleStrokedArrow ) 
-				#(#JVLayoutSpec #'Utils.Task' 
-					#attribute: 'task' 
-					#lineLayout: #(#(#Point 889 820 ) #(#Point 734 499 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Utils.Task' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 905 820 ) #(#Point 750 499 ) ) 
-					#symbol: #littleStrokedArrow ) ) ) #(#'Utils.TaskWithParam' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/Utils/TaskWithParam.java' 930 652 1 nil ) 
-		#(#'PhaseSegregator.Peripheral' '/home/swamp2/maida/cxg9789/cs555/Neuroidal/PhaseSegregator/Peripheral.java' 231 941 1 nil 
-			#layouts: #(
-				#(#JVLayoutSpec #'Base.Concept' 
-					#attribute: 'concepts' 
-					#lineLayout: #(#(#Point 237 941 ) #(#Point 423 301 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Base.Area' 
-					#attribute: 'inputAreas' 
-					#lineLayout: #(#(#Point 239 941 ) #(#Point 247 168 ) ) 
-					#symbol: #plain ) 
-				#(#JVLayoutSpec #'Base.Area' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 224 941 ) #(#Point 232 168 ) ) 
-					#symbol: #littleStrokedArrow ) 
-				#(#JVLayoutSpec #'Base.Network' 
-					#attribute: '«uses»' 
-					#lineLayout: #(#(#Point 241 941 ) #(#Point 426 559 ) ) 
+					#lineLayout: #(#(#Point 356 323 ) #(#Point 516 511 ) ) 
 					#symbol: #littleStrokedArrow ) ) ) ) )
