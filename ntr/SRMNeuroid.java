@@ -27,7 +27,7 @@ public class SRMNeuroid extends Neuroid  {
      * Learning parameter for the Winnow learning algorithm.
      * @see SRMNeuroid.SRMMode#updateWeights
      */
-    static final double correctTimesRequired = 3;
+    static final double correctTimesRequired = 2;
 
     /**
      * 
@@ -300,7 +300,7 @@ public class SRMNeuroid extends Neuroid  {
 			if (potential < suggestedThreshold) 
 			    isitnotfit();
 			else { 
-			    if (fitnessCounter < correctTimesRequired - 1) 
+			    if (fitnessCounter < correctTimesRequired) 
 				fitter();
 			    else 
 				fit();	// Goes into UM
@@ -344,11 +344,12 @@ public class SRMNeuroid extends Neuroid  {
 	}
 
 	void fitter() {
-	    fitnessCounter = fitnessCounter + 1;
+	    fitnessCounter = fitnessCounter + 1; // TODO: should go after suggestThreshold()
 	    suggestThreshold();
 	}
 
 	void fitless() {
+	    // TODO: Use Math.max() in the following
 	    fitnessCounter = fitnessCounter - 1; // Correct behavior
 	    // NO: If fitnessCounter<=1 go back to AM (no other change in mode)
 	    if (fitnessCounter <= 1) {
@@ -375,7 +376,8 @@ public class SRMNeuroid extends Neuroid  {
 	void fit() throws ConceptSaturatedException {
 	    makeConcept(); // Throws the exception
 	    state = UM; // Memorized!
-	    threshold = 0.9 * suggestedThreshold; // Set threshold lower than anticipated
+	    // Set threshold lower than anticipated (TODO: 2/3 and put it to when Th is calc'ed)
+	    threshold = 0.9 * suggestedThreshold; 
 	    System.out.println("Into UM mode!; " + this);
 	    setChanged();
 	}
