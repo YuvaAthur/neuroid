@@ -48,7 +48,7 @@ public class ArtificialConcept extends SRMNeuroid
 	super(network.getConceptArea()); 
 	this.name = name;
 
-	conceptSet = new HashSet();
+	conceptSet = new TreeSet();
 	conceptSet.add(this);
 
 	init2();
@@ -61,7 +61,7 @@ public class ArtificialConcept extends SRMNeuroid
      * @param network a <code>Network</code> value
      * @param conceptSet a <code>Vector</code> value
      */
-    public ArtificialConcept (Network network, HashSet conceptSet) {
+    public ArtificialConcept (Network network, Set conceptSet) {
 	super(network.getConceptArea());
 	this.conceptSet = conceptSet;
 
@@ -84,9 +84,6 @@ public class ArtificialConcept extends SRMNeuroid
     /**
      * Called by all contructors. Adds entry in hashtable of <code>conceptArea</code>.
      * @see ConceptArea
-     * @param network a <code>Network</code> value
-     * @param conceptSet a <code>Vector</code> value
-     * @param name a <code>String</code> value
      */
     void init2() {
 	if (conceptSet != null) 
@@ -188,6 +185,7 @@ public class ArtificialConcept extends SRMNeuroid
     /**
      * Required for implementing the Comparable interface for use in TreeMap implementation
      * in ConceptArea.
+     * TODO: Check names?
      * @see ConceptArea 
      * @param o an <code>Object</code> value
      * @return an <code>int</code> value
