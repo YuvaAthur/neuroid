@@ -5,6 +5,7 @@ import neuroidnet.remote.*;
 import edu.ull.cgunay.utils.*;
 
 import java.lang.*;
+import java.lang.reflect.*;
 import java.util.*;
 import java.text.*;
 import java.io.*;
@@ -236,7 +237,6 @@ public class Area implements Runnable, AreaInt, Serializable, Expressive {
        */
     public void setActivationThreshold(double  v) {this.activationThreshold = v;}
     
-
     /**
      * Constructor for plain Area (no inhibitory interneuron). Calls other constructor.
      * @see #Area(Network,String,int,int,double,double,boolean,double,double)
@@ -250,9 +250,9 @@ public class Area implements Runnable, AreaInt, Serializable, Expressive {
      */
     public Area(Network network, String name, int numberOfNeuroids,
 		int replication, double period, double threshold, double timeConstantM,
-		double refractoryTimeConstant) {
+		double refractoryTimeConstant, Class neuroidClass) {
 	this(network, name, numberOfNeuroids, replication, period, threshold, false,
-	     timeConstantM, refractoryTimeConstant);
+	     timeConstantM, refractoryTimeConstant, neuroidClass);
     }
 
     /**
@@ -275,7 +275,7 @@ public class Area implements Runnable, AreaInt, Serializable, Expressive {
      */
     public Area(Network network, String name, int numberOfNeuroids, int replication,
 		double period, double threshold, boolean inhibInter, double timeConstantM,
-		double refractoryTimeConstant) {
+		double refractoryTimeConstant, Class neuroidClass) {
 	this.numberOfNeuroids = numberOfNeuroids;
 	this.replication = replication;
 	this.deltaT = network.deltaT;
@@ -286,47 +286,65 @@ public class Area implements Runnable, AreaInt, Serializable, Expressive {
 	this.timeConstantM = timeConstantM;
 
 	// Neuroids in Area (one for the inhib. inter-neuron)
-	neuroids = new Vector(numberOfNeuroids+(inhibInter?1:0)); 
-
-	if (inhibInter) {
-	    // Add inhibitory inter-neuron: one neuron that takes input from all neuroids and
-	    // projects to all. Threshold is fixed to fire above ~replication inputs
-	    // weights and threshold should *not* be modified? refraction?
-	    inhibitoryInterNeuroid =
-		new Neuroid(this, replication*0.9, refractoryTimeConstant);
-	    fromInhibitorySynapseTemplate =
-		new Synapse(null, null, 0.5, deltaT, true, 0); // no delay
-	    toInhibitorySynapseTemplate =
-		new Synapse(null, null, 1, deltaT, false, 0); // no delay
-	    inhibitorySynapseVector =
-		new AxonArbor(fromInhibitorySynapseTemplate, inhibitoryInterNeuroid, this); 
-
-	    // Synapse to be used for connections from the inhibitoryInterNeuroid
-	    //Synapse fromInhibitorysynapsetemplate =
-		
-
-	    // The axon emanating from the inhibitoryInterNeuroid
-	    //inhibitorySynapseVector =
-	
-
-	    try {
-		// Create concept
-		(new SensoryConcept(network, "Area: " + name + " inhibitory neuroid")).
-		    attach(inhibitoryInterNeuroid);
-	    } catch (ConceptSaturatedException e) {
-		e.fillInStackTrace();
-		throw new RuntimeException("Fatal: Cannot attach to inhibitory inter neuroid concept.");
-	    } // end of try-catch
-    
-	} // end of if (inhibInter)
+	neuroids = new Vector(numberOfNeuroids+(inhibInter?1:0));
 
 	// The activation threshold that makes neuroids go from AM to AM1
 	// @see Neuroid.step
 	activationThreshold = threshold;
 
-	// Instantiate Neuroids
-	for (int i = 0; i < numberOfNeuroids; i++)  // Enumerate neuroids
-	    new Neuroid(this, activationThreshold, refractoryTimeConstant);
+	Constructor cons;
+	if (numberOfNeuroids > 0 || inhibInter) {
+	    try {
+		Class[] consParams = { Area.class, double.class, double.class };
+		cons = neuroidClass.getConstructor(consParams);
+	    } catch (NoSuchMethodException e) {
+		throw new Error("Fatal: Constructor not found in the given Neuroid class " +
+				neuroidClass);
+	    } 
+
+
+	    if (inhibInter) {
+		// Add inhibitory inter-neuron: one neuron that takes input from all neuroids and
+		// projects to all. Threshold is fixed to fire above ~replication inputs
+		// weights and threshold should *not* be modified? refraction?
+		Object[] params = {this, new Double(replication*0.9),
+				   new Double(refractoryTimeConstant)};
+		try {
+		    inhibitoryInterNeuroid = (Neuroid)cons.newInstance(params);
+		} catch (Exception e) {
+		    throw new Error("Fatal: Cannot instantiate Neuroid " + neuroidClass);
+		} // end of catch
+		//new PeakerNeuroid(this, replication*0.9, refractoryTimeConstant);
+		fromInhibitorySynapseTemplate =
+		    new Synapse(null, null, 0.5, deltaT, true, 0); // no delay
+		toInhibitorySynapseTemplate =
+		    new Synapse(null, null, 1, deltaT, false, 0); // no delay
+		inhibitorySynapseVector =
+		    new AxonArbor(fromInhibitorySynapseTemplate, inhibitoryInterNeuroid, this); 
+
+		try {
+		    // Create concept
+		    (new SensoryConcept(network, "Area: " + name + " inhibitory neuroid")).
+			attach(inhibitoryInterNeuroid);
+		} catch (ConceptSaturatedException e) {
+		    e.fillInStackTrace();
+		    throw new RuntimeException("Fatal: Cannot attach to inhibitory inter neuroid concept.");
+		} // end of try-catch
+    
+	    } // end of if (inhibInter)
+
+	    // Instantiate Neuroids
+	    try {
+		Object[] params = {this, new Double(activationThreshold),
+				   new Double(refractoryTimeConstant)};
+
+		for (int i = 0; i < numberOfNeuroids; i++)  // Enumerate neuroids
+		    cons.newInstance(params);
+	    } catch (Exception e) {
+		throw new Error("Fatal: Cannot instantiate Neuroid " + neuroidClass);
+	    } // end of catch
+
+	} // end of if (numberOfNeuroids > 0 || inhibInter)
 
 	// Create a thread to do the step()s
 	thread = new Thread(this);
