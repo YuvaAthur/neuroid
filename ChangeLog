@@ -1,3 +1,34 @@
+2002-10-29  Cengiz Gunay  <cengiz@ull.edu>
+
+	* ntr/Peripheral.java (Repository): Is now textually Expressive.
+
+	* phasesegregator (Repository): Added StaticticalInputSequence for
+	collecting statistical info by presenting randomly selected
+	objects to the network.
+
+	* scripts (Repository): Added new bsh scripts for collecting
+	statistical info. Still needs better plots, i.e. an errorplot
+	class.
+
+2002-10-12  Cengiz Gunay  <cengiz@ull.edu>
+
+	* ntr/Shell.java (Message): Added new starting point to bootstrap
+	BeanShell with appropriate environment to call simulation
+	commands.
+
+2002-10-10  Cengiz Gunay  <cengiz@ull.edu>
+
+	* phasesegregator (Repository): Added simpler test-beds (with two
+	level intermediate areas) for investigation of phase segregation
+	failure. Apparently caused by appearance of spurious concept early
+	in the hierarchy.
+
+	* ntr/ModeProfile.java (Repository): Updated profiles to give
+	sufficient information.
+
+	* ntr/SRMNeuroid.java (Repository): Fixed important bug which
+	stopped weights from changing in learning.
+
 2002-05-18  Cengiz Gunay  <cengiz@ull.edu>
 
 	* ntr/SRMNeuroid.java (Repository): Spin-off from former neuroid that keeps 

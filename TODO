@@ -1,69 +1,60 @@
 - general:
-	- make backup directories for observations. Include PS files of plots, class files 
+	- adopt ant
+	- create a versioning scheme to be put in manifest files of jars
+	- make all bsh commands as functions in files that are sourced automatically (like bsh commands)
+	- waiting to put bsh files in a uniform place, in jar files?
+	+ make backup directories for observations. Include PS files of plots, class files 
 		for bot neuroidnet and plots, and saved binary object files. 
 	+ make an interface that step()s [utils.Simulation]
-- naming:
-	+ create a NeuroidName class that holds name, id for neuroids?
-		+ Add this to the watchList in Network [no, I put it in beanshell watchedSet]
-	+ make watchList a Set.
-	X in bsh: before any loading, extract the watchSet of previous net and add it to the loaded one [not really, watchedSet should be kept in bsh, i.e. the SimulationController]
-	+ add an id to Synapse according to place in Neuroid.synapses Vector
-	+ change all names! neuroid should just mention its number and area name !
-		+ toString: name & id
-		+ change getStatus to getProperties
-		+ getStatus returns transient state
-		+ put all of these in an interface and explain
 - ntr:
 	- make Area abstract and derive special subclasses
-	+ make Area take a neuroid template, so that it can instantiate different neuroids
-		[ it's taking Class param to instantiate neuroids ]
+	- calculate new probabilities and change threshold? (in network.build?)
+		- alternatively: make adaptive threshold? (see the new electrical circuit model)
+		+ made continuous state machine that drives the discrete state machine
 	+ make a SRMNeuroid and move everything out of Neuroid
 		- then make the new AdaptiveThresholdNeuroid 
 			[ made PeakerNeuroid as intermediate step]
-		- Change modeprofile to lookup properties from Mode instances using
-			reflection instead of explicit functions for each property.
+		X Change modeprofile to lookup properties from Mode instances using
+			reflection instead of explicit functions for each property. [stupid]
 	+ put step inside Neuroid.Mode?
 	X move Mode to its own class and make each state a new class. 
 		+ keep Mode under neuroid, but extend neuroid and extend Mode inside
 		- make new algorithms stand in their own packages, i.e. UMT or SRM?
 	X remove debug switch from neuroid [I need it]
-	- calculate new probabilities and change threshold? (in network.build?)
-		- alternatively: make adaptive threshold? (see the new electrical circuit model)
-		+ made continuous state machine that drives the discrete state machine
+	+ make Area take a neuroid template, so that it can instantiate different neuroids
+		[ it's taking Class param to instantiate neuroids ]
 - packages: 
 	- move plot related classes in neuroidnet.ntr to neuroidnet.ntr.plots
 	+ move neuroinet independent stuff in neuroinet.ntr.plots.* to utils.plots.* out of neuroidnet!
 	+ document and put them on home page for open use (also iterators move'em out)
 	+ write package.html, improve documentation to include examples
-- periphery
-	X put concept-area into peripheral object? does it need its step() called? [yes]
-	+ make a single sensory area 
-	+ move Concept related files to periphery
-		+ move ConceptArea to periphery package
-		+ ArtificialConcept?
-		+ ConceptSaturatedException
-+ throw FoundException in Utils.Task to optimize iterations for search 
-X extend the Vectors that holds neuroids, etc. so that they show up in organizational descriptions
-	- correct way would've been to use templatized types of vectors which doesn't exist in Java
-		they're working on it, see bug on "parameterized types"
 - graphs
+	- make sure plots/profiles are savable
+	- add toString to ProfilableDouble
+	- set styles for b/w printing
+	- make an ErrorBarPlot which takes a min/max/mean profile or vector.
+	- remove temporary files after being done
+	- add SuperposedPlot
+		- do for gnuplot, also improve to return a Plot
+		- make labels as legend only for superposed graphs!
+		+ done for matlab
+	- add multiplots
+		- make spike plot more like a plot to use the generalized calls from Grapher
+		+ add canned multiplots, e.g. for neuroid: pot, conf, threshold, etc.
+		+ separate frames, or superimposed with different legends
 	+ add the notion of window number to grapher,
 		+ or better associate each plot with its own window (created PlotHandle)
-	- add SuperimposedPlot
-	- add multiplots
-		- separate frames, or superimposed with different legends
-		- make spike plot more like a plot to use the generalized calls from Grapher
-		- add canned multiplots, e.g. for neuroid: pot, conf, threshold, etc.
 	+ GNUPlot
 		+ add setOutputFile() method to grapher to send output as (E)PS [writeEPS()]
 	+ put title on matlab graph
 		- there's a bug in associating the correct legend [wait for SuperimposedPlot]
 	+ modify to produce gnuplot graphs optionally. 
 - make debugger-style simulator
-	- make a beanshell script to bootstrap bsh.Console with a `neuroidal' environment
-		+ made a ~/.bshrc that sets an Interpreter env which contains funcs and vars
 	- enable placement of breakpoints
 	- enable setting recursive watches to neuroids at deep layers of the net
+	+ make a beanshell script to bootstrap bsh.Console with a `neuroidal' environment
+		+ use ~/.bshrc that sets env which contains funcs and vars [obsolete]
+		+ made a "rc.bsh" that is source'd from ntr.Shell when the interpreter is invoked
  	+ allow watch switches on all objects (corresponding to watching)
 		+ every entity should record its activity in a separate object (Profiles)
 			+ neuroid saves its fire time, mode: threshold, sugT, confidence
@@ -75,6 +66,28 @@ X extend the Vectors that holds neuroids, etc. so that they show up in organizat
 	+ don't save all spikes, just the ones being debugged
 	+ allow re-runs (by saving network state in binary with serialization
 		(make everything serializable))
+- naming:
+	+ create a NeuroidName class that holds name, id for neuroids?
+		+ Add this to the watchList in Network [no, I put it in beanshell watchedSet]
+	+ make watchList a Set.
+	X in bsh: before any loading, extract the watchSet of previous net and add it to the loaded one [not really, watchedSet should be kept in bsh, i.e. the SimulationController]
+	+ add an id to Synapse according to place in Neuroid.synapses Vector
+	+ change all names! neuroid should just mention its number and area name !
+		+ toString: name & id
+		+ change getStatus to getProperties
+		+ getStatus returns transient state
+		+ put all of these in an interface and explain
+- periphery
+	X put concept-area into peripheral object? does it need its step() called? [yes]
+	+ make a single sensory area 
+	+ move Concept related files to periphery
+		+ move ConceptArea to periphery package
+		+ ArtificialConcept?
+		+ ConceptSaturatedException
++ throw FoundException in Utils.Task to optimize iterations for search 
+X extend the Vectors that holds neuroids, etc. so that they show up in organizational descriptions
+	- correct way would've been to use templatized types of vectors which doesn't exist in Java
+		they're working on it, see bug on "parameterized types"
 -errors:
 	+ rigid threshold causing problems, need adaptive max taking threshold
 	+ spurious concepts, due to infinite weights after ConceptSaturatedException
@@ -83,7 +96,7 @@ X extend the Vectors that holds neuroids, etc. so that they show up in organizat
 	+ sumOfCurrentWeights overflow? [no]
 - area name as a concept? or area representing neuroids?
 - really use SRM or forward-euler is sufficient?
-	- can we mix SRM and diff eqs? I need adaptive threshold
+	- can we mix SRM and diff eqs? I need adaptive threshold. Use exp-euler?
 - fix ConcurrentModificationException by waiting for all threads to finish at the end.
 - change naming of sensoryneuroid to 'percept'
 - implement tzeng's network: allocate all assemblies in input area and create all UMs then prune connections and count 'em!
