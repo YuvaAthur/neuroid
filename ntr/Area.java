@@ -4,6 +4,7 @@ import Remote.*;
 import java.lang.*;
 import java.util.*;
 import java.text.*;
+import java.io.*;
 import Utils.*;
 
 /**
@@ -14,12 +15,24 @@ import Utils.*;
  * @since 1.0
  */
 
-public class Area implements Runnable, Remote.AreaInt {
+public class Area implements Runnable, Remote.AreaInt, Serializable {
 
     /**
      * Name of the <code>Area</code> for identification purposes.
      */
     String name;
+
+    /**
+       * Get the value of name.
+       * @return value of name.
+       */
+    public String getName() {return name;}
+    
+    /**
+       * Set the value of name.
+       * @param v  Value to assign to name.
+       */
+    public void setName(String  v) {this.name = v;}
 
     /**
      * Parent network.
@@ -123,9 +136,21 @@ public class Area implements Runnable, Remote.AreaInt {
     volatile boolean stepRequested = false;
 
     /**
-     * Thread to do the actual calculations.
+     * Thread to do the actual calculations. Is not part of the persistent object.
      */
-    Thread thread;
+    transient Thread thread;
+
+    /**
+       * Get the value of thread.
+       * @return value of thread.
+       */
+    public Thread getThread() {return thread;}
+    
+    /**
+       * Set the value of thread.
+       * @param v  Value to assign to thread.
+       */
+    public void setThread(Thread  v) {this.thread = v;}
 
     /**
      * Count of concept allocations made (via call to createArbitrarySynapses)
@@ -159,7 +184,7 @@ public class Area implements Runnable, Remote.AreaInt {
 
     /**
      * The threshold to change a Neuroid from AM to AM1 mode.
-     * @see Neuroid.step
+     * @see Neuroid#step
      */
     double activationThreshold;
     
@@ -178,7 +203,7 @@ public class Area implements Runnable, Remote.AreaInt {
 
     /**
      * Constructor for plain Area (no inhibitory interneuron). Calls <code>init()</code>.
-     * @see #init()
+     * @see #init
      * @param network a <code>Network</code> value
      * @param name a <code>String</code> value
      * @param numberOfNeuroids an <code>int</code> value
@@ -196,7 +221,7 @@ public class Area implements Runnable, Remote.AreaInt {
 
     /**
      * Constructor with option to add inhibitory inter-neuron. Calls <code>init()</code>.
-     * @see #init()
+     * @see #init
      *
      * @param network a <code>Network</code> value
      * @param name a <code>String</code> value
@@ -252,9 +277,15 @@ public class Area implements Runnable, Remote.AreaInt {
 	    // projects to all. Threshold is fixed to fire above 2*replication inputs
 	    // weights and threshold should *not* be modified? refraction?
 	    inhibitoryInterNeuroid = new Neuroid(this, /*numberOfNeuroids,*/ /*2**/replication*0.9, refractoryTimeConstant);
-	    // Create concept
-	    (new periphery.SensoryConcept(network, "Area: " + name + " inhibitory neuroid")).
-		attach(inhibitoryInterNeuroid);
+    try {
+	// Create concept
+	(new periphery.SensoryConcept(network, "Area: " + name + " inhibitory neuroid")).
+	    attach(inhibitoryInterNeuroid);
+    } catch (ConceptSaturatedException e) {
+	e.fillInStackTrace();
+	throw new RuntimeException("Fatal: Cannot attach to inhibitory inter neuroid concept.");
+    } // end of try-catch
+    
 	} // end of if (inhibInter)
 
 	// The activation threshold that makes neuroids go from AM to AM1
@@ -272,12 +303,15 @@ public class Area implements Runnable, Remote.AreaInt {
     }
 
     /**
-     * Adds a neuroid to the <code>Area</code>.
+     * Adds a neuroid to the <code>Area</code>. Determines a sequence number according to
+     * the <code>neuroid</code>'s order in the <code>Vector neuroids</code>.
      *
      * @param neuroid a <code>Neuroid</code> value
+     * @see Neuroid#id
      */
     public void addNeuroid(Neuroid neuroid) {
 	neuroids.add(neuroid);
+	neuroid.id = neuroids.indexOf(neuroid);
 
 	if (inhibInter) {
 	    Vector inhibitorySynapseVector = new Vector();	
@@ -443,7 +477,7 @@ public class Area implements Runnable, Remote.AreaInt {
      * <p>TODO: If a allocate-on-demand approach is used for neuroids,
      * in case of finding a non-existing neuroid should result in its creation.
      * @see #createArbitrarySynapses
-     * @see #destArea
+     * @see AxonArbor#destArea
      * @return a <code>Neuroid</code> value
      */
     public Neuroid getRandomNeuroid() {
@@ -585,6 +619,22 @@ public class Area implements Runnable, Remote.AreaInt {
 	    } else Thread.yield();*/
 	    
 	} // end of while (true)
+    }
+
+    /**
+     * Method called when a serialized object is loaded.
+     * Only customization done is to create a new thread
+     * to reside in the <code>transient thread</code> variable.
+     *
+     * @param in a <code>java.io.ObjectInputStream</code> value
+     * @exception IOException if an error occurs
+     * @exception ClassNotFoundException if an error occurs
+     */
+    private void readObject(java.io.ObjectInputStream in)
+	throws IOException, ClassNotFoundException {
+	in.defaultReadObject();	// Real method that does reading
+	thread = new Thread(this); // Set the transient variable
+	thread.start();
     }
 
 }
