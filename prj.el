@@ -41,6 +41,8 @@
 
 
 
+
+
 (jde-set-project-name "default")
 (jde-set-variables 
  '(jde-gen-to-string-method-template (quote ("'&" "\"public String toString() {\" 'n>" "\"return super.toString();\" 'n>" "\"}\" 'n>")))
@@ -155,7 +157,7 @@ RemoteException {\"" "'n>\"}\"'n 'n" "'> \"public void unsetEntityContext() thro
  '(jde-global-classpath (quote ("/home/swamp2/maida/cxg9789/cs555/javarun")))
  '(jde-bug-vm-includes-jpda-p nil)
  '(jde-javadoc-describe-class-template (quote ("* Describe class " (jde-javadoc-code name) " here.")))
- '(jde-run-application-class "router.SmallNetwork")
+ '(jde-run-application-class "PhaseSegregator.Network")
  '(jde-gen-cflow-else (quote ("(if (jde-parse-comment-or-quoted-p)" "'(l \"else\")" "'(l > \"else \"" "\"{\" > n> r n" "\"} // end of else\" > n>)" ")")))
  '(jde-compile-option-target (quote ("1.2")))
  '(jde-imenu-enable t)
