@@ -1,19 +1,18 @@
-package neuroidnet.Remote;
+package neuroidnet.remote;
 
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
 
-//import java.rmi.*;
 import java.rmi.server.*;
 
+// $Id$
 /**
- * Remote.Synapse.java
+ * An augmented remote synapse definition.
  *
- *
- * Created: Fri Dec  1 02:34:03 2000
+ * <p>Created: Fri Dec  1 02:34:03 2000
  *
  * @author Cengiz Gunay
- * @version
+ * @version $Revision$
+ * @deprecated See <code>neuroidnet.ntr.Synapse</code>
  */
 
 public class Synapse extends neuroidnet.ntr.Synapse
@@ -43,4 +42,4 @@ public class Synapse extends neuroidnet.ntr.Synapse
 	localSynapse.receiveSpike();
     }*/
 
-}// Remote.Synapse
+}// remote.Synapse

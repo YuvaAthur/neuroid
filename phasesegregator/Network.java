@@ -1,20 +1,22 @@
-package neuroidnet.PhaseSegregator;
+package neuroidnet.phasesegregator;
 import neuroidnet.ntr.*;
 import neuroidnet.periphery.*;
-//import Remote.*;
+//import remote.*;
+
+// $Id$
 /**
  * Builds a network to test theoretical phase segregation properties.
  * <p>TODO: Instead of n input areas, put all input concepts in the same area,
  * similar to that of V1-V3, V5 example.
  *
- * Created: Thu Nov 23 03:09:39 2000
+ * <p>Created: Thu Nov 23 03:09:39 2000
  *
  * @author Cengiz Gunay
  * @version $Revision$ for this file
  */
 
-public class  Network extends neuroidnet.ntr.Network {
-    Peripheral peripheral; //note that it's a PhaseSegregator.Peripheral
+public class Network extends neuroidnet.ntr.Network {
+    Peripheral peripheral; //note that it's a phasesegregator.Peripheral
 
     public Network (boolean isConcurrent) { // 
 	super(0.01, isConcurrent);		// sets deltaT
@@ -120,4 +122,4 @@ public class  Network extends neuroidnet.ntr.Network {
     } // end of main ()
 
     
-}// SimpleNetwork
+}// Network

@@ -1,6 +1,6 @@
-package neuroidnet.Simple;
+package neuroidnet.simple;
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
+import neuroidnet.remote.*;
 
 /**
  * OBSOLETE: first trial, is not up-to-date
@@ -24,8 +24,8 @@ public class Peripheral extends ntr.Peripheral {
 	b = new Peripheral.Concept(inputArea1);
     }
 
-    public Peripheral (Network network, Remote.AreaInt inputArea1, Remote.AreaInt inputArea2,
-			     Remote.AreaInt circuitArea) {
+    public Peripheral (Network network, AreaInt inputArea1, AreaInt inputArea2,
+		       AreaInt circuitArea) {
 	super(network);
 	
 	a = new Peripheral.Concept(inputArea1);

@@ -1,17 +1,19 @@
-package neuroidnet.Remote;
+package neuroidnet.remote;
+
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
-//import java.rmi.*;
+
 import java.rmi.server.*;
 
+// $Id$
 /**
- * Remote.Area.java
+ * 
  *
  *
  * Created: Fri Dec  1 02:54:41 2000
  *
  * @author Cengiz Gunay
  * @version
+ * @deprecated See <code>neuroidnet.ntr.Area</code>.
  */
 
 public class Area extends neuroidnet.ntr.Area {
@@ -29,16 +31,16 @@ public class Area extends neuroidnet.ntr.Area {
      */
     public Synapse addRandomSynapse() {
 	try {
-	    Synapse s = new Remote.Synapse(getRandomNeuroid(), 1, deltaT, false);
+	    Synapse s = new Synapse(getRandomNeuroid(), 1, deltaT, false);
 	    //System.out.println("***synapse: " + s);
 	    return s;
 	} catch (java.rmi.RemoteException e) {
 	    e.printStackTrace();
-	    throw new RuntimeException("Cannot instantiate Remote.Synapse!");
+	    throw new RuntimeException("Cannot instantiate remote Synapse!");
 	}
     }
 
-    /*public void connectToArea(Remote.Area destArea) throws java.rmi.RemoteException {
+    /*public void connectToArea(remote.Area destArea) throws java.rmi.RemoteException {
 	
     } */   
-}// Remote.Area
+}// remote.Area

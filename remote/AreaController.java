@@ -1,15 +1,19 @@
-package neuroidnet.Remote;
+package neuroidnet.remote;
+
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
-//import java.rmi.*;
+
+// $Id$
 /**
- * Remote.AreaController.java
- * Create a Remote.Area and register it to the Registry.
- * @see Remote.Area
- * Created: Fri Dec  1 02:56:09 2000
+ * Create an <code>Area</code> and register it to the RMI registry.
+ * <p>Created: Fri Dec  1 02:56:09 2000
+ * TODO:
+ * <ul>
+ *   <li> Connect to a server and wait for a request to create an Area.
+ * </ul>
  *
+ * @see neuroidnet.ntr.Area
  * @author Cengiz Gunay
- * @version
+ * @version $Revision$
  */
 
 public class AreaController  {
@@ -26,7 +30,7 @@ public class AreaController  {
      */
     public static void main (String[] args) {
 	if (args.length < 2) {
-	    System.out.println("Usage: Remote.AreaController name threshold");
+	    System.out.println("Usage: remote.AreaController name threshold");
 	    return;
 	}
 	String name = args[0];
@@ -40,16 +44,16 @@ public class AreaController  {
 	
 	System.setSecurityManager(new RMISecurityManager());
 	try {
-	    Remote.Area area =
-		new Remote.Area(name, numberOfNeuroids, replication, deltaT, period, threshold);
+	    neuroidnet.ntr.Area area =
+		new neuroidnet.ntr.Area(name, numberOfNeuroids, replication, deltaT,
+					period, threshold);
 	    Naming.bind(name, area);
 	    System.out.println("Bound to rmiregistry");
 	    
 	} catch (Exception e) {
 	    System.out.println("Error: " + e);
 	}
-
 	
     } // end of main ()
     
-}// Remote.AreaController
+}// remote.AreaController

@@ -1,9 +1,9 @@
-package neuroidnet.Simple;
+package neuroidnet.simple;
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
+import neuroidnet.remote.*;
 import java.util.*;
 //import java.rmi.*;
-import neuroidnet.Utils.*;
+import neuroidnet.utils.*;
 
 /**
  * Two areas: input and circuit.
@@ -28,8 +28,8 @@ public class MultiConceptPeripheral extends ntr.Peripheral {
 	allocateConcepts();
     }
 
-    public MultiConceptPeripheral (Network network, Remote.AreaInt inputArea, 
-				   Remote.AreaInt circuitArea) {
+    public MultiConceptPeripheral (Network network, AreaInt inputArea, 
+				   AreaInt circuitArea) {
 	super(network);
 	this.inputArea = inputArea;
 	this.circuitArea = circuitArea;
@@ -42,8 +42,8 @@ public class MultiConceptPeripheral extends ntr.Peripheral {
 	    a = new Peripheral.Concept((ntr.Area)inputArea);
 	    b = new Peripheral.Concept((ntr.Area)inputArea);
 	} else {
-	    a = new Peripheral.Concept((Remote.AreaInt)inputArea);
-	    b = new Peripheral.Concept((Remote.AreaInt)inputArea);
+	    a = new Peripheral.Concept((AreaInt)inputArea);
+	    b = new Peripheral.Concept((AreaInt)inputArea);
 	} // end of else
 
 	int inputReplication, destReplication, destNumberOfNeuroids;
@@ -54,11 +54,11 @@ public class MultiConceptPeripheral extends ntr.Peripheral {
 	    destNumberOfNeuroids = ((ntr.Area)circuitArea).getNumberOfNeuroids();
 	} else {
 	    try {
-		inputReplication = ((Remote.AreaInt)inputArea).getReplication();
-		destReplication = ((Remote.AreaInt)circuitArea).getReplication();
-		destNumberOfNeuroids = ((Remote.AreaInt)circuitArea).getNumberOfNeuroids(); 
+		inputReplication = ((AreaInt)inputArea).getReplication();
+		destReplication = ((AreaInt)circuitArea).getReplication();
+		destNumberOfNeuroids = ((AreaInt)circuitArea).getNumberOfNeuroids(); 
 	    } catch (java.rmi.RemoteException e) {
-		System.out.println("Cannot call Remote.Area methods.");
+		System.out.println("Cannot call remote.Area methods.");
 		e.printStackTrace();
 		return;
 	    }
@@ -78,7 +78,7 @@ public class MultiConceptPeripheral extends ntr.Peripheral {
 	    if (inputArea instanceof ntr.Area) {
 		noiseConcepts.add(new Peripheral.Concept((ntr.Area)inputArea));
 	    } else {
-		noiseConcepts.add(new Peripheral.Concept((Remote.AreaInt)inputArea));
+		noiseConcepts.add(new Peripheral.Concept((AreaInt)inputArea));
 	    } // end of else
 	    
 	} // end of for (int i = 0; i < remainingConcepts; i++)

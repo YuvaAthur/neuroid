@@ -1,7 +1,7 @@
 package neuroidnet.router;
 import neuroidnet.ntr.*;
 import neuroidnet.periphery.*;
-//import neuroidnet.Remote.*;
+//import neuroidnet.remote.*;
 /**
  * Builds a network to test hashing quality for a hypothetical routing task.
  * 32 possible addresses should be associated with equal number of output nodes.

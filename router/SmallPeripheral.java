@@ -1,10 +1,10 @@
 package neuroidnet.router;
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
+import neuroidnet.remote.*;
 import neuroidnet.periphery.*;
 import java.util.*;
 //import java.rmi.*;
-import neuroidnet.Utils.*;
+import neuroidnet.utils.*;
 
 /**
  * 3 <code>SensoryArea</code>s and 3 medial <code>Area</code>s.

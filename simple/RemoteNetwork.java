@@ -1,6 +1,6 @@
-package neuroidnet.Simple;
+package neuroidnet.simple;
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
+import neuroidnet.remote.*;
 //import java.rmi.*;
 import java.net.*;
 
@@ -21,11 +21,11 @@ public class RemoteNetwork extends Network {
     }
 
     public void build() {
-	Remote.AreaInt inputArea1, inputArea2, circuitArea;
+	AreaInt inputArea1, inputArea2, circuitArea;
 	try {
-	    inputArea1 = (Remote.AreaInt) Naming.lookup("rmi://grad06.cacs/I1");
-	    inputArea2 = null; //(Remote.AreaInt) Naming.lookup("rmi://swamp08.cacs/I2");
-	    circuitArea = (Remote.AreaInt) Naming.lookup("rmi://swamp10.cacs/C");
+	    inputArea1 = (AreaInt) Naming.lookup("rmi://grad06.cacs/I1");
+	    inputArea2 = null; //(AreaInt) Naming.lookup("rmi://swamp08.cacs/I2");
+	    circuitArea = (AreaInt) Naming.lookup("rmi://swamp10.cacs/C");
 	} catch (java.rmi.RemoteException e) {
 	    System.out.println("Error: " + e);
 	    return;

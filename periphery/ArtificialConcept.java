@@ -1,7 +1,7 @@
 package neuroidnet.periphery;
 
 import neuroidnet.ntr.*;
-import neuroidnet.Utils.*;
+import neuroidnet.utils.*;
 
 import java.lang.*;
 import java.util.*;
@@ -105,10 +105,11 @@ public class ArtificialConcept extends Neuroid
      * Attaches the neuroid to the concept population.
      * Aborts and throws an exception if population already contains Area.replication
      * number of Neuroids.
-     * TODO: How about bidirectional connections?
+     * <p>TODO: How about bidirectional connections?
      * @see Concept#attach
      * @param neuroid a <code>Neuroid</code> value
      */
+
     public void attach(Neuroid neuroid) throws ConceptSaturatedException {
 	    if (synapses.size() >= neuroid.getArea().getReplication()) {
 		System.out.println("Replication limit reached for " + this + "\n" +
@@ -118,11 +119,15 @@ public class ArtificialConcept extends Neuroid
 					      this);
 	    }
 	    
-	Synapse synapse = new Synapse(neuroid, this, excitatorySynapse); // adds to synapses
-	Vector synapses = new Vector(1); 
-	synapses.add(synapse);	// Local variable
-	neuroid.getArea().addAxon(neuroid, synapses);
-    }
+	    AxonArbor synapses = new AxonArbor(excitatorySynapse, neuroid, area);
+	    try {
+		synapses.addNeuroid(this); 		 
+	    } catch (ResynapseException e) {
+		throw new Error("Fatal: " + e);
+	    } // end of try-catch
+	    
+
+	}
 
     /**
      * Detaches the neuroid from the concept population.

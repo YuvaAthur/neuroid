@@ -1,10 +1,10 @@
-package neuroidnet.PhaseSegregator;
+package neuroidnet.phasesegregator;
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
+import neuroidnet.remote.*;
 import neuroidnet.periphery.*;
 import java.util.*;
 //import java.rmi.*;
-import neuroidnet.Utils.*;
+import neuroidnet.utils.*;
 
 /**
  * Creates inputs in one <code>SensoryArea</code> that projects to

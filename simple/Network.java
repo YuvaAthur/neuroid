@@ -1,6 +1,6 @@
-package neuroidnet.Simple;
+package neuroidnet.simple;
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
+import neuroidnet.remote.*;
 
 /**
  * SimpleNetwork.java

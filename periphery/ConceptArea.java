@@ -1,7 +1,7 @@
 package neuroidnet.periphery;
 
 import neuroidnet.ntr.*;
-import neuroidnet.Utils.*;
+import neuroidnet.utils.*;
 import java.util.*;
 
 // $Id$

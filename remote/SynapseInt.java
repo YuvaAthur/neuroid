@@ -1,20 +1,19 @@
-package neuroidnet.Remote;
-import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
-//import java.rmi.*;
+package neuroidnet.remote;
 
+import neuroidnet.ntr.*;
+
+// $Id$
 /**
- * Remote.SynapseInt.java
- * Distributed extensions to Synapse
- * @see Synapse
+ * Distributed extensions of <code>neuroidnet.ntr.Synapse</code>.
  * 
- * Created: Fri Dec  1 02:36:25 2000
+ * <p>Created: Fri Dec  1 02:36:25 2000
  *
+ * @see neuroidnet.ntr.Synapse
  * @author Cengiz Gunay
- * @version
+ * @version $Revision$
  */
 
 public interface SynapseInt extends java.rmi.Remote {
     void receiveSpike() throws java.rmi.RemoteException;
-    Synapse getLocalSynapse() throws java.rmi.RemoteException;
-}// Remote.SynapseInt
+    //Synapse getLocalSynapse() throws java.rmi.RemoteException;
+}// remote.SynapseInt

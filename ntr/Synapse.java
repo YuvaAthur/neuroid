@@ -1,7 +1,7 @@
 package neuroidnet.ntr;
 import neuroidnet.ntr.*;
-import neuroidnet.Utils.*;
-import neuroidnet.Remote.*;
+import neuroidnet.utils.*;
+import neuroidnet.remote.*;
 import java.io.*;
 import java.lang.*;
 import java.util.*;
@@ -15,7 +15,7 @@ import java.util.*;
  * @since 1.0
  */
 
-public class Synapse implements DumpsData, Serializable {
+public class Synapse implements SynapseInt, DumpsData, Serializable {
     /**
      * List of times when spikes are received
      */
@@ -35,8 +35,8 @@ public class Synapse implements DumpsData, Serializable {
 
     /**
      * Axonal delay associated with this synapse (simplified). 
-     * <code>delay</code> is required for the <code>PhaseSegregator.Network</code>
-     * @see PhaseSegregator.Network
+     * <code>delay</code> is required for the <code>phasesegregator.Network</code>
+     * @see phasesegregator.Network
      */
     double delay; 
 

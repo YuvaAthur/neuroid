@@ -2,8 +2,8 @@ package neuroidnet.ntr;
 
 import neuroidnet.ntr.*;
 import neuroidnet.periphery.*;
-import neuroidnet.Utils.*;
-//import neuroidnet.Remote.*;
+import neuroidnet.utils.*;
+//import neuroidnet.remote.*;
 
 import java.lang.*;
 import java.util.*;
@@ -387,9 +387,9 @@ public class Neuroid implements Input, Serializable {
      * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
      * @version 1.0
      * @since 1.0
-     * @see Utils.Task
+     * @see utils.Task
      */
-    abstract class SynapseActivityTask implements neuroidnet.Utils.TaskWithReturn {
+    abstract class SynapseActivityTask implements neuroidnet.utils.TaskWithReturn {
 	Neuroid toplevel = Neuroid.this;
 
 	SynapseActivityTask() {	}
@@ -468,7 +468,7 @@ public class Neuroid implements Input, Serializable {
 
 /*
 	// Loop over synapses and update according to Winnow learning rule
-	Iteration.loop(synapses.iterator(), new Utils.Task() { 
+	Iteration.loop(synapses.iterator(), new Task() { 
 		public void job(Object o) {
 		    Synapse s = (Synapse) o;
 		    if (s.isPotentiated()) 

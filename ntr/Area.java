@@ -1,8 +1,8 @@
 package neuroidnet.ntr;
 
 import neuroidnet.periphery.*;
-import neuroidnet.Remote.*;
-import neuroidnet.Utils.*;
+import neuroidnet.remote.*;
+import neuroidnet.utils.*;
 
 import java.lang.*;
 import java.util.*;
@@ -17,7 +17,7 @@ import java.io.*;
  * @since 1.0
  */
 
-public class Area implements Runnable, neuroidnet.Remote.AreaInt, Serializable {
+public class Area implements Runnable, AreaInt, Serializable {
 
     /**
      * Name of the <code>Area</code> for identification purposes.
@@ -118,22 +118,19 @@ public class Area implements Runnable, neuroidnet.Remote.AreaInt, Serializable {
      * The template used for creating synapses from the <code>inhibitoryInterNeuroid</code>
      * @see #inhibitoryInterNeuroid
      */
-    Synapse fromInhibitorySynapseTemplate =
-	new Synapse(null, null, 0.5, deltaT, true, 0); // no delay
+    Synapse fromInhibitorySynapseTemplate;
 
     /**
      * The template used for creating synapses to the <code>inhibitoryInterNeuroid</code>
      * @see #inhibitoryInterNeuroid
      */
-    Synapse toInhibitorySynapseTemplate =
-	new Synapse(null, null, 1, deltaT, false, 0); // no delay
+    Synapse toInhibitorySynapseTemplate;
 
     /**
      * The axon emanating from the inhibitoryInterNeuroid
      * @see #init
      */
-    AxonArbor inhibitorySynapseVector =
-	new AxonArbor(fromInhibitorySynapseTemplate, inhibitoryInterNeuroid, this); 
+    AxonArbor inhibitorySynapseVector;
 
     /**
      * Hash table holding the white matter, e.g. the axons of neuroids residing in this
@@ -241,8 +238,8 @@ public class Area implements Runnable, neuroidnet.Remote.AreaInt, Serializable {
     
 
     /**
-     * Constructor for plain Area (no inhibitory interneuron). 
-     * @see #init
+     * Constructor for plain Area (no inhibitory interneuron). Calls other constructor.
+     * @see #Area(Network,String,int,int,double,double,boolean,double,double)
      * @param network a <code>Network</code> value
      * @param name a <code>String</code> value
      * @param numberOfNeuroids an <code>int</code> value
@@ -295,7 +292,14 @@ public class Area implements Runnable, neuroidnet.Remote.AreaInt, Serializable {
 	    // Add inhibitory inter-neuron: one neuron that takes input from all neuroids and
 	    // projects to all. Threshold is fixed to fire above ~replication inputs
 	    // weights and threshold should *not* be modified? refraction?
-	    inhibitoryInterNeuroid = new Neuroid(this, replication*0.9, refractoryTimeConstant);
+	    inhibitoryInterNeuroid =
+		new Neuroid(this, replication*0.9, refractoryTimeConstant);
+	    fromInhibitorySynapseTemplate =
+		new Synapse(null, null, 0.5, deltaT, true, 0); // no delay
+	    toInhibitorySynapseTemplate =
+		new Synapse(null, null, 1, deltaT, false, 0); // no delay
+	    inhibitorySynapseVector =
+		new AxonArbor(fromInhibitorySynapseTemplate, inhibitoryInterNeuroid, this); 
 
 	    // Synapse to be used for connections from the inhibitoryInterNeuroid
 	    //Synapse fromInhibitorysynapsetemplate =
@@ -384,7 +388,7 @@ public class Area implements Runnable, neuroidnet.Remote.AreaInt, Serializable {
 	    destReplication = ((AreaInt)destArea).getReplication();
 	    destNumberOfNeuroids = ((AreaInt)destArea).getNumberOfNeuroids(); 
 	} catch (java.rmi.RemoteException e) {
-	    throw new Error("Cannot call Remote.Area methods.");
+	    throw new Error("Cannot call AreaInt methods.");
 	}
 	
 	// Valiant's connection probability for random multipartite graphs 
@@ -418,7 +422,7 @@ public class Area implements Runnable, neuroidnet.Remote.AreaInt, Serializable {
 						       _numberOfConnections); 
 
 		    } catch (java.rmi.RemoteException e) {
-			throw new Error("Cannot call Remote.Area methods.");
+			throw new Error("Cannot call remote.Area methods.");
 		    }
 		}}, p);
     }
@@ -427,7 +431,7 @@ public class Area implements Runnable, neuroidnet.Remote.AreaInt, Serializable {
      * Adds the synapses to the outgoing synapse record of the <code>Area</code>.
      * If synapses associated with <code>srcNeuroid</code> exist,
      * new synapses are just added to them.
-     * TO DO: get a remote reference to an AxonArbor in the RemoteArea and put it in hash.
+     * TO DO: get a remote reference to an AxonArbor in the remote Area and put it in hash.
      * @param srcNeuroid the presynaptic <code>Neuroid</code> in this <code>Area</code>.
      * @param synapses the <code>Vector</code> to be associated with <code>srcNeuroid</code>
      */
@@ -563,7 +567,7 @@ public class Area implements Runnable, neuroidnet.Remote.AreaInt, Serializable {
      */
     public void step() {
 /*	updateTime();
-	Iteration.loop(neuroids.iterator(), new Utils.Task() {
+	Iteration.loop(neuroids.iterator(), new Task() {
 		public void job(Object o) {
 		    ((Neuroid)o).step();
 		}
@@ -586,26 +590,17 @@ public class Area implements Runnable, neuroidnet.Remote.AreaInt, Serializable {
     /**
      * Fires neuroid. Looks up synapses that its axon targets and calls <code>receiveSpike</code>
      * method of all <code>Synapse</code>s.
-     * <p> TODO: Make it trigger the AxonArbor to fire.
+     * <p> TODO: Make it trigger the Axon to fire.
      * @see Neuroid
      * @see Synapse#receiveSpike
      * @param neuroid <code>Neuroid</code> to fire
      */
     void fireNeuroid(Neuroid neuroid) {
-	Vector synapses = (Vector)axons.get(neuroid);
-	if (synapses == null) return;
-	Iteration.loop(synapses.iterator(), new Task() {
+	Vector axon = (Vector)axons.get(neuroid);
+	if (axon == null) return;
+	Iteration.loop(axon.iterator(), new Task() {
 		public void job(Object o) {
-		    if (o instanceof Synapse) 
-			((Synapse)o).receiveSpike();
-		    else {
-			try {
-			    ((SynapseInt)o).receiveSpike();
-			} catch (java.rmi.RemoteException e) {
-			    System.out.println("Cannot call Remote.Synapse");
-			}
-		    } // end of else
-		    //System.out.println("***synapse");
+		    ((Input)o).fire();
 		}});
     }
 

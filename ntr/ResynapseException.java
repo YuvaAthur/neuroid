@@ -1,6 +1,6 @@
 package neuroidnet.ntr;
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
+import neuroidnet.remote.*;
 
 /**
  * ResynapseException.java

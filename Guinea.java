@@ -1,6 +1,6 @@
 import java.lang.*;
 import java.util.*;
-import Utils.*;
+import neuroidnet.utils.*;
 
 /**
  * Guinea.java
@@ -16,6 +16,12 @@ public class Guinea  {
     volatile ParallelTask pT;
 
     public Guinea () {
+
+	new ntr.Neuroid(null, 0, 0.0, 0.0) {
+		public void fire() {
+		}
+	    };
+
 	Vector a = new Vector();
 	a.add("A");
 	a.add("B");

@@ -2,15 +2,15 @@ package neuroidnet.ntr;
 
 import neuroidnet.ntr.*;
 import neuroidnet.periphery.*;
-import neuroidnet.Remote.*;
+import neuroidnet.remote.*;
+import neuroidnet.utils.*;
 
 import java.util.*;
 import java.io.*;
 import java.text.*;
 import java.lang.*;
-
 //import java.rmi.*;
-import neuroidnet.Utils.*;
+
 // * $Id$
 /**
  * <p>Container for all <code>Area</code>s that hold <code>Neuroid</code>s.

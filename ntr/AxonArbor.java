@@ -1,11 +1,12 @@
 package neuroidnet.ntr;
 
-import neuroidnet.Remote.*;
-import neuroidnet.Utils.*;
+import neuroidnet.remote.*;
+import neuroidnet.utils.*;
 
 import java.lang.*;
 import java.util.*;
 //import java.rmi.*;
+
 
 // $Id$
 /**
@@ -24,7 +25,7 @@ import java.util.*;
  * @version $Revision$
  */
 
-public class AxonArbor extends Vector {
+public class AxonArbor extends Vector implements Input {
     /**
      * Axon's owner neuroid.
      * @see Neuroid
@@ -177,5 +178,27 @@ public class AxonArbor extends Vector {
 	addSynapse(new Synapse(srcNeuroid, destNeuroid, destSynapseTemplate));
 	//	createSynapse(destNeuroid);
     }
+
+    // implementation of neuroidnet.ntr.Input interface
+
+    /**
+     * Spikes are received at contained synapses.
+     */
+    public void fire() {
+	Iteration.loop(iterator(), new Task() {
+		public void job(Object o) {
+		    if (o instanceof Synapse) 
+			((Synapse)o).receiveSpike();
+		    else {
+			try {
+			    ((SynapseInt)o).receiveSpike();
+			} catch (java.rmi.RemoteException e) {
+			    System.out.println("Cannot call SynapseInt");
+			}
+		    } // end of else
+		    //System.out.println("***synapse");
+		}});
+    }
+
     
 }// AxonArbor

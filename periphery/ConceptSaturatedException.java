@@ -1,6 +1,6 @@
 package neuroidnet.periphery;
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
+import neuroidnet.remote.*;
 
 // $Id$
 /**

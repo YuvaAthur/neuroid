@@ -1,11 +1,11 @@
 package neuroidnet.ntr;
 import neuroidnet.ntr.*;
-import neuroidnet.Remote.*;
+import neuroidnet.remote.*;
 import java.lang.*;
 import java.util.*;
 import java.io.*;
 //import java.rmi.*;
-import neuroidnet.Utils.*;
+import neuroidnet.utils.*;
 
 // $Id$
 /**
@@ -103,7 +103,7 @@ public abstract class Peripheral  implements Serializable {
 	}
 
 	public void fire() {
-	    Iteration.loop(synapses.iterator(), new Utils.Task() {
+	    Iteration.loop(synapses.iterator(), new Task() {
 		    public void job(Object synapse) {
 			// Induce reception of spike
 			if (synapse instanceof Synapse)
