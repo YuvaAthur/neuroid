@@ -288,7 +288,7 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
     public String getProperties() {
 	return
 	    getStatus() + " {\n" +
-	    "Peripheral: " + peripheral + "\n" +
+	    "Peripheral: {\n" + peripheral.getProperties() + "\n},\n" +
 	    new StringTask() {
 		public void job(Object o) {
 		    super.job(((Area)o).getProperties() + "\n");
@@ -302,6 +302,9 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
      * @param msecs a <code>double</code> value to simulate this network
      */
     public void advanceTime(double msecs) {
+	if (peripheral == null) 
+	    throw new Error("Fatal: no peripheral set in " + this + ".");
+	
 	double untilTime = 30.0;
 	long startTime = System.currentTimeMillis();
 	int steps = (int) (msecs / deltaT);
@@ -366,8 +369,11 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
     }
 
     /**
-     * Build the network (USED TO: and run the simulation.)
-     * Calls <code>build()</code>
+     * Build the network (USED TO: and run the simulation.)  Calls
+     * <code>build()</code>. Initializes network for parallel or
+     * single-threaded execution.
+     * <p>TODO: Change this to build?
+     *
      * @see #build
      * @see #simulation
      */

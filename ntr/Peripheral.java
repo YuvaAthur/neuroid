@@ -6,6 +6,7 @@ import java.util.*;
 import java.io.*;
 //import java.rmi.*;
 import edu.ull.cgunay.utils.*;
+import neuroidnet.ntr.Expressive;
 
 // $Id$
 /**
@@ -20,7 +21,7 @@ import edu.ull.cgunay.utils.*;
  * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
  * @version $Revision$
  */
-public abstract class Peripheral  implements Serializable {
+public abstract class Peripheral  implements Serializable, Expressive {
 
     /**
      * Pointer to associated <code>Network</code> object
@@ -119,6 +120,32 @@ public abstract class Peripheral  implements Serializable {
 		    }});
 	}
     }*/
+
+    // implementation of neuroidnet.ntr.Expressive interface
+
+    /**
+     *
+     * @return <description>
+     */
+    public String toString() {
+	return getClass().getName();
+    }
+    
+    /**
+     *
+     * @return <description>
+     */
+    public String getProperties() {
+	return this + "";
+    }
+
+    /**
+     *
+     * @return <description>
+     */
+    public String getStatus() {
+	return this + "";
+    }
 
     
 }// Peripheral
