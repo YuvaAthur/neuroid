@@ -1,0 +1,10 @@
+import neuroidnet.ntr.plots.*;
+import neuroidnet.ntr.*;
+
+//reloadClasses();
+
+until = 15;
+w2 = 89;
+w2_1 = 4;
+w1 = 76; 
+w1_1 = 86;

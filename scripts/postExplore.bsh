@@ -1,0 +1,16 @@
+source("preamble.bsh");
+
+// Then restart, i.e. load the net and put watch'es
+network = load("net.data");
+n1 = network.getNeuroid("M1", w1);
+n1_1 = network.getNeuroid("M1", w1_1); 
+n2 = network.getNeuroid("M2", w2); 
+n2_1 = network.getNeuroid("M2", w2_1); 
+
+network.addWatch(n1);
+network.addWatch(n1_1);
+network.addWatch(n2);
+network.addWatch(n2_1);
+
+network.advanceTime(until);
+save(network, "net.withprofile.data");

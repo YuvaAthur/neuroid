@@ -1,0 +1,13 @@
+source("preamble.bsh");
+
+n2 = network.getNeuroid("M2", w2);
+print (n2.getStatus());
+
+n2_1 = network.getNeuroid("M2", w2_1);
+print (n2_1.getStatus());
+
+n1 = network.getNeuroid("M1", w1);
+print (n1.getStatus());
+
+n1_1 = network.getNeuroid("M1", w1_1);
+print (n1_1.getStatus());

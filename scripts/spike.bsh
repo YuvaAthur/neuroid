@@ -1,0 +1,7 @@
+source("preamble.bsh");
+
+prof = n.getProfile();
+mprof = prof.getModeProfile();
+sprof = mprof.getStateProfile();
+spplot = prof.getSpikesEmittedPlot();
+display(spplot);
