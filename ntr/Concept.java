@@ -35,12 +35,6 @@ public interface Concept {
     void fire();
 
     /**
-     * Dump synaptic activity to output (file?). TO DO: do it!
-     *
-     */
-    void dumpData();
-
-    /**
      * Returns the conceptSet that constitutes this concept
      *
      * @return a <code>Set</code> value
