@@ -96,7 +96,7 @@ public class AxonArbor extends Vector {
 
     /**
      * Creates a new synapse connected to a random member of the <code>Area</code>.
-     * @see deltaT
+     * @see Area#deltaT
      * @return a <code>Synapse</code> value */
     public Synapse createRandomSynapse() {
 	return createSynapse(destArea.getRandomNeuroid());

@@ -14,7 +14,7 @@ import Remote.*;
  *
  * @author Cengiz Gunay
  * @version $Revision$ for this file.
- * @see ArtificialConcept.attach
+ * @see ArtificialConcept#attach
  */
 
 public class ConceptSaturatedException extends Exception {
