@@ -109,7 +109,7 @@
  '(jde-javadoc-describe-class-template "\"* Describe class \" (jde-javadoc-code name) \" here.\"")
  '(jde-run-application-class "neuroidnet.phasesegregator.Network")
  '(jde-gen-cflow-else (quote ("(if (jde-parse-comment-or-quoted-p)" "'(l \"else\")" "'(l '> \"else \"" "(if jde-gen-k&r " "()" "'>'n)" "\"{\"'>'n'>'r'n" "\"} // end of else\"'>'n'>)" ")")))
- '(jde-compile-option-target (quote ("1.2")))
+ '(jde-compile-option-target (quote ("1.1")))
  '(jde-imenu-enable t)
  '(jde-make-program "make")
  '(jde-db-option-vm-args nil)
