@@ -86,41 +86,12 @@ public class AxonArbor extends Vector {
 
 		}}, p);
 	
-	/*if (((Boolean)p[1]).booleanValue()) 
+	if (((Boolean)p[1]).booleanValue()) 
 	    // throw exception if neuroid found in existing synapses
 	    throw new ResynapseException("Synapsing on same neuron, try again!");
-	else */
+	else 
 	    // otherwise accept new synapse
 	    add(synapse);
-    }
-
-    /**
-     * Creates new <code>numberOfSynapses</code> <code>Synapse</code>s.
-     * AxonArbor makes sure to return a set of synapses to distinct neurons (no repetitions!)
-     * TODO: maybe put these methods into <code>AxonArbor</code>.
-     * @param numberOfSynapses an <code>int</code> value
-     * @return a <code>Vector</code> value
-     */
-    public void createRandomSynapses(int numberOfSynapses) {
-	for (int index = 0; index < numberOfSynapses; index++) {
-	    int retries = 10, // Retries for coincides with previously allocated synapses
-		retry = retries; 
-
-	    while (retry-- > 0) {
-		try {
-		    addSynapse(createRandomSynapse(srcNeuroid));
-		    break;	// Success
-		} catch (ResynapseException e) {
-		    // nothing
-		    System.out.println("CLASH! Searching for a new neuron to synapse!");
-		}
-		 
-	    } // end of while (retry-- > 0)
-	    if (retry <= 0) 
-		throw new Error("ERROR: Could not find neuron to synapse in " + retries +
-				"tries."); 
-	    
-	} // end of for (int index = 0; index < numberOfSynapses; index++)
     }
 
     /**
