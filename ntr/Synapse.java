@@ -403,10 +403,10 @@ public class Synapse implements SynapseInt, DumpsData, Serializable, Expressive 
      * Returns true if Synapse received a spike a short time back.
      *
      * @return <code>true</code> if potential before multiplication with weight is
-     * above an arbitrary value (0.1)
+     * above an arbitrary value (0.5)
      */
     boolean isPotentiated() {
-	return ( getPotential()/getWeight() > 0.1);
+	return ( getPotential()/getWeight() > 0.5);
     }
 
     /**
