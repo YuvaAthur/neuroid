@@ -1,0 +1,31 @@
+
+print(	"NeuroidNetShell by Cengiz Gunay running on BeanShell\n"); 
+
+start() { super.source("start.bsh"); }
+stats() { super.source("stats.bsh"); }
+testCapacity() { super.source("testCapacity.bsh"); }
+testTolerance() { super.source("testTolerance.bsh"); }
+post() { super.source("postExplore.bsh"); }
+watcheds() { super.source("watcheds.bsh"); }
+prof() { super.network = load("net.withprofile.data"); watcheds(); }
+spike(n) { super.n = n; super.source("spike.bsh"); }
+wplot(n,s) { super.n = n; super.s = s; super.source("wplot.bsh"); }
+synActs(n) { super.n = n; super.source("synActs.bsh"); }
+gnuplot() { super.grapher = new GNUPlot(); }
+matlab() { super.grapher = new MatLab(); }
+display(plot) { return grapher.display(plot, null); }
+obsyn() { super.source("obsyn.bsh"); }
+getNeuroid(s,i) { return network.getNeuroid(s,i); }
+getNeuroid(n) { return network.getNeuroid(n); }
+chain() { super.source("chain.bsh"); }
+printProfile(p) {
+  Task t = new Task() {
+    void job(Object o) {
+      e = (Map.Entry)o;
+      print(e.getKey() + "=" + ((Expressive)e.getValue()).getStatus());
+}};
+  UninterruptedIteration.loop(p.collection(null), t);
+}
+
+print("\nAvailable methods: " + this.methods);
+source("/dev/null"); // To bring the source command into namespace
