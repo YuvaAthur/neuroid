@@ -1,10 +1,10 @@
-package router;
-import Base.*;
-import Remote.*;
-import periphery.*;
+package neuroidnet.router;
+import neuroidnet.ntr.*;
+import neuroidnet.Remote.*;
+import neuroidnet.periphery.*;
 import java.util.*;
 //import java.rmi.*;
-import Utils.*;
+import neuroidnet.Utils.*;
 
 /**
  * 3 <code>SensoryArea</code>s and 3 medial <code>Area</code>s.
@@ -19,12 +19,12 @@ import Utils.*;
  * @version $Revision$ for this file
  */
 
-public class SmallPeripheral extends Base.Peripheral {
-    Base.Area inputArea;
+public class SmallPeripheral extends ntr.Peripheral {
+    ntr.Area inputArea;
     int numberOfItems;
     SensoryArea sensoryArea;
 
-    public SmallPeripheral (Base.Network network, Base.Area inputArea,
+    public SmallPeripheral (ntr.Network network, ntr.Area inputArea,
 			    int numberOfItems) {
 	super(network);
 	this.inputArea = inputArea;

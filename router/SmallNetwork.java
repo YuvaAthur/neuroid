@@ -1,7 +1,7 @@
-package router;
-import Base.*;
-import periphery.*;
-//import Remote.*;
+package neuroidnet.router;
+import neuroidnet.ntr.*;
+import neuroidnet.periphery.*;
+//import neuroidnet.Remote.*;
 /**
  * Builds a network to test hashing quality for a hypothetical routing task.
  * 32 possible addresses should be associated with equal number of output nodes.
@@ -13,7 +13,7 @@ import periphery.*;
  * @version $Revision$ for this file
  */
 
-public class SmallNetwork extends Base.Network {
+public class SmallNetwork extends ntr.Network {
     router.SmallPeripheral peripheral;
 
     public SmallNetwork (boolean isConcurrent) {
@@ -28,10 +28,10 @@ public class SmallNetwork extends Base.Network {
 
 	double period = Neuroid.defaultPeriod();
 
-	Base.Area inputArea =
-	    new Base.Area(this, "I", 200, 20, period, 0.9, false);
-	Base.Area circuitArea =
-	    new Base.Area(this, "C", 650, 20, period, 1.8, false);
+	ntr.Area inputArea =
+	    new ntr.Area(this, "I", 200, 20, period, 0.9, false);
+	ntr.Area circuitArea =
+	    new ntr.Area(this, "C", 650, 20, period, 1.8, false);
 
 	areas.add(inputArea);
 	areas.add(circuitArea);
