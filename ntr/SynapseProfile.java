@@ -66,6 +66,14 @@ public class SynapseProfile  implements Serializable {
 	return new SpikePlot("Spikes received from " + synapse, null, synapse.getSpikeTrain());
     }
 
+    public Plot getPotentialPlot() {
+	return new PotentialPlot("Potential of " + synapse, null, this);
+    }
+
+    public Plot getWeightedPotentialPlot() {
+	return new WeightedPotentialPlot("Weighted potential of " + synapse, null, this);
+    }
+
     public Plot getWeightPlot() {
 	return new ProfilePlot("Weight of " + synapse, null, getWeightProfile());
     }
