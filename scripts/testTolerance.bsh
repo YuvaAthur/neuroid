@@ -1,0 +1,74 @@
+// $Id$
+/**
+ * For running the network a number of times (say 100) to get
+ * statistically significant performance results.
+ */
+
+setAccessibility(true);
+
+source("preamble.bsh");
+source("stats.bsh");
+
+minCorrectProfile = new Profile();
+maxCorrectProfile = new Profile();
+meanCorrectProfile = new Profile();
+minSpuriousProfile = new Profile();
+maxSpuriousProfile = new Profile();
+meanSpuriousProfile = new Profile();
+
+maxTrials = 10;
+numberOfMedialAreas = 2;
+numberOfObjects = 5;
+startTime = System.currentTimeMillis();
+
+for (timeConstantM = 7; timeConstantM < (numberOfMedialAreas + 1) * 2 * 7; timeConstantM += 7) {
+
+    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
+    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
+
+    for (numberOfTrials = 0; numberOfTrials < maxTrials; numberOfTrials++) {
+	runOnce(numberOfObjects, numberOfMedialAreas, timeConstantM, Double.NaN);
+	meanQc += qc;
+	meanQs += qs;
+	minQc = Math.min(minQc, qc);
+	minQs = Math.min(minQs, qs);
+	maxQc = Math.max(maxQc, qc);
+	maxQs = Math.max(maxQs, qs);
+    }
+    meanQc /= maxTrials;
+    meanQs /= maxTrials;
+
+    minCorrectProfile.put(new Double(timeConstantM), new ProfilableDouble(minQc));
+    maxCorrectProfile.put(new Double(timeConstantM), new ProfilableDouble(maxQc));
+    meanCorrectProfile.put(new Double(timeConstantM), new ProfilableDouble(meanQc));
+    minSpuriousProfile.put(new Double(timeConstantM), new ProfilableDouble(minQs));
+    maxSpuriousProfile.put(new Double(timeConstantM), new ProfilableDouble(maxQs));
+    meanSpuriousProfile.put(new Double(timeConstantM), new ProfilableDouble(meanQs));
+
+     
+} // end of for (numberOfObjects = 1; numberOfObjects < 5; numberOfObjects++)
+
+print("correct concept qualities = " + meanCorrectProfile);
+print("spurious concept quality = " + meanSpuriousProfile);
+
+matlab();
+correctPlots = new LinkedList();
+correctPlots.add(new ProfilePlot("Min", null, minCorrectProfile));
+correctPlots.add(new ProfilePlot("Max", null, maxCorrectProfile));
+correctPlots.add(plot = new ProfilePlot("Mean", null, meanCorrectProfile));
+plot.setXLabel("Membrane Time Constant \\tau_m");
+plot.setYLabel("Quality");
+h1 = grapher.superposedPlot("Performance of Correct Concepts with " + numberOfMedialAreas + " Layers over " + maxTrials + " Trials, " + numberOfObjects + " Objects", correctPlots, null);
+//plot.setTitle();
+/*
+display(plot);*/
+
+spuriousPlots = new LinkedList();
+spuriousPlots.add(new ProfilePlot("Min", null, minSpuriousProfile));
+spuriousPlots.add(new ProfilePlot("Max", null, maxSpuriousProfile));
+spuriousPlots.add(plot = new ProfilePlot("Mean", null, meanSpuriousProfile));
+plot.setXLabel("Membrane Time Constant \\tau_m");
+plot.setYLabel("Quality");
+h2 = grapher.superposedPlot("Performance of Spurious Concepts with " + numberOfMedialAreas + " Layers over " + maxTrials + " Trials, " + numberOfObjects + " Objects", spuriousPlots, null);
+
+print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime) + " msec");

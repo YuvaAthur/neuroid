@@ -1,0 +1,73 @@
+// $Id$
+/**
+ * For running the network a number of times (say 100) to get
+ * statistically significant performance results.
+ */
+
+setAccessibility(true);
+
+source("preamble.bsh");
+
+void runOnce(int numberOfObjects, int numberOfMedialAreas,
+	     double timeConstantM, double segregation) {
+    network = new neuroidnet.phasesegregator.Network(false);
+    network.numberOfMedialAreas = numberOfMedialAreas; 
+
+    //print("\tau_m = " + network.timeConstantM);
+    if (!new Double(timeConstantM).isNaN())
+	network.timeConstantM = timeConstantM; 
+    if (!new Double(segregation).isNaN())
+	network.segregation = segregation; 
+    //print("\tau_m = " + network.timeConstantM);
+
+    network.run();
+    peripheral = new neuroidnet.phasesegregator.StatisticalInputSequence(network);
+    peripheral.numberOfObjects = numberOfObjects;
+    peripheral.build();
+
+    //save(network, "net.data");
+
+    // do an exploratory run
+    network.advanceTime(peripheral.numberOfObjects * (network.segregation + 1));
+    print (network.getProperties());
+
+    peripheral.evaluateResults();
+    this.caller.cc = peripheral.correctConcepts();
+    this.caller.qc = peripheral.qualityOfConcepts(this.caller.cc);
+    print(this.caller.cc.size() + " correct concept quality = " + this.caller.qc);
+
+    this.caller.sc = peripheral.spuriousConcepts();
+    //print(sc);
+    this.caller.qs = peripheral.qualityOfConcepts(this.caller.sc);
+    print(this.caller.sc.size() + " spurious concepts, quality = " + this.caller.qs);
+}
+
+void combinedProfilePlot(String xlabel, String titleExtra) {
+    correctPlots = new LinkedList();
+    correctPlots.add(new ProfilePlot("Correct Max", null, maxCorrectProfile));
+    correctPlots.add(plot = new ProfilePlot("Correct Mean", null, meanCorrectProfile));
+    correctPlots.add(new ProfilePlot("Correct Min", null, minCorrectProfile));
+    correctPlots.add(new ProfilePlot("Spurious Max", null, maxSpuriousProfile));
+    correctPlots.add(new ProfilePlot("Spurious Mean", null, meanSpuriousProfile));
+    correctPlots.add(plot = new ProfilePlot("Spurious Min", null, minSpuriousProfile));
+    //plot.setXLabel("Membrane Time Constant \\tau_m");
+    plot.setXLabel(xlabel);
+    plot.setYLabel("Quality");
+    this.caller.h3 = grapher.superposedPlot("Performance of Concepts with " + numberOfMedialAreas + " Layers over " + maxTrials + " Trials" + titleExtra, correctPlots, null);
+
+}
+
+initProfile(list) {
+    task = new Task() {
+	    void job(Object variable) {
+		String[] allP = { "min", "max", "mean"};
+		task = new Task() {
+			void job(Object o) {
+			    eval("global." + o + variable + "Profile = new Profile();");
+			}
+		    };
+		UninterruptedIteration.loop(allP, task);
+	    }
+	};
+    UninterruptedIteration.loop(list, task);
+}
