@@ -13,21 +13,21 @@ import Remote.*;
  */
 
 public class Peripheral extends Base.Peripheral {
-    Concept a, b;
+    Peripheral.Concept a, b;
 
     public Peripheral (Network network, Area inputArea1, Area inputArea2, Area circuitArea) {
 	super(network);
 	
-	a = new Concept(inputArea1);
-	b = new Concept(inputArea1);
+	a = new Peripheral.Concept(inputArea1);
+	b = new Peripheral.Concept(inputArea1);
     }
 
     public Peripheral (Network network, Remote.AreaInt inputArea1, Remote.AreaInt inputArea2,
 			     Remote.AreaInt circuitArea) {
 	super(network);
 	
-	a = new Concept(inputArea1);
-	b = new Concept(inputArea1);
+	a = new Peripheral.Concept(inputArea1);
+	b = new Peripheral.Concept(inputArea1);
     }
 
     public void fireInputs() {
