@@ -28,6 +28,13 @@ abstract public class Network {
     protected Peripheral peripheral;
 
     /**
+     * Redundant pointer to instance of the ConceptArea (it is also in <code>areas</code>)
+     * @see #areas
+     * @see ConceptArea
+     */
+    ConceptArea conceptArea;
+
+    /**
      * Increment of time for algorithms.
      * TODO: Put it elsewhere; too far to reach!
      */
@@ -62,6 +69,15 @@ abstract public class Network {
      */
     boolean isConcurrent;
 
+    /**
+     * Adds an area to the network.
+     *
+     * @param area an <code>Area</code> value
+     */
+    public void addArea(Area area) {
+	areas.add(area);
+    }
+    
     /**
      * Updates the state of the <code>Network</code>.
      * Updates all <code>Area</code>s contained within. 
@@ -126,6 +142,9 @@ abstract public class Network {
     public Network(double deltaT, boolean isConcurrent) {
 	this.deltaT = deltaT;
 	this.isConcurrent = isConcurrent;
+
+	conceptArea = new ConceptArea(this);
+	areas.add(conceptArea);
 
 	stepTask = new Task() {
 		public void job(Object o) {
