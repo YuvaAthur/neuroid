@@ -259,11 +259,22 @@ public class Area implements Runnable {
      * @return a <code>Vector</code> value
      */
     public Vector createRandomSynapses(int numberOfSynapses) {
-	Vector synapses = new Vector(numberOfSynapses);
+	AxonArbor axon = new AxonArbor(numberOfSynapses);
 	for (int index = 0; index < numberOfSynapses; index++) {
-	    synapses.add(createRandomSynapse());
+	    int retry = 10; // Retries for coincides with previously allocated synapses
+	    while (retry-- > 0) {
+		try {
+		    axon.addSynapse(createRandomSynapse());
+		    retry = 0;	// Success
+		} catch (ResynapseException e) {
+		    // nothing
+		    System.out.println("CLASH! Searching for a new neuron to synapse!");
+		}
+		 
+	    } // end of while (retry-- > 0)
+	    
 	} // end of for (int index = 0; index < numberOfSynapses; index++)
-	return synapses;
+	return axon;
     }
 
     /**
