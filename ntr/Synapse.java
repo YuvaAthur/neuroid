@@ -83,6 +83,17 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
 	    this.value = Math.min(maxWeight, v);
 	    setChanged();		// Observable element has changed
 	}
+
+	public double doubleValue() { return getValue(); }
+    }
+
+    /**
+     * Returns a reference to the <code>weight</code> object.
+     *
+     * @return a <code>Weight</code> value
+     */
+    public Weight getWeightObject() {
+	return weight;
     }
 
     /**
@@ -150,6 +161,49 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
      * @see #setWeight
      */
     public final static double maxWeight = 5;
+
+    SynapseProfile profile;
+    
+    /**
+     * Get the value of profile.
+     * @return value of profile.
+     */
+    public SynapseProfile getProfile() {
+	return profile;
+    }
+    
+    /**
+     * Set the value of profile.
+     * @param v  Value to assign to profile.
+     */
+    public void setProfile(SynapseProfile  v) {
+	this.profile = v;
+    }
+    
+
+    /**
+     * If set, it saves information about its (weight) changes.
+     */
+    boolean watch = false;
+    
+    /**
+     * Get the value of watch.
+     * @return value of watch.
+     */
+    public boolean isWatch() {
+	return watch;
+    }
+    
+    /**
+     * Set the value of watch.
+     * @param v  Value to assign to watch.
+     */
+    public void setWatch(boolean  v) {
+	this.watch = v;
+	if (watch) 
+	    profile = new SynapseProfile(this);
+    }
+    
 
     // TODO: Make subclasses where excitory/inhib or phase/period behavior can be specified
     /**
