@@ -3,5 +3,7 @@ source("preamble.bsh");
 syprof = (SynapseProfile)(n.getProfile()).getSynapseProfiles().elementAt(s);
 wprof = syprof.getWeightProfile();
 wplot = new ProfilePlot(null, null, wprof);
-splot = syprof.getSpikesReceivedPlot();
-print(grapher.display(splot));
+//splot = syprof.getSpikesReceivedPlot();
+
+plot = syprof.getWeightedPotentialPlot();
+display(plot);

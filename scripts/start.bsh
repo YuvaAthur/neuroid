@@ -1,5 +1,8 @@
 source("preamble.bsh");
 
+// To keep watched elements
+//watchSet = new java.util.HashSet();
+
 network = new neuroidnet.phasesegregator.Network(false);
 network.run();
 save(network, "net.data");

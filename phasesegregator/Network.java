@@ -28,7 +28,6 @@ public class Network extends neuroidnet.ntr.Network {
      * n input areas and m medial areas. See scheme depicted page EX[6]-0] in notes .
      */
     public void build() {
-	//TO DO: Implement this method.
 	int
 	    numberOfNeuroids = 100,
 	    replication = 10;
@@ -40,7 +39,7 @@ public class Network extends neuroidnet.ntr.Network {
 	    timeConstantM = 10,
 	    refractoryTimeConstant = 10,
 	    threshold,
-	    nuBoost = 6.0;	// nu parameter to increase probability of connection
+	    nuBoost = 4.0;	// nu parameter to increase probability of connection
 	
 	int numberOfMedialAreas = 3,
 	    numberOfItemsPerArea = 3,
@@ -126,7 +125,8 @@ public class Network extends neuroidnet.ntr.Network {
 
 	    network.advanceTime(15.00); // Run net 
 
-	    Plot plot = n.getProfile().spikesEmittedPlot();
+	    NeuroidProfile profile = n.getProfile();
+	    Plot plot = new MembranePotentialPlot("trial", null, profile);
 	    Grapher grapher = new GNUPlot();
 	    System.out.println("Grapher response: " + grapher.display(plot));
 
