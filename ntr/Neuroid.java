@@ -427,7 +427,7 @@ public class Neuroid implements Input {
 		}
 
 		void potentiatedSynapse(Synapse s) {
-		    conceptSet.add(s.srcNeuroid.concept);
+		    conceptSet.addAll(s.srcNeuroid.concept.getConceptSet());
 		}
 
 		void silentSynapse(Synapse s) { }
@@ -446,6 +446,7 @@ public class Neuroid implements Input {
 	} catch (NullPointerException e) { 
 	    concept = new ArtificialConcept(area.network, conceptSet);
 	} 
+	concept.attach(this);
     }
 
     /**
@@ -456,7 +457,7 @@ public class Neuroid implements Input {
     public String toString() {
 	return "Neuroid #" + hashCode() + " in " + area + ", u = " +
 	    numberFormat.format(potential) + ", " + mode +
-	    (concept != null ? ", concept: " + concept : "");
+	    (concept != null ? ", " + concept : "");
     }
 
     /**
