@@ -52,7 +52,6 @@ public class AxonArbor extends Vector {
 		    } // end of if
 
 		}}, p);
-
 	
 	/*if (((Boolean)p[1]).booleanValue()) 
 	    // throw exception if neuroid found in existing synapses
