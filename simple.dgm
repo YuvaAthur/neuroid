@@ -1,0 +1,271 @@
+LIAR1
+#(#JVDiagramSpec 
+	#name: 'simple' 
+	#creationDateSeconds: 3163725925 
+	#modificationDateSeconds: 3185251460 
+	#author: #(#AD2Identity 
+		#nickName: '' 
+		#name: '' 
+		#company: '' ) 
+	#state: #(#AD2DiagramState 
+		#bits: 133 
+		#zoom: '100%' 
+		#translation: #(#Point 0 0 ) ) 
+	#settings: #(#AD2DiagramSettings 
+		#colors: 
+		#(#AD2Paint 
+			#symbolicColorDictionary: #(#classBackground #(#ColorValue #lightYellow ) #textForeground #(#ColorValue #black ) #interfaceBackground #(#ColorValue #salmon ) #classForeground #(#ColorValue #black ) #textBackground #(#ColorValue 4096 6553 8191 ) #diagramBackground #(#ColorValue #white ) #abstractClassBackground #(#ColorValue 8191 6553 4096 ) #freeLine #(#ColorValue #black ) #finalClassBackground #(#ColorValue 6553 8191 4096 ) #implementation #(#ColorValue #red ) #association #(#ColorValue #black ) #inheritance #(#ColorValue #black ) ) 
+			#indexedColors: #(#(#ColorValue #white ) #(#ColorValue 6143 6143 6143 ) #(#ColorValue #gray ) #(#ColorValue #black ) #(#ColorValue 8191 4096 6151 ) #(#ColorValue #salmon ) #(#ColorValue 8191 6553 4096 ) #(#ColorValue #lightYellow ) #(#ColorValue 6553 8191 4096 ) #(#ColorValue #paleGreen ) #(#ColorValue 4096 8191 6152 ) #(#ColorValue #lightCyan ) #(#ColorValue 4096 6553 8191 ) #(#ColorValue #royalBlue ) #(#ColorValue 6553 4096 8191 ) #(#ColorValue #orchid ) #(#ColorValue 4096 2048 2106 ) #(#ColorValue 4096 4096 2048 ) #(#ColorValue 2048 4096 2562 ) #(#ColorValue 2048 2048 4096 ) ) 
+			#coloredPrinting: true ) 
+		#notation: 
+		#(#AD2NotationPreferences 
+			#notationType: #UML 
+			#useColorScheme: true 
+			#useStereotypes: true 
+			#displayInheritanceSymbol: true 
+			#displayVisibilitySymbols: true 
+			#displayNavigabilitySymbol: true 
+			#suppressMissingCompartments: true 
+			#displayFullyQualifiedName: false 
+			#displayDynamicRelations: true ) 
+		#layout: 
+		#(#AD2LayoutPreferences 
+			#relationLayoutType: #straight 
+			#inheritanceLayoutType: #straight 
+			#implementsLayoutType: #straight 
+			#inheritanceOrientation: #topToBottom 
+			#equalizeClassSize: false ) ) 
+	#filter: #(#JVMethodFilter 
+		#attributesFilter: 
+		#(#JVFilter 
+			#bits: 0 
+			#negativeBits: 0 
+			#individuals: #() ) 
+		#servicesFilter: 
+		#(#JVFilter 
+			#bits: 0 
+			#negativeBits: 0 
+			#individuals: #() ) 
+		#dynamicRelationsFilter: 
+		#(#JVFilter 
+			#bits: 0 
+			#negativeBits: 0 
+			#individuals: #() ) ) 
+	#classes: #(
+		#(#'java.util.Vector' nil 600 304 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.AxonArbor' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 609 304 ) #(#Point 649 201 ) ) ) 
+				#(#JVLayoutSpec #'Base.Dendrite' 
+					#attribute: '#inheritance' 
+					#lineLayout: #(#(#Point 643 345 ) #(#Point 704 373 ) ) ) ) ) #(#'Base.Neuroid$Mode' '/home/swamp2/maida/cxg9789/Neuroidal/Base/Neuroid.java' 1112 0 1 nil ) 
+		#(#'Base.AxonArbor' '/home/swamp2/maida/cxg9789/Neuroidal/Base/AxonArbor.java' 658 157 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: 'destArea' 
+					#lineLayout: #(#(#Point 625 157 ) #(#Point 558 55 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: 'srcNeuroid' 
+					#lineLayout: #(#(#Point 698 164 ) #(#Point 867 61 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 680 157 ) #(#Point 853 52 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 661 157 ) #(#Point 594 55 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Base.Input' '/home/swamp2/maida/cxg9789/Neuroidal/Base/Input.java' 1080 112 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: '#implements' 
+					#lineLayout: #(#(#Point 1044 123 ) #(#Point 926 59 ) ) ) ) ) 
+		#(#'Base.Dendrite' '/home/swamp2/maida/cxg9789/Neuroidal/Base/Dendrite.java' 740 368 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.Synapse' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 777 372 ) #(#Point 836 344 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Base.Network' '/home/swamp2/maida/cxg9789/Neuroidal/Base/Network.java' 344 -48 1 nil 
+			#filter: 
+			#(#JVMethodFilter 
+				#attributesFilter: 
+				#(#JVFilter 
+					#bits: 0 
+					#negativeBits: 0 
+					#individuals: #('watchList' ) ) 
+				#servicesFilter: 
+				#(#JVFilter 
+					#bits: 0 
+					#negativeBits: 0 
+					#individuals: #() ) 
+				#dynamicRelationsFilter: 
+				#(#JVFilter 
+					#bits: 0 
+					#negativeBits: 0 
+					#individuals: #() ) ) 
+			#layouts: #(
+				#(#JVLayoutSpec #'java.util.Vector' 
+					#attribute: 'areas' 
+					#lineLayout: #(#(#Point 351 -4 ) #(#Point 575 304 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'java.util.Vector' 
+					#attribute: '«uses, creates»' 
+					#lineLayout: #(#(#Point 369 -4 ) #(#Point 593 304 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Peripheral' 
+					#attribute: 'peripheral' 
+					#lineLayout: #(#(#Point 337 -4 ) #(#Point 339 208 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Peripheral' 
+					#attribute: '«uses, creates»' 
+					#lineLayout: #(#(#Point 367 -4 ) #(#Point 369 208 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: '«uses, creates»' 
+					#layout1: #(1.0 0.863636 ) 
+					#lineLayout: #(#(#Point 381 -10 ) #(#Point 537 11 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: '«uses, creates»' 
+					#lineLayout: #(#(#Point 381 -22 ) #(#Point 853 35 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Base.Peripheral' '/home/swamp2/maida/cxg9789/Neuroidal/Base/Peripheral.java' 347 208 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.Network' 
+					#attribute: 'network' 
+					#lineLayout: #(#(#Point 324 208 ) #(#Point 322 -4 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Network' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 354 208 ) #(#Point 352 -4 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Base.Area' '/home/swamp2/maida/cxg9789/Neuroidal/Base/Area.java' 561 11 1 nil 
+			#filter: 
+			#(#JVMethodFilter 
+				#attributesFilter: 
+				#(#JVFilter 
+					#bits: 0 
+					#negativeBits: 0 
+					#individuals: #('inhibInter' 'inhibitoryInterNeuroid' ) ) 
+				#servicesFilter: 
+				#(#JVFilter 
+					#bits: 0 
+					#negativeBits: 0 
+					#individuals: #() ) 
+				#dynamicRelationsFilter: 
+				#(#JVFilter 
+					#bits: 0 
+					#negativeBits: 0 
+					#individuals: #() ) ) 
+			#layouts: #(
+				#(#JVLayoutSpec #'java.util.Vector' 
+					#attribute: 'neuroids' 
+					#lineLayout: #(#(#Point 556 55 ) #(#Point 590 304 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'java.util.Vector' 
+					#attribute: '«uses»' 
+					#lineLayout: #(#(#Point 571 55 ) #(#Point 605 304 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.AxonArbor' 
+					#attribute: '«creates»' 
+					#lineLayout: #(#(#Point 576 55 ) #(#Point 643 157 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Network' 
+					#attribute: 'network' 
+					#layout1: #(0.0 0.125 ) 
+					#layout2: #(1.0 0.291667 ) 
+					#lineLayout: #(#(#Point 525 17 ) #(#Point 473.0 -20.0 ) #(#Point 381 -35 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Network' 
+					#attribute: '«uses»' 
+					#layout1: #(0.0 0.375 ) 
+					#layout2: #(1.0 0.708333 ) 
+					#lineLayout: #(#(#Point 525 28 ) #(#Point 446.0 9.0 ) #(#Point 381 -17 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'java.util.Hashtable' 
+					#attribute: 'axons' 
+					#lineLayout: #(#(#Point 552 55 ) #(#Point 452 300 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: '«uses, creates»' 
+					#lineLayout: #(#(#Point 598 52 ) #(#Point 705.0 106.0 ) #(#Point 853 52 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) #(#'java.util.Hashtable' nil 443 300 1 nil ) 
+		#(#'Base.Synapse' '/home/swamp2/maida/cxg9789/Neuroidal/Base/Synapse.java' 872 304 1 nil 
+			#layouts: #(
+				#(#JVLayoutSpec #'java.util.Vector' 
+					#attribute: 'spikeTrain' 
+					#lineLayout: #(#(#Point 836 326 ) #(#Point 643 326 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: 'destNeuroid' 
+					#layout1: #(0.925 0.0 ) 
+					#layout2: #(0.9375 1.0 ) 
+					#lineLayout: #(#(#Point 903 304 ) #(#Point 921 61 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: 'srcNeuroid' 
+					#layout1: #(0.7 0.0 ) 
+					#layout2: #(0.6875 1.0 ) 
+					#lineLayout: #(#(#Point 887 304 ) #(#Point 903 61 ) ) 
+					#symbol: #plain ) 
+				#(#JVLayoutSpec #'Base.Neuroid' 
+					#attribute: '«uses, creates»' 
+					#layout1: #(0.4125 0.0 ) 
+					#layout2: #(0.4375 1.0 ) 
+					#lineLayout: #(#(#Point 866 304 ) #(#Point 884 61 ) ) 
+					#symbol: #littleStrokedArrow ) ) ) 
+		#(#'Base.Neuroid' '/home/swamp2/maida/cxg9789/Neuroidal/Base/Neuroid.java' 889 17 1 nil 
+			#filter: 
+			#(#JVMethodFilter 
+				#attributesFilter: 
+				#(#JVFilter 
+					#bits: 0 
+					#negativeBits: 0 
+					#individuals: #('spikeTrain' 'correctTimesRequired' 'debug' 'externalCurrent' 'hasFired' ) ) 
+				#servicesFilter: 
+				#(#JVFilter 
+					#bits: 0 
+					#negativeBits: 0 
+					#individuals: #() ) 
+				#dynamicRelationsFilter: 
+				#(#JVFilter 
+					#bits: 0 
+					#negativeBits: 0 
+					#individuals: #() ) ) 
+			#layouts: #(
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: '«uses, creates»' 
+					#lineLayout: #(#(#Point 853 53 ) #(#Point 598 49 ) ) 
+					#symbol: #littleStrokedArrow ) 
+				#(#JVLayoutSpec #'Base.Area' 
+					#attribute: 'area' 
+					#lineLayout: #(#(#Point 853 23 ) #(#Point 598 19 ) ) 
+					#symbol: #plain ) ) 
+			#patches: #(#JVPatchCollection 
+				#(#JVTypePatch 
+					#attributeName: 'synapses' 
+					#destinationClassName: #zaaaa 
+					#multiplicity: true ) ) ) ) 
+	#texts: #(
+		#(#JVFreeLineSpec 
+			#vertices: #(#(#Point 858 61 ) #(#Point 794.0 211.0 ) #(#Point 739 368 ) ) 
+			#symbol: #plain 
+			#pattern: #solid 
+			#color: nil ) #(#AD2TextSpec 972 27 'mode
+' #(5 ) #(nil ) #plain nil ) #(#AD2TextSpec 734 213 'synapses
+' #(9 ) #(nil ) #plain nil ) 
+		#(#JVFreeLineSpec 
+			#vertices: #(#(#Point 592 52 ) #(#Point 679 157 ) ) 
+			#symbol: #plain 
+			#pattern: #solid 
+			#color: nil ) #(#AD2TextSpec 634 99 'axons
+' #(6 ) #(nil ) #plain nil ) 
+		#(#JVFreeLineSpec 
+			#vertices: #(#(#Point 928 33 ) #(#Point 1037 29 ) ) 
+			#symbol: #plain 
+			#pattern: #solid 
+			#color: nil ) ) )
