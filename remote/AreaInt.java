@@ -16,12 +16,15 @@ import java.util.*;
  */
 
 public interface AreaInt extends java.rmi.Remote {
-    Vector createRandomSynapses(Neuroid fromNeuroid, int numberOfSynapses)
-	throws java.rmi.RemoteException; 
-    Vector createArbitrarySynapses(Neuroid fromNeuroid, int numberOfSynapses)
+    AxonArbor createRandomSynapses(Base.Synapse destSynapseTemplate, Neuroid srcNeuroid,
+				   int numberOfSynapses)
+	throws java.rmi.RemoteException;
+    AxonArbor createArbitrarySynapses(Base.Synapse destSynapseTemplate, Neuroid srcNeuroid,
+				      int numberOfSynapses) 
 	throws java.rmi.RemoteException; 
     int getNumberOfNeuroids() throws java.rmi.RemoteException;
     int getReplication() throws java.rmi.RemoteException;
     void step() throws java.rmi.RemoteException;
-    void connectToArea(Object destArea) throws java.rmi.RemoteException;
+    void connectToArea(Remote.AreaInt destArea, double timeConstantS, double delay)
+	throws java.rmi.RemoteException;
 }// Remote.AreaInt
