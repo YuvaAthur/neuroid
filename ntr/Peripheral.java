@@ -38,7 +38,7 @@ public class Peripheral  {
     /**
      * An input concept represented by <code>Synapse</code>s connecting to replication factor
      * number of <code>Neuroid</code>s in the <code>Area</code>.
-     *
+     * OSOLETE!!!
      * @see Area
      * @see Neuroid
      * @see Synapse
@@ -52,10 +52,13 @@ public class Peripheral  {
 	 * that this <code>Concept</code> should activate.
 	 */
 	Vector synapses;
-
+/*
 	public Concept(Remote.AreaInt area) {
+	    Synapse synapseTemplate =
+		new Synapse(null, null, area.timeConstantM, network.deltaT, false, 0);
 	    try {
-		synapses = area.createArbitrarySynapses(null, area.getReplication());
+		synapses =
+		    area.createArbitrarySynapses(synapseTemplate, null, area.getReplication());
 	    } catch (java.rmi.RemoteException e) {
 		e.printStackTrace();
 		throw new RuntimeException("Cannot access area.createArbitrarySynapses");
@@ -64,7 +67,9 @@ public class Peripheral  {
 	}
 
 	public Concept(Base.Area area) {
-	    synapses = area.createArbitrarySynapses(null, area.getReplication());
+	    Synapse synapseTemplate =
+		new Synapse(null, null, area.timeConstantM, network.deltaT, false, 0);
+	    synapses = area.createArbitrarySynapses(synapseTemplate, null, area.getReplication());
 	}
 
 	public void fire() {
@@ -82,7 +87,7 @@ public class Peripheral  {
 			    }
 			} // end of else
 		    }});
-	}
+	}*/
     }
 
     
