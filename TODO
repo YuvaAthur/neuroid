@@ -1,17 +1,25 @@
+- area name as a concept? or area representing neuroids?
++ limit recruitment by throwing an exception in Concept.attach
+- put step inside Neuroid.Mode?
+- modify to produce gnuplot graphs optionally. 
+- fix ConcurrentModificationException by waiting for all threads to finish at the end.
++ make neuroidal web page with links to reports of related projects
 - make Area implement Remote.AreaInt, etc.
 - TreeSet or HashSet?
 - change naming of sensoryneuroid to 'percept'
 - implement tzeng's network: allocate all assemblies in input area and create all UMs then prune connections and count 'em!
-- implement dumpdata in conceptArea
-- move Concept related files to periphery/ 
-- Test new synapse scanning constructs for validity.
-- Enable seleciton of dynamic behavior of groups of neurons (delay + membrane characteristic).
-- use AxonArbor for dist communication improvement.
-- migrate functions into AxonArbor.
+- move Concept related files to periphery/ (SensoryXX are done, how about ArtificialConcept?)
+- use AxonArbor for dist communication improvement (event-list protocol).
 ? do something about too many updates to the algorithm
 - solve problem with constant current
-- enable selection of inhibitory connections and other parameters
-- set global inhibitory connections
++ enable selection of inhibitory connections and other parameters
++ set global inhibitory connections
++ implement dumpdata in conceptArea
++ Test new synapse scanning constructs for validity.
++ Enable selection of dynamic behavior of groups of neurons (delay + membrane characteristic).
++ migrate functions into AxonArbor.
++ clean and make a new graph figure in matlab graph
++ remove repeating "Concept:"s from the composite names
 + conceptualize inhibitory neuroids!
 + two ways of textualization (expression): 1- static-long (getStatus), 2- dynamic-short (toString) ?
 + add count of neuroids in a concept to its string value!
