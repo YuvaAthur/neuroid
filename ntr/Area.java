@@ -3,7 +3,7 @@ import Base.*;
 import Remote.*;
 import java.lang.*;
 import java.util.*;
-//import java.rmi.*;
+import java.text.*;
 import Utils.*;
 
 /**
@@ -231,6 +231,7 @@ public class Area implements Runnable {
 	// Create a thread to do the step()s
 	thread = new Thread(this);
 	thread.start();
+
     }
 
     /**
@@ -246,7 +247,7 @@ public class Area implements Runnable {
 
 	    // Add inhibitory synapse to neuroid from inhibitoryInterNeuroid
 	    inhibitorySynapseVector.add(new Synapse(inhibitoryInterNeuroid, neuroid,
-						    1, deltaT, true)); 
+						    0.5, deltaT, true)); 
 
 	    // Add an initial excitory synapse to inhibitoryInterNeuroid from neuroid
 	    Vector oneSynapse = new Vector();
@@ -289,7 +290,8 @@ public class Area implements Runnable {
 	int numberOfConnections = (int) (destNumberOfNeuroids * connProb);
 
 	System.out.println("Conn prob from " + this + " to " + destArea + " is " +
-			   connProb + "(" + numberOfConnections + " Neuroids)");
+			   Network.numberFormat.format(connProb) + "(" + numberOfConnections +
+			   " Neuroids)");
 
 	// Loop for every neuroid in this area
 	Object[] p = { destArea, new Integer(numberOfConnections)};
@@ -509,7 +511,17 @@ public class Area implements Runnable {
      * @return a <code>String</code> value
      */
     public String toString() {
-	return "Area: " + name + " at t=" + time;
+	return "Area: " + name + " at t=" + Network.numberFormat.format(time);
+    }
+
+    /**
+     * Describe Area in more detail.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getStatus() {
+	return this + ", numberOfNeuroids=" + numberOfNeuroids +
+	    ", replication=" + replication + ", deltaT=" + deltaT;
     }
 
     // implementation of java.lang.Runnable interface
