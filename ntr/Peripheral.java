@@ -3,8 +3,10 @@ import Base.*;
 import Remote.*;
 import java.lang.*;
 import java.util.*;
+import java.io.*;
 //import java.rmi.*;
 import Utils.*;
+
 // $Id$
 /**
  *
@@ -15,12 +17,22 @@ import Utils.*;
  *
  * Created: Mon Nov 20 02:08:10 2000
  *
- * @author Cengiz Gunay
+ * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
  * @version $Revision$
  */
+public abstract class Peripheral  implements Serializable {
 
-public class Peripheral  {
+    /**
+     * Pointer to associated <code>Network</code> object
+     * @see Base.Network
+     */
     protected Network network;
+
+    /**
+     * Peripheral system's own account of time.
+     *
+     */
+    protected double time;
 
     /**
      * Creates a new <code>Peripheral</code> instance.
@@ -31,9 +43,30 @@ public class Peripheral  {
      */
     public Peripheral (Network network) {
 	this.network = network;
+	this.time = 0;
 
 	network.setPeripheral(this);
     }
+
+
+    /**
+     * Peripheral control of timepass, initiates peripheral events associated with time.
+     * Delegates to <code>network.step()</code>.
+     * @see Network#step
+     */
+    public void step() {
+	eventsAtThisTime();
+	network.step();
+	time += network.deltaT;
+    }
+
+    /**
+     * Called by step(), determines periperal actions.
+     * Should be overloaded in instances of this class
+     * @see #step
+     */
+    protected abstract void eventsAtThisTime();
+    
 
     /**
      * An input concept represented by <code>Synapse</code>s connecting to replication factor
@@ -46,13 +79,10 @@ public class Peripheral  {
      * @version 1.0
      * @since 1.0
      */
-    public class Concept {
-	/**
-	 * Vector of <code>Synapses</code> connected to <code>Neuroids</code>
-	 * that this <code>Concept</code> should activate.
-	 */
-	Vector synapses;
 /*
+    public class Concept {
+	Vector synapses;
+
 	public Concept(Remote.AreaInt area) {
 	    Synapse synapseTemplate =
 		new Synapse(null, null, area.timeConstantM, network.deltaT, false, 0);
@@ -87,8 +117,8 @@ public class Peripheral  {
 			    }
 			} // end of else
 		    }});
-	}*/
-    }
+	}
+    }*/
 
     
 }// Peripheral
