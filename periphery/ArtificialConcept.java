@@ -33,7 +33,8 @@ public class ArtificialConcept extends Neuroid
     /**
      * Excitatory synapse template to instantiate new synapses.
      */
-    final Synapse excitatorySynapse = new Synapse(null, null, 1, area.network.deltaT, false);
+    final Synapse excitatorySynapse = new Synapse(null, null, area.timeConstantM,
+						  area.network.deltaT, false, 0);
 
     /**
      * Create a simple concept.

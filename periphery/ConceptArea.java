@@ -29,8 +29,8 @@ public class ConceptArea extends Area
      * @param network a <code>Network</code> value
      */
     public ConceptArea (Network network) {
-	// threshold 0.9? get it from somewhere?
-	super(network, "ConceptArea", 0, 1, 0, 0.9, false); 
+	// threshold 0.9? get it from somewhere? SRM params defined here!!!
+	super(network, "ConceptArea", 0, 1, 0, 0.9, false, 0.001); 
     }
     /*
       int getNewId() {

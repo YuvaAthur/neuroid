@@ -31,9 +31,9 @@ public class Synapse extends Base.Synapse
     public void setLocalSynapse(Synapse  v) {this.localSynapse = v;}
     
     public Synapse (Neuroid srcNeuroid, Neuroid destNeuroid, double timeConstantM,
-		    double timeConstantS, boolean isInhibitory)
+		    double timeConstantS, boolean isInhibitory, double delay)
 	throws java.rmi.RemoteException {
-	super(srcNeuroid, destNeuroid, timeConstantM, timeConstantS, isInhibitory);
+	super(srcNeuroid, destNeuroid, timeConstantM, timeConstantS, isInhibitory, delay);
 	UnicastRemoteObject.exportObject(this);
     }
 

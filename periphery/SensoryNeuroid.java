@@ -38,7 +38,10 @@ public class SensoryNeuroid extends Base.Neuroid {
 
 	// Create connections to destArea
 	Vector synapses;
-	synapses = destArea.createArbitrarySynapses(this, destArea.getReplication());
+	Synapse synapseTemplate = // TODO: Fix timeConstantS??
+	    new Synapse(null, null, area.timeConstantM, area.deltaT, false, 0);
+	synapses = destArea.createArbitrarySynapses(synapseTemplate, this,
+						    destArea.getReplication());
 	/* this one is for RemoteAreas
 	try {
 	    synapses = destArea.createArbitrarySynapses(null, destArea.getReplication());

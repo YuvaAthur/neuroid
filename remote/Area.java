@@ -14,8 +14,7 @@ import java.rmi.server.*;
  * @version
  */
 
-public class Area extends Base.Area
-    implements Remote.AreaInt {
+public class Area extends Base.Area {
     public Area (String name, int numberOfNeuroids, int replication,
 		       double deltaT, double period, double threshold) throws java.rmi.RemoteException {
 	super(name, numberOfNeuroids, replication, deltaT, period, threshold);

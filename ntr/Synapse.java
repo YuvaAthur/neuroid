@@ -66,6 +66,7 @@ public class Synapse implements DumpsData {
     /**
      * Creates a new <code>Synapse</code> instance. Attaches itself to <code>destNeuroid</code>.
      * Default weight is 1.
+     * <p>TODO: timeConstantM might need to be associated with the neuroid, but then we lose the flexibility of assigning synapses with different time constants.
      * @see Neuroid#synapses
      * @param destNeuroid a <code>Neuroid</code> value
      * @param timeConstantM a <code>double</code> value

@@ -17,7 +17,7 @@ package periphery;
 public class SensoryArea extends Base.Area {
     public SensoryArea (Base.Network network, String name) {
 	// threshold 0.9? get it from somewhere?
-	super(network, name, 0, 1, 0, 0.9, false); 
+	super(network, name, 0, 1, 0, 0.9, false, 0.001); 
 	network.addArea(this);	// TODO: add areas to network automatically? what about remoteareas?
     }
     
