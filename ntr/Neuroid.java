@@ -55,13 +55,13 @@ public class Neuroid implements Input {
     /**
      * Parent Area.
      */
-    Area area;
+    protected Area area;
 
     /**
      * Associated concept if neuroid has memorized anything.
      * @see Concept
      */
-    Concept concept = null;
+    protected Concept concept = null;
 
     /**
      * OBSOLETE? Good for representation.
@@ -71,7 +71,7 @@ public class Neuroid implements Input {
     /**
      * Represents the state and dynamic parameters of the neuroid.
      */
-    Mode mode;
+    protected Mode mode;
 
     /**
      * Internal.
@@ -434,8 +434,8 @@ public class Neuroid implements Input {
      * @version 1.0
      * @since 1.0
      */
-    class Mode {
-	final static int
+    protected class Mode {
+	public final static int
 	    AM = 0, 
 	    UM = AM + 1,
 	    AM1 = UM + 1;
