@@ -304,8 +304,10 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
      * @since 1.0
      * @see edu.ull.cgunay.utils.Task
      */
-    abstract class SynapseActivityTask implements edu.ull.cgunay.utils.TaskWithReturn {
-	//Neuroid toplevel = Neuroid.this;
+    abstract class SynapseActivityTask implements TaskWithReturn {
+	final Hashtable synapsePotentials = new Hashtable();
+	double meanPotential = 0;
+	int numberOfActiveSynapses = 0;
 
 	SynapseActivityTask() {	}
 
@@ -314,7 +316,22 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
 	 *
 	 */
 	public void iterate() {
-	    UninterruptedIteration.loop(synapses, this); 
+	    new UninterruptedIteration() {
+		public void job(Object o) {
+		    Synapse s = (Synapse) o;
+		    double potential = s.getPotential() / s.getWeight();
+		    synapsePotentials.put(s, new Double(potential));
+		    if (s.getSrcNeuroid().getTimeLastFired() >= 0) {
+			numberOfActiveSynapses++;
+			meanPotential += potential;
+		    } // end of if (s.getSrcNeuroid().getTimeLastFired() < 0)
+		}
+	    }.loop(synapses);
+
+	    // mean value
+	    meanPotential /= numberOfActiveSynapses;
+
+	    UninterruptedIteration.loop(synapsePotentials.keySet(), this); 
 	}
 
 	/**
@@ -328,7 +345,7 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
 	 */
 	public void job(Object o) {
 	    Synapse s = (Synapse) o;
-	    if (s.isPotentiated())
+	    if (((Double)synapsePotentials.get(s)).doubleValue() / meanPotential > 0.5)
 		potentiatedSynapse(s);
 	    else 
 		silentSynapse(s);
