@@ -46,13 +46,15 @@ public class ConceptArea extends Area
      * @return the description to be printed out as a <code>String</code> value
      */
     public String getProperties() {
-	return
-	    super.getProperties() + "\n" +
-	    new StringTask() {
-		public void job(Object o) {
-		    this.retval += "" + ((ArtificialConcept)o).getProperties() + "\n";
-		}
-	    }.getString(neuroids);
+	synchronized (neuroids) {
+	    return
+		super.getProperties() + "\n" +
+		new StringTask() {
+		    public void job(Object o) {
+			this.retval += "" + ((ArtificialConcept)o).getProperties() + "\n";
+		    }
+		}.getString(neuroids);
+	}
     }
 
     /**

@@ -371,7 +371,11 @@ public class Area
      * @see Neuroid#id
      */
     public int addNeuroid(Neuroid neuroid) {
-	neuroids.add(neuroid);
+
+	// Thread safe
+	synchronized (neuroids) {
+	    neuroids.add(neuroid);
+	}
 
 	Vector axon = new Vector();
 
@@ -435,21 +439,23 @@ public class Area
 	final Synapse synapseTemplate =
 	    new Synapse(null, null, timeConstantM, timeConstantS, false, delay);
 
-	// Loop for every neuroid in this area and create connection in destination area
-	new UninterruptedIteration() { 
-	    public void job(Object o) {
-		Neuroid srcNeuroid = (Neuroid) o;
+	synchronized (neuroids) {
+	    // Loop for every neuroid in this area and create connection in destination area
+	    new UninterruptedIteration() { 
+		public void job(Object o) {
+		    Neuroid srcNeuroid = (Neuroid) o;
 
-		try {
-		    // Need to be called at the remote area, so that it can generate 
-		    // a remote reference to an AxonArbor object 
-		    destArea.addRandomSynapses(synapseTemplate, srcNeuroid,
-					       numberOfConnections); 
+		    try {
+			// Need to be called at the remote area, so that it can generate 
+			// a remote reference to an AxonArbor object 
+			destArea.addRandomSynapses(synapseTemplate, srcNeuroid,
+						   numberOfConnections); 
 
-		} catch (java.rmi.RemoteException e) {
-		    throw new Error("Cannot call remote.Area methods.");
-		}
-	    }}.loop(neuroids);
+		    } catch (java.rmi.RemoteException e) {
+			throw new Error("Cannot call remote.Area methods.");
+		    }
+		}}.loop(neuroids);
+	}
     }
 
     /**
@@ -685,6 +691,7 @@ public class Area
 		    updateTime();
 		    while (true) {
 			try {
+			    // instead synchronize on neuroids? (may cause deadlock!)
 			    UninterruptedIteration.loop(neuroids.iterator(), new Task() {
 				    public void job(Object o) {
 					((Neuroid)o).step();
@@ -694,7 +701,7 @@ public class Area
 			} catch (ConcurrentModificationException ez) {
 			    // do nothing, i.e. restart
 			    System.out.println("Concurrent modification in Area.step(), " +
-					       "repeating...");
+					       "repeating in " + this);
 			}	     
 		    } // end of while (true)
 		    stepRequested = false; // Completed
