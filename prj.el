@@ -22,6 +22,8 @@
 
 
 
+
+
 (jde-set-project-name "default")
 (jde-set-variables 
  '(jde-gen-to-string-method-template (quote ("'&" "\"public String toString() {\" 'n>" "\"return super.toString();\" 'n>" "\"}\" 'n>")))
@@ -58,7 +60,7 @@
  '(jde-quote-classpath t)
  '(jde-enable-abbrev-mode t)
  '(jde-gen-action-listener-template (quote ("'& (P \"Component name: \")" "\".addActionListener(new ActionListener() {\" 'n>" "\"public void actionPerformed(ActionEvent e) {\" 'n>" "\"}});\" 'n>")))
- '(jde-gen-class-buffer-template (quote ("(funcall jde-gen-boilerplate-function) 'n" "\"// $Id$\" 'n" "\"/**\" 'n" "\" * \"" "(file-name-nondirectory buffer-file-name) 'n" "\" *\" 'n" "\" *\" 'n" "\" * <p>Created: \" (current-time-string) 'n" "\" * <p>Modified: $Date$\" 'n" "\" *\" 'n" "\" * @author \" (user-full-name) 'n" "\" * @version $Revision$ for this file.\" 'n" "\" */\" 'n>" "'n>" "\"public class \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "\" \" (jde-gen-get-super-class)" "\" {\"  'n>" "" "\"public \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "\" ()\"" "\" {\"  'n>" "" "'p 'n>" "\"}\">" "'n>" "'n>" "\"}\">" "\"// \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "'n>")))
+ '(jde-gen-class-buffer-template (quote ("(funcall jde-gen-boilerplate-function) 'n" "\"// $\" \"Id$\" 'n" "\"/**\" 'n" "\" * \"" "(file-name-nondirectory buffer-file-name) 'n" "\" *\" 'n" "\" *\" 'n" "\" * <p>Created: \" (current-time-string) 'n" "\" * <p>Modified: $\" \"Date$\" 'n" "\" *\" 'n" "\" * @author \" (user-full-name) 'n" "\" * @version $\" \"Revision$ for this file.\" 'n" "\" */\" 'n>" "'n>" "\"public class \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "\" \" (jde-gen-get-super-class)" "\" {\"  'n>" "" "\"public \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "\" ()\"" "\" {\"  'n>" "" "'p 'n>" "\"}\">" "'n>" "'n>" "\"}\">" "\"// \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "'n>")))
  '(jde-gen-boilerplate-function (quote jde-gen-create-buffer-boilerplate))
  '(jde-compile-option-classpath nil)
  '(jde-gen-code-templates (quote (("Get Set Pair" . jde-gen-get-set) ("toString method" . jde-gen-to-string-method) ("Action Listener" . jde-gen-action-listener) ("Window Listener" . jde-gen-window-listener) ("Mouse Listener" . jde-gen-mouse-listener) ("Mouse Motion Listener" . jde-gen-mouse-motion-listener) ("Inner Class" . jde-gen-inner-class) ("println" . jde-gen-println) ("property change support" . jde-gen-property-change-support) ("EJB Entity Bean" . jde-gen-entity-bean) ("EJB Session Bean" . jde-gen-session-bean))))
