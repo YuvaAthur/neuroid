@@ -8,5 +8,5 @@ diff:
 	for i in *.bsh; do echo $$i; diff $$i $(HOME)/neuroidnet/scripts/$$i; done
 
 commit:
-	cd ../..; cp -f $(WD)/*.bsh scripts/
+	cd ../..; cp -uf $(WD)/*.bsh scripts/
 	cp -f Makefile ../Makefile.trace

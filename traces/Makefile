@@ -1,7 +1,8 @@
 # For creating version dependent folders for each neuroidnet instance
 
 SHELL=bash
-DATETIME=$(shell date +%Y-%m-%d_%T)
+DATETIME:=$(shell date +%Y-%m-%d_%T)
+TRACEBASE:=$(shell pwd)
 TRACEDIR:=trace_$(DATETIME)
 JAVARUN=$(HOME)/classes
 
