@@ -42,6 +42,9 @@ public class ArtificialConcept extends Neuroid
 	super(network.conceptArea); 
 	this.name = name;
 
+	conceptSet = new HashSet();
+	conceptSet.add(this);
+
 	init2();
     }
 
@@ -54,6 +57,7 @@ public class ArtificialConcept extends Neuroid
     public ArtificialConcept (Network network, HashSet conceptSet) {
 	super(network.conceptArea);
 	this.conceptSet = conceptSet;
+
 	name = conceptSet.toString(); // TODO: ???
 
 	init2();
@@ -127,7 +131,8 @@ public class ArtificialConcept extends Neuroid
     public String toString() {
 	/*return "Concept #" + hashCode() + ", u = " +
 	    numberFormat.format(potential) + ", name: " + name;*/
-	return "Concept " + name;
+	return "Concept: " + name + "(" + synapses.size()
+	    /*+ "/" + area.getReplication()*/ + ")";
     }
 
     /**
@@ -146,6 +151,10 @@ public class ArtificialConcept extends Neuroid
 	    you = new Integer(o.hashCode()); 
 	
 	return me.compareTo(you);
+    }
+
+    public Set getConceptSet() {
+	return conceptSet;
     }
 
 }// ArtificialConcept
