@@ -1,3 +1,11 @@
+2002-11-17  Cengiz Gunay  <cengiz@ull.edu>
+
+	* scripts/stats.bsh (Repository): Fixed bug with not releasing
+	resources in sequential simulations.
+
+	* scripts/testSegregation.bsh (Repository): runs multiple
+	simulations for getting segregation parameter profiles.
+
 2002-10-29  Cengiz Gunay  <cengiz@ull.edu>
 
 	* ntr/Peripheral.java (Repository): Is now textually Expressive.
