@@ -32,7 +32,7 @@ public class ConceptArea extends Area
     public ConceptArea (Network network) {
 	// threshold 0.9? get it from somewhere? SRM params defined here!!!
 	// timeConstantM, refractoryTimeConstant << 1
-	super(network, "ConceptArea", 0, 1, 0, 0.9, false, 0.001, 0.001); 
+	super(network, "ConceptArea", 0, 1, 0, 0.9, false, 0.001, 0.001, SRMNeuroid.class); 
     }
     /*
       int getNewId() {
@@ -62,7 +62,7 @@ public class ConceptArea extends Area
      * @see Network#finale
      */
     public String dumpData() {
-	return
+	return null /*
 	    "%% Matlab script created by the Neuroidal network\n\n" +
 	    "lastTime = " + time + ";\n" + 
 	    "numberOfConcepts = " + neuroids.size() + ";" +
@@ -82,7 +82,7 @@ public class ConceptArea extends Area
 			"text(0, 0.5, '" + o + "');\n\n";
 		    id++;
 		}
-	    }.getString(neuroids);	
+	    }.getString(neuroids)*/; 
     }
 
     /**
@@ -112,7 +112,7 @@ public class ConceptArea extends Area
     public Set entrySet() { return conceptLookup.entrySet(); }
     public Object get(Object key) {
 	Object convertedKey = convertKey(key);
-	System.out.println("Searching " + convertedKey + " in conceptArea.");
+	//System.out.println("Searching " + convertedKey + " in conceptArea.");
 	return conceptLookup.get(convertedKey);
     }
     public boolean isEmpty() { return conceptLookup.isEmpty(); }

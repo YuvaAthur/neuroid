@@ -18,7 +18,7 @@ import java.util.*;
  * @version $Revision$ for this file
  */
 
-public class ArtificialConcept extends Neuroid
+public class ArtificialConcept extends SRMNeuroid
     implements Concept, Comparable, DumpsData, Expressive {
 
     /**
@@ -107,7 +107,7 @@ public class ArtificialConcept extends Neuroid
 
     public void attach(Neuroid neuroid) throws ConceptSaturatedException {
 	    if (synapses.size() >= neuroid.getArea().getReplication()) {
-		System.out.println("Replication limit reached for " + this + "\n" +
+		System.out.println("Replication limit reached for " + this + ". " +
 				   "Cannot attach " + neuroid + ".");
 		throw new
 		    ConceptSaturatedException("Replication limit reached for concept " +

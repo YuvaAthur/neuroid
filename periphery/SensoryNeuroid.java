@@ -10,6 +10,7 @@ import java.util.*;
  * It is excited by sensory inputs, by call to its <code>fire()</code> method.
  * It is connected to a replicated neuroids in a destination area.
  * It has a SensoryConcept associated with it.
+ * <p>Shouldn't be a SRMNeuroid, should have a SRMMode. Should have special mode with only state.
  * @see Neuroid#fire()
  * @see SensoryConcept
  * @see SensoryNeuroid
@@ -21,7 +22,7 @@ import java.util.*;
  * @version $Revision$ for this file.
  */
 
-public class SensoryNeuroid extends Neuroid {
+public class SensoryNeuroid extends SRMNeuroid {
     /**
      * Create neuroid and associate a new <code>SensoryConcept</code> with it.
      * Connects <em>arbitrarily</em> to a number of neuroids at the destination area.
@@ -43,7 +44,7 @@ public class SensoryNeuroid extends Neuroid {
 	    throw new RuntimeException("New concept is already full?");
 	} // end of try-catch
 	
-	mode.setState(Mode.UM);
+	mode.setState(SRMMode.UM);
 
 	// Create connections to destArea
 	AxonArbor synapses;

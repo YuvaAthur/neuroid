@@ -19,8 +19,9 @@ import neuroidnet.ntr.*;
 public class SensoryArea extends Area {
     public SensoryArea (Network network, String name) {
 	// threshold 0.9? get it from somewhere?
+	// refractoryTimeConstant not applicable, dummy value
 	super(network, name, 0, 1, 0, 0.9, false,
-	      network.deltaT * 100, 0.001); // refractoryTimeConstant not applicable, dummy value
+	      network.deltaT * 100, 0.001, void.class); 
 	network.addArea(this);	// TODO: add areas to network automatically? what about remoteareas?
     }
     
