@@ -31,6 +31,22 @@ public class ArtificialConcept extends SRMNeuroid
      * Set of other concepts that this concept represents, if available.
      */
     Set conceptSet;
+    
+    /**
+     * Get the value of conceptSet.
+     * @return value of conceptSet.
+     */
+    public Set getConceptSet() {
+	return conceptSet;
+    }
+    
+    /**
+     * Set the value of conceptSet.
+     * @param v  Value to assign to conceptSet.
+     */
+    public void setConceptSet(Set  v) {
+	this.conceptSet = v;
+    }
 
     /**
      * Excitatory synapse template to instantiate new synapses.
@@ -66,7 +82,7 @@ public class ArtificialConcept extends SRMNeuroid
 	this.conceptSet = conceptSet;
 
 	// Create a name for the concept by concatanating causing concept names
-	name = new StringTask("{ ", " }") {
+	name = new StringTask("[ ", " ]") {
 		// concept names separated by comma
 		boolean first = true;
 		public void job(Object o) {
@@ -194,15 +210,17 @@ public class ArtificialConcept extends SRMNeuroid
 	if (!(o instanceof Concept)) 
 	    throw new ClassCastException("" + o);
 
-	Integer
+	// if only one element left, compare names
+	if (conceptSet.size() == 1 ) 
+	    return name.compareTo(((ArtificialConcept)o).name);
+	
+	return new ComparableSortedSet(conceptSet).compareTo(new ComparableSortedSet(((ArtificialConcept)o).conceptSet));
+
+	/*Integer
 	    me = new Integer(hashCode()),
 	    you = new Integer(o.hashCode()); 
 	
-	return me.compareTo(you);
-    }
-
-    public Set getConceptSet() {
-	return conceptSet;
+	return me.compareTo(you);*/
     }
 
     public String getName() {
