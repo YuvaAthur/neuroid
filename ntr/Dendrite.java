@@ -1,5 +1,5 @@
 
-package Base;
+package neuroidnet.ntr;
 
 import java.util.*;
 
@@ -15,7 +15,7 @@ import java.util.*;
  * <p>Created: Sun Nov  4 00:26:26 2001
  * <p>Modified: $Date$
  *
- * @see Base.AxonArbor
+ * @see ntr.AxonArbor
  * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
  * @version $Revision$ for this file.
  */
@@ -28,7 +28,7 @@ public class Dendrite extends Vector  {
     
     /**
      * Adds a synapse to the vector.
-     * @see Base.AxonArbor#addSynapse
+     * @see ntr.AxonArbor#addSynapse
      * @param synapse 
      */
     public synchronized boolean add(Synapse synapse) {

@@ -1,6 +1,6 @@
-package Base;
-import Base.*;
-import Remote.*;
+package neuroidnet.ntr;
+import neuroidnet.ntr.*;
+import neuroidnet.Remote.*;
 
 // $Id$
 /**

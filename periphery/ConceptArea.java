@@ -1,6 +1,7 @@
-package Base;
+package neuroidnet.periphery;
 
-import Utils.*;
+import neuroidnet.ntr.*;
+import neuroidnet.Utils.*;
 import java.util.*;
 
 // $Id$
@@ -48,8 +49,8 @@ public class ConceptArea extends Area
 	String retval = super.getStatus() + "\n";
 	
 	// TODO: make this following class common with the one in Network.toString()
-	Utils.TaskWithReturn neuroidsToStringTask =
-	    new Utils.TaskWithReturn() {
+	TaskWithReturn neuroidsToStringTask =
+	    new TaskWithReturn() {
 		String retval = new String();
 		
 		public void job(Object o) {
@@ -81,8 +82,8 @@ public class ConceptArea extends Area
 	    "figure;\n\n";
 	
 	// TODO: make this following class common with the one in Network.toString()
-	Utils.TaskWithReturn toStringTask =
-	    new Utils.TaskWithReturn() {
+	TaskWithReturn toStringTask =
+	    new TaskWithReturn() {
 		    String retval = new String();
 		    int id = 0;
 		

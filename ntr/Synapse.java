@@ -1,7 +1,7 @@
-package Base;
-import Base.*;
-import Utils.*;
-import Remote.*;
+package neuroidnet.ntr;
+import neuroidnet.ntr.*;
+import neuroidnet.Utils.*;
+import neuroidnet.Remote.*;
 import java.io.*;
 import java.lang.*;
 import java.util.*;
@@ -68,6 +68,23 @@ public class Synapse implements DumpsData, Serializable {
     Neuroid srcNeuroid;
 
     /**
+     * Get the value of srcNeuroid.
+     * @return value of srcNeuroid.
+     */
+    public Neuroid getSrcNeuroid() {
+	return srcNeuroid;
+    }
+    
+    /**
+     * Set the value of srcNeuroid.
+     * @param v  Value to assign to srcNeuroid.
+     */
+    public void setSrcNeuroid(Neuroid  v) {
+	this.srcNeuroid = v;
+    }
+    
+
+    /**
      * Postsynaptic neuroid
      */
     Neuroid destNeuroid;
@@ -94,7 +111,8 @@ public class Synapse implements DumpsData, Serializable {
     /**
      * Creates a new <code>Synapse</code> instance. Attaches itself to
      * <code>destNeuroid</code>.  Default weight is 1.  
-     *
+     * One can create a synapse template for using later by giving <code>null</code> for the
+     * <code>destneuroid</code>.
      * <p>TODO: timeConstantM might need to be associated with the
      * neuroid, but then we lose the flexibility of assigning synapses
      * with different time constants. In "Brief history of time
@@ -140,7 +158,8 @@ public class Synapse implements DumpsData, Serializable {
     /**
      * Initialization code called from various constructors.
      * Init weights and adds <code>Synapse</code> to <code>destNeuroid.synapses</code>
-     * @see Base.Neuroid#synapses
+     * unless it's a template synapse.
+     * @see ntr.Neuroid#synapses
      */
     final private void init() {
 	weight = 1;
@@ -264,8 +283,8 @@ public class Synapse implements DumpsData, Serializable {
 	while (true) {
 	    try {
 		// TODO: make this following class common with the one in Network.toString()
-		Utils.TaskWithReturn toStringTask =
-		    new Utils.TaskWithReturn() {
+		TaskWithReturn toStringTask =
+		    new TaskWithReturn() {
 			String retval = new String();
 			int number = 0;
 		    

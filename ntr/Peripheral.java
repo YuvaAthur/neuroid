@@ -1,11 +1,11 @@
-package Base;
-import Base.*;
-import Remote.*;
+package neuroidnet.ntr;
+import neuroidnet.ntr.*;
+import neuroidnet.Remote.*;
 import java.lang.*;
 import java.util.*;
 import java.io.*;
 //import java.rmi.*;
-import Utils.*;
+import neuroidnet.Utils.*;
 
 // $Id$
 /**
@@ -24,7 +24,7 @@ public abstract class Peripheral  implements Serializable {
 
     /**
      * Pointer to associated <code>Network</code> object
-     * @see Base.Network
+     * @see ntr.Network
      */
     protected Network network;
 
@@ -88,18 +88,18 @@ public abstract class Peripheral  implements Serializable {
 		new Synapse(null, null, area.timeConstantM, network.deltaT, false, 0);
 	    try {
 		synapses =
-		    area.createArbitrarySynapses(synapseTemplate, null, area.getReplication());
+		    area.addArbitrarySynapses(synapseTemplate, null, area.getReplication());
 	    } catch (java.rmi.RemoteException e) {
 		e.printStackTrace();
-		throw new RuntimeException("Cannot access area.createArbitrarySynapses");
+		throw new RuntimeException("Cannot access area.addArbitrarySynapses");
 	    }
 	    // TODO: teach the dest neuroids to memorize this input.
 	}
 
-	public Concept(Base.Area area) {
+	public Concept(ntr.Area area) {
 	    Synapse synapseTemplate =
 		new Synapse(null, null, area.timeConstantM, network.deltaT, false, 0);
-	    synapses = area.createArbitrarySynapses(synapseTemplate, null, area.getReplication());
+	    synapses = area.addArbitrarySynapses(synapseTemplate, null, area.getReplication());
 	}
 
 	public void fire() {

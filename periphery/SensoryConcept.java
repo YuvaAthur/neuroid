@@ -1,5 +1,7 @@
-package periphery;
-import Base.*;
+package neuroidnet.periphery;
+
+import neuroidnet.ntr.*;
+
 // $Id$
 /**
  * Concept created by peripheral controller. Associated with a <code>SensoryNeuroid</code>.

@@ -1,4 +1,6 @@
-package periphery;
+package neuroidnet.periphery;
+
+import neuroidnet.ntr.*;
 
 // $Id$
 /**
@@ -14,8 +16,8 @@ package periphery;
  * @version $Revision$ for this file.
  */
 
-public class SensoryArea extends Base.Area {
-    public SensoryArea (Base.Network network, String name) {
+public class SensoryArea extends Area {
+    public SensoryArea (Network network, String name) {
 	// threshold 0.9? get it from somewhere?
 	super(network, name, 0, 1, 0, 0.9, false,
 	      network.deltaT * 100, 0.001); // refractoryTimeConstant not applicable, dummy value

@@ -1,6 +1,7 @@
-package Base;
+package neuroidnet.periphery;
 
-import Utils.*;
+import neuroidnet.ntr.*;
+import neuroidnet.Utils.*;
 
 import java.lang.*;
 import java.util.*;
@@ -44,7 +45,7 @@ public class ArtificialConcept extends Neuroid
      * @param name a <code>String</code> value
      */
     public ArtificialConcept(Network network, String name) {
-	super(network.conceptArea); 
+	super(network.getConceptArea()); 
 	this.name = name;
 
 	conceptSet = new HashSet();
@@ -61,12 +62,12 @@ public class ArtificialConcept extends Neuroid
      * @param conceptSet a <code>Vector</code> value
      */
     public ArtificialConcept (Network network, HashSet conceptSet) {
-	super(network.conceptArea);
+	super(network.getConceptArea());
 	this.conceptSet = conceptSet;
 
 	// Create a name for the concept by concatanating causing concept names
-	Utils.TaskWithReturn toStringTask =
-	    new Utils.TaskWithReturn() {
+	TaskWithReturn toStringTask =
+	    new TaskWithReturn() {
 		String name = "[ ";
 		    
 		// spike lists from different synapses separated by space
@@ -120,7 +121,7 @@ public class ArtificialConcept extends Neuroid
 	Synapse synapse = new Synapse(neuroid, this, excitatorySynapse); // adds to synapses
 	Vector synapses = new Vector(1); 
 	synapses.add(synapse);	// Local variable
-	neuroid.area.addAxon(neuroid, synapses);
+	neuroid.getArea().addAxon(neuroid, synapses);
     }
 
     /**
@@ -133,7 +134,7 @@ public class ArtificialConcept extends Neuroid
 	// Search in synapses and delete the synapse (both from here and from the area's axons)
 	for (Iterator i = synapses.iterator(); i.hasNext() ;) {
 	    Synapse s = (Synapse) i.next();
-	    if (s.srcNeuroid.equals(neuroid)) {
+	    if (s.getSrcNeuroid().equals(neuroid)) {
 		removed = s;
 		i.remove();
 		break;		// Out of for
@@ -143,7 +144,7 @@ public class ArtificialConcept extends Neuroid
 	if (removed == null) 
 	    throw new RuntimeException("Fatal: cannot find neuroid to detach.");
 
-	Vector synapses = (Vector) neuroid.area.axons.get(neuroid); // TODO: function?
+	Vector synapses = (Vector) neuroid.getArea().getAxons().get(neuroid); // TODO: function?
 	synapses.remove(removed); // Remove Synapse associated with neuroid
     }
 
@@ -160,12 +161,12 @@ public class ArtificialConcept extends Neuroid
 	String retval = this + " {\n";
 	
 	// TODO: make this following class common with the one in Network.toString()
-	Utils.TaskWithReturn toStringTask =
-	    new Utils.TaskWithReturn() {
+	TaskWithReturn toStringTask =
+	    new TaskWithReturn() {
 		String retval = new String();
 		
 		public void job(Object o) {
-		    retval += "\t" + ((Synapse)o).srcNeuroid + "\n";
+		    retval += "\t" + ((Synapse)o).getSrcNeuroid() + "\n";
 		}
 
 		public Object getValue() {

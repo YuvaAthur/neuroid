@@ -1,12 +1,16 @@
-package Base;
-import Base.*;
-//import Remote.*;
+package neuroidnet.ntr;
+
+import neuroidnet.ntr.*;
+import neuroidnet.periphery.*;
+import neuroidnet.Utils.*;
+//import neuroidnet.Remote.*;
+
 import java.lang.*;
 import java.util.*;
 import java.text.*;
 import java.io.*;
 //import java.rmi.*;
-import Utils.*;
+
 
 // $Id$
 /**
@@ -32,7 +36,7 @@ public class Neuroid implements Input, Serializable {
     /**
      * List of incoming synapses.
      */
-    Dendrite synapses = new Dendrite();
+    protected Dendrite synapses = new Dendrite();
 
     /**
      * Last firing time of this Neuroid.
@@ -114,7 +118,7 @@ public class Neuroid implements Input, Serializable {
     /**
      * If set, the neuroid saves informatoin about its state changes.
      */
-    boolean watch = false;
+    protected boolean watch = false;
     
     /**
      * Get the value of watch.
@@ -254,7 +258,7 @@ public class Neuroid implements Input, Serializable {
 	while (true) {
 	    try {
 		potential = 0;
-		Iteration.loop(synapses.iterator(), new Utils.Task() { 
+		Iteration.loop(synapses.iterator(), new Task() { 
 			public void job(Object o) {
 			    potential += ((Synapse)o).getPotential();
 			}});
@@ -317,7 +321,7 @@ public class Neuroid implements Input, Serializable {
 	    if (potential < mode.suggestedThreshold) {
 		// if any presynaptic neuroid has fired in this period
 		hasFired = false;
-		Iteration.loop(synapses.iterator(), new Utils.Task() {
+		Iteration.loop(synapses.iterator(), new Task() {
 		    public void job(Object o) {
 			if (((Synapse)o).isPotentiated()) 
 			    hasFired = true;
@@ -385,7 +389,7 @@ public class Neuroid implements Input, Serializable {
      * @since 1.0
      * @see Utils.Task
      */
-    abstract class SynapseActivityTask implements Utils.TaskWithReturn {
+    abstract class SynapseActivityTask implements neuroidnet.Utils.TaskWithReturn {
 	Neuroid toplevel = Neuroid.this;
 
 	SynapseActivityTask() {	}
@@ -572,7 +576,7 @@ public class Neuroid implements Input, Serializable {
 
 	// Iterate over synapses and set weights to 1
 	Iteration.loop(synapses.iterator(),
-		       new Utils.Task() {
+		       new Task() {
 		public void job(Object o) {
 		    ((Synapse) o).setWeight(1);
 		}});
@@ -598,7 +602,7 @@ public class Neuroid implements Input, Serializable {
      */
     public String getStatus() {
 
-	Utils.TaskWithReturn synapseIterator = new Utils.TaskWithReturn() {
+	TaskWithReturn synapseIterator = new TaskWithReturn() {
 		String retval = " {\n";
 
 		public void job(Object o) {
@@ -623,8 +627,8 @@ public class Neuroid implements Input, Serializable {
 	String retval = "";
 	
 	// TODO: make this following class common with the one in Network.toString()
-	Utils.TaskWithReturn toStringTask =
-	    new Utils.TaskWithReturn() {
+	TaskWithReturn toStringTask =
+	    new TaskWithReturn() {
 		    String retval = new String();
 		    
 		    // spike lists from different synapses separated by space

@@ -1,13 +1,16 @@
-package Base;
-import Base.*;
-import Remote.*;
+package neuroidnet.ntr;
+
+import neuroidnet.ntr.*;
+import neuroidnet.periphery.*;
+import neuroidnet.Remote.*;
+
 import java.util.*;
 import java.io.*;
 import java.text.*;
 import java.lang.*;
 
 //import java.rmi.*;
-import Utils.*;
+import neuroidnet.Utils.*;
 // * $Id$
 /**
  * <p>Container for all <code>Area</code>s that hold <code>Neuroid</code>s.
@@ -41,7 +44,24 @@ abstract public class Network implements DebuggerInterface, Serializable {
      * @see #areas
      * @see ConceptArea
      */
-    ConceptArea conceptArea;
+    protected ConceptArea conceptArea;
+    
+    /**
+     * Get the value of conceptArea.
+     * @return value of conceptArea.
+     */
+    public ConceptArea getConceptArea() {
+	return conceptArea;
+    }
+    
+    /**
+     * Set the value of conceptArea.
+     * @param v  Value to assign to conceptArea.
+     */
+    public void setConceptArea(ConceptArea  v) {
+	this.conceptArea = v;
+    }
+    
 
     /**
      * Increment of time for algorithms.
@@ -264,8 +284,8 @@ abstract public class Network implements DebuggerInterface, Serializable {
 	retval += "Peripheral: " + peripheral + "\n";
 	//retval += "ConceptArea: \n" + conceptArea.getStatus();
 
-	Utils.TaskWithReturn areasToStringTask =
-	    new Utils.TaskWithReturn() {
+	TaskWithReturn areasToStringTask =
+	    new TaskWithReturn() {
 		String retval = new String();
 		
 		public void job(Object o) {
@@ -318,7 +338,7 @@ abstract public class Network implements DebuggerInterface, Serializable {
 			((Area)o).step();
 		    else {
 			try {
-			    ((Remote.AreaInt)o).step(); // Should be done in parallel!!!
+			    ((AreaInt)o).step(); // Should be done in parallel!!!
 			} catch (java.rmi.RemoteException e) { 
 			    e.printStackTrace();
 			    throw new RuntimeException("Cannot call remote Area.step()");
