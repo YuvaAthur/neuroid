@@ -113,7 +113,7 @@ public class Neuroid implements Input, Serializable {
     public void setMode(Mode  v) {
 	this.mode = v;
 	try {
-	    neuroidProfile.getModeProfile().connectTo(mode, new Double(area.time)); 
+	    profile.getModeProfile().connectTo(mode, new Double(area.time)); 
 	} catch (NullPointerException e) { } // it's ok, then don't do it.
     }
     
@@ -156,25 +156,25 @@ public class Neuroid implements Input, Serializable {
     public void setWatch(boolean  v) {
 	this.watch = v;
 	if (watch) 
-	    neuroidProfile = new NeuroidProfile(this);
+	    profile = new NeuroidProfile(this);
     }
 
-    NeuroidProfile neuroidProfile;
+    NeuroidProfile profile;
     
     /**
-     * Get the value of neuroidProfile.
-     * @return value of neuroidProfile.
+     * Get the value of profile.
+     * @return value of profile.
      */
-    public NeuroidProfile getNeuroidProfile() {
-	return neuroidProfile;
+    public NeuroidProfile getProfile() {
+	return profile;
     }
     
     /**
-     * Set the value of neuroidProfile.
-     * @param v  Value to assign to neuroidProfile.
+     * Set the value of profile.
+     * @param v  Value to assign to profile.
      */
-    public void setNeuroidProfile(NeuroidProfile  v) {
-	this.neuroidProfile = v;
+    public void setProfile(NeuroidProfile  v) {
+	this.profile = v;
     }
 
     /**
@@ -353,7 +353,7 @@ public class Neuroid implements Input, Serializable {
 	if (watch) {
 	    // REDUNDANT, remove one! See note above in calculatePotential
 	    spikeTrain.add(new Double(timeLastFired)); 
-	    neuroidProfile.spikesEmitted.add(new Double(timeLastFired)); 
+	    profile.spikesEmitted.add(new Double(timeLastFired)); 
 	}
     }
 
@@ -808,7 +808,10 @@ public class Neuroid implements Input, Serializable {
 	   * Set the value of state.
 	   * @param v  Value to assign to state.
 	   */
-	public void setState(int  v) {this.state = v;}
+	public void setState(int  v) {
+	    this.state = v;
+	    setChanged();
+	}
 	
 	/**
 	 * Threshold of the neuroid.
@@ -825,7 +828,10 @@ public class Neuroid implements Input, Serializable {
 	   * Set the value of threshold.
 	   * @param v  Value to assign to threshold.
 	   */
-	public void setThreshold(double  v) {this.threshold = v;}
+	public void setThreshold(double  v) {
+	    this.threshold = v;
+	    setChanged(); 
+	}
 
 	/**
 	 * The total sum of incoming weights to a Neuroid should be fixed. (Why?)
@@ -847,6 +853,7 @@ public class Neuroid implements Input, Serializable {
 	 */
 	public void setSumOfWeights(double  v) {
 	    this.sumOfWeights = v;
+	    setChanged();
 	}
 	
 	public String toString() {
@@ -856,5 +863,9 @@ public class Neuroid implements Input, Serializable {
 		", sugT = " + Network.numberFormat.format(suggestedThreshold) /*+
 		", sumOW = " + Network.numberFormat.format(sumOfCurrentWeights)*/;
 	}
+
+	public double doubleValue() {
+	    throw new RuntimeException("Not applicable to this object");
+	} 
     }
 }
