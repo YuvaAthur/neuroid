@@ -345,7 +345,7 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
 	 */
 	public void job(Object o) {
 	    Synapse s = (Synapse) o;
-	    if (((Double)synapsePotentials.get(s)).doubleValue() / meanPotential > 0.5)
+	    if (((Double)synapsePotentials.get(s)).doubleValue() / meanPotential > 0.7)
 		potentiatedSynapse(s);
 	    else 
 		silentSynapse(s);
@@ -381,11 +381,11 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
     void makeConcept() throws ConceptSaturatedException {
 
 	// Loop over synapses and save their concepts in conceptSet
-	HashSet conceptSet = (HashSet) new SynapseActivityTask() {
-		HashSet conceptSet;
+	TreeSet conceptSet = (TreeSet) new SynapseActivityTask() {
+		TreeSet conceptSet;
 
 		public void iterate() {
-		    conceptSet = new HashSet();
+		    conceptSet = new TreeSet();
 		    super.iterate();
 		}
 
