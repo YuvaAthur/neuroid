@@ -379,7 +379,7 @@ public class Area implements Runnable, AreaInt, Serializable {
      * @param nuBoost a <code>double</code> factor to multiply the original probability
      * ratio as to magnify
      */
-    public void connectToArea(AreaInt destArea, double timeConstantS,
+    public void connectToArea(final AreaInt destArea, double timeConstantS,
 			      double delay, double nuBoost) {
 	// TODO: don't connect inhibitoryInterNeuroid!
 	int destReplication, destNumberOfNeuroids;
@@ -396,13 +396,32 @@ public class Area implements Runnable, AreaInt, Serializable {
 				    (destNumberOfNeuroids * replication * replication ));
 
 	// Number of neuroids in the destination to be connected to each neuroid here
-	int numberOfConnections = (int) (destNumberOfNeuroids * connProb);
+	final int numberOfConnections = (int) (destNumberOfNeuroids * connProb);
 
 	System.out.println("Conn prob from " + this + " to " + destArea + " is " +
 			   Network.numberFormat.format(connProb) + "(" + numberOfConnections +
 			   " Neuroids)");
 
-	// Loop for every neuroid in this area
+	final Synapse synapseTemplate =
+	    new Synapse(null, null, timeConstantM, timeConstantS, false, delay);
+
+	// Loop for every neuroid in this area and create connection in destination area
+	new Iteration() { 
+	    public void job(Object o) {
+		Neuroid srcNeuroid = (Neuroid) o;
+
+		try {
+		    // Need to be called at the remote area, so that it can generate 
+		    // a remote reference to an AxonArbor object 
+		    destArea.addRandomSynapses(synapseTemplate, srcNeuroid,
+					       numberOfConnections); 
+
+		} catch (java.rmi.RemoteException e) {
+		    throw new Error("Cannot call remote.Area methods.");
+		}
+	    }}.loop(neuroids);
+
+	/*
 	Object[] p = { destArea,
 		       new Integer(numberOfConnections),
 		       // SRM parameters: timeConstantM = 1, timeConstantS = deltaT, excitatory 
@@ -425,6 +444,7 @@ public class Area implements Runnable, AreaInt, Serializable {
 			throw new Error("Cannot call remote.Area methods.");
 		    }
 		}}, p);
+	*/
     }
 
     /**
