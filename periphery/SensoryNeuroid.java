@@ -1,6 +1,8 @@
-package periphery;
+package neuroidnet.periphery;
+
+import neuroidnet.ntr.*;
+
 import java.util.*;
-import Base.*;
 
 // $Id$
 /**
@@ -19,23 +21,27 @@ import Base.*;
  * @version $Revision$ for this file.
  */
 
-public class SensoryNeuroid extends Base.Neuroid {
+public class SensoryNeuroid extends Neuroid {
     /**
      * Create neuroid and associate a new <code>SensoryConcept</code> with it.
      * Connects <em>arbitrarily</em> to a number of neuroids at the destination area.
      * 
      * @see SensoryConcept
-     * @see Base.Area#createArbitrarySynapses
+     * @see ntr.Area#addArbitrarySynapses
      * @param sensoryArea Where to put this neuroid.
      * @param conceptName Name.
      * @param destArea the destination area to project axons.
      */
-    public SensoryNeuroid(Base.Area sensoryArea, Base.Area destArea, String conceptName) {
+    public SensoryNeuroid(Area sensoryArea, Area destArea, String conceptName) {
 	super(sensoryArea); 
 
 	// Create concept
 	concept = new SensoryConcept(area.network, conceptName);
-	concept.attach(this);
+	try {
+	    concept.attach(this);	     
+	} catch (ConceptSaturatedException e) {
+	    throw new RuntimeException("New concept is already full?");
+	} // end of try-catch
 	
 	mode.setState(Mode.UM);
 
@@ -43,16 +49,16 @@ public class SensoryNeuroid extends Base.Neuroid {
 	AxonArbor synapses;
 	Synapse synapseTemplate = // TODO: Fix timeConstantS??
 	    new Synapse(null, null, area.timeConstantM, area.deltaT, false, 0);
-	synapses = destArea.createArbitrarySynapses(synapseTemplate, this,
-						    destArea.getReplication());
+	destArea.addArbitrarySynapses(synapseTemplate, this,
+				      destArea.getReplication());
 	/* this one is for RemoteAreas
 	try {
-	    synapses = destArea.createArbitrarySynapses(null, destArea.getReplication());
+	    synapses = destArea.addArbitrarySynapses(null, destArea.getReplication());
 	} catch (java.rmi.RemoteException e) {
 	    e.printStackTrace();
-	    throw new RuntimeException("Cannot access area.createArbitrarySynapses");
+	    throw new RuntimeException("Cannot access area.addArbitrarySynapses");
 	}*/
-	area.addAxon(this, synapses);
+	//area.addAxon(this, synapses);
     }
     
     /**
