@@ -15,7 +15,7 @@ import java.util.*;
  */
 
 public class ArtificialConcept extends Neuroid
-    implements Concept {
+    implements Concept, Comparable {
 
     /**
      * Name of the concept
@@ -25,7 +25,7 @@ public class ArtificialConcept extends Neuroid
     /**
      * Set of other concepts that this concept represents, if available.
      */
-    Vector conceptSet;
+    Set conceptSet;
 
     /**
      * Excitatory synapse template to instantiate new synapses.
@@ -39,10 +39,10 @@ public class ArtificialConcept extends Neuroid
      * @param name a <code>String</code> value
      */
     public ArtificialConcept(Network network, String name) {
-	super(network.conceptArea, 0, 1); 
+	super(network.conceptArea); 
 	this.name = name;
 
-	init();
+	init2();
     }
 
     /**
@@ -51,12 +51,12 @@ public class ArtificialConcept extends Neuroid
      * @param network a <code>Network</code> value
      * @param conceptSet a <code>Vector</code> value
      */
-    public ArtificialConcept (Network network, Vector conceptSet) {
-	super(network.conceptArea, 0, 1); // TODO: do it
+    public ArtificialConcept (Network network, HashSet conceptSet) {
+	super(network.conceptArea);
 	this.conceptSet = conceptSet;
-	name = conceptSet.toString(); 
+	name = conceptSet.toString(); // TODO: ???
 
-	init();
+	init2();
     }
 
     /**
@@ -66,7 +66,7 @@ public class ArtificialConcept extends Neuroid
      * @param conceptSet a <code>Vector</code> value
      * @param name a <code>String</code> value
      */
-    void init() {
+    void init2() {
 	if (conceptSet != null) 
 	    ((ConceptArea)area).put(conceptSet, this); 
 	else // Add redundant entry in hashtable if conceptSet is empty
@@ -117,5 +117,35 @@ public class ArtificialConcept extends Neuroid
      */
     public void dumpData() {
     }
+
     
+    /**
+     * Describe concept.
+     * <p>TODO: remove unneccessary info?
+     * @return <description>
+     */
+    public String toString() {
+	/*return "Concept #" + hashCode() + ", u = " +
+	    numberFormat.format(potential) + ", name: " + name;*/
+	return "Concept " + name;
+    }
+
+    /**
+     * Required for implementing the Comparable interface for use in TreeMap implementation
+     * in ConceptArea.
+     * @see ConceptArea 
+     * @param o an <code>Object</code> value
+     * @return an <code>int</code> value
+     */
+    public int compareTo(Object o) {
+	if (!(o instanceof Concept)) 
+	    throw new ClassCastException("" + o);
+
+	Integer
+	    me = new Integer(hashCode()),
+	    you = new Integer(o.hashCode()); 
+	
+	return me.compareTo(you);
+    }
+
 }// ArtificialConcept
