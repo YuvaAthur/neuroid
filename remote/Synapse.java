@@ -1,6 +1,8 @@
-package Remote;
-import Base.*;
-import Remote.*;
+package neuroidnet.Remote;
+
+import neuroidnet.ntr.*;
+import neuroidnet.Remote.*;
+
 //import java.rmi.*;
 import java.rmi.server.*;
 
@@ -14,8 +16,8 @@ import java.rmi.server.*;
  * @version
  */
 
-public class Synapse extends Base.Synapse
-    implements Remote.SynapseInt {
+public class Synapse extends neuroidnet.ntr.Synapse
+    implements SynapseInt {
     Synapse localSynapse;
     
     /**

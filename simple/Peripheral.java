@@ -1,6 +1,6 @@
-package Simple;
-import Base.*;
-import Remote.*;
+package neuroidnet.Simple;
+import neuroidnet.ntr.*;
+import neuroidnet.Remote.*;
 
 /**
  * OBSOLETE: first trial, is not up-to-date
@@ -14,7 +14,7 @@ import Remote.*;
  * @deprecated 
  */
 
-public class Peripheral extends Base.Peripheral {
+public class Peripheral extends ntr.Peripheral {
     Peripheral.Concept a, b;
 
     public Peripheral (Network network, Area inputArea1, Area inputArea2, Area circuitArea) {

@@ -1,6 +1,6 @@
-package Simple;
-import Base.*;
-import Remote.*;
+package neuroidnet.Simple;
+import neuroidnet.ntr.*;
+import neuroidnet.Remote.*;
 //import java.rmi.*;
 import java.net.*;
 

@@ -1,6 +1,6 @@
-package Simple;
-import Base.*;
-import Remote.*;
+package neuroidnet.Simple;
+import neuroidnet.ntr.*;
+import neuroidnet.Remote.*;
 
 /**
  * SimpleNetwork.java
@@ -12,7 +12,7 @@ import Remote.*;
  * @version
  */
 
-public class Network extends Base.Network {
+public class Network extends ntr.Network {
     MultiConceptPeripheral peripheral;
 
     public Network (boolean isConcurrent) {
@@ -30,9 +30,9 @@ public class Network extends Base.Network {
 
 	double period = Neuroid.defaultPeriod();
 
-	Base.Area inputArea1 = new Base.Area("I1", numberOfNeuroids, replication, deltaT, period, 0.9);
-	Base.Area inputArea2 = null; //new Area("I2", numberOfNeuroids, replication, deltaT, period, 0.9);
-	Base.Area circuitArea = new Base.Area("C", numberOfNeuroids, replication, deltaT, period, 1.8);
+	ntr.Area inputArea1 = new ntr.Area("I1", numberOfNeuroids, replication, deltaT, period, 0.9);
+	ntr.Area inputArea2 = null; //new Area("I2", numberOfNeuroids, replication, deltaT, period, 0.9);
+	ntr.Area circuitArea = new ntr.Area("C", numberOfNeuroids, replication, deltaT, period, 1.8);
 	areas.add(inputArea1);
 	//areas.add(inputArea2);
 	areas.add(circuitArea);

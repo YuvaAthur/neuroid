@@ -1,6 +1,6 @@
-package Remote;
-import Base.*;
-import Remote.*;
+package neuroidnet.Remote;
+import neuroidnet.ntr.*;
+import neuroidnet.Remote.*;
 //import java.rmi.*;
 /**
  * Remote.AreaController.java

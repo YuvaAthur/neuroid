@@ -1,6 +1,6 @@
-package Remote;
-import Base.*;
-import Remote.*;
+package neuroidnet.Remote;
+import neuroidnet.ntr.*;
+import neuroidnet.Remote.*;
 //import java.rmi.*;
 import java.rmi.server.*;
 
@@ -14,7 +14,7 @@ import java.rmi.server.*;
  * @version
  */
 
-public class Area extends Base.Area {
+public class Area extends neuroidnet.ntr.Area {
     public Area (String name, int numberOfNeuroids, int replication,
 		       double deltaT, double period, double threshold) throws java.rmi.RemoteException {
 	super(name, numberOfNeuroids, replication, deltaT, period, threshold);
@@ -24,10 +24,10 @@ public class Area extends Base.Area {
     /**
      * Overload method in <code>Area</code> to create <code>Remote.Synapse</code> instead.
      * TODO: fix; original method moved to AxonArbor.
-     * @see Area#createRandomSynapse
+     * @see Area#addRandomSynapse
      * @return a <code>Synapse</code> value
      */
-    public Synapse createRandomSynapse() {
+    public Synapse addRandomSynapse() {
 	try {
 	    Synapse s = new Remote.Synapse(getRandomNeuroid(), 1, deltaT, false);
 	    //System.out.println("***synapse: " + s);

@@ -1,6 +1,7 @@
-package Remote;
-import Base.*;
-import Remote.*;
+package neuroidnet.Remote;
+import neuroidnet.*;
+import neuroidnet.ntr.*;
+
 //import java.rmi.*;
 import java.util.*;
 
@@ -16,15 +17,17 @@ import java.util.*;
  */
 
 public interface AreaInt extends java.rmi.Remote {
-    AxonArbor createRandomSynapses(Base.Synapse destSynapseTemplate, Neuroid srcNeuroid,
+    void addRandomSynapses(neuroidnet.ntr.Synapse destSynapseTemplate, Neuroid srcNeuroid,
 				   int numberOfSynapses)
 	throws java.rmi.RemoteException;
-    AxonArbor createArbitrarySynapses(Base.Synapse destSynapseTemplate, Neuroid srcNeuroid,
+    void addArbitrarySynapses(neuroidnet.ntr.Synapse destSynapseTemplate,
+				      Neuroid srcNeuroid,
 				      int numberOfSynapses) 
 	throws java.rmi.RemoteException; 
     int getNumberOfNeuroids() throws java.rmi.RemoteException;
     int getReplication() throws java.rmi.RemoteException;
     void step() throws java.rmi.RemoteException;
-    void connectToArea(Remote.AreaInt destArea, double timeConstantS, double delay, double nuBoost)
+    void connectToArea(neuroidnet.Remote.AreaInt destArea, double timeConstantS,
+		       double delay, double nuBoost)
 	throws java.rmi.RemoteException;
 }// Remote.AreaInt
