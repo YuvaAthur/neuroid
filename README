@@ -1,0 +1,37 @@
+
+Cengiz Gunay's NeuroidNet
+------------------------------
+
+
+The files in this directory are:
+
+build.xml		Simple ANT build file (http://ant.apache.org)
+ChangeLog		Log of low-level changes to the code.
+classes/		Target dir for Java class files.  
+classes.dgm		UML class diagram for JVision 2.1.
+makedoc*		Shell script to generate project javadoc.
+ntr/			Base classes for the Neuroidal Tabula Rasa.
+overview.html		Javadoc overview page.
+periphery/		Periphery classes.
+phasesegregator/	Classes to setup the phase segregation tests.
+prj.el			Emacs JDE project file.
+README			This file.
+remote/			Java RMI distributed computing support (Out-of-date)
+scripts/		BeanShell scripts to drive the simulator.
+simple.dgm
+stats			Some old statistics from comparing timing of RMI runs.
+TAGS			Emacs tags file.
+TODO			List of things to do.
+traces/			Simulation traces (including the results in the dissertation)
+
+
+Quick start guide:
+--------------------
+
+run:
+
+	java neuroidnet.ntr.Shell -c
+
+to get a BeanShell interface with the simulation commands pre-loaded from an
+initialization file. See the javadoc for the neuroidnet.ntr.Shell class for more
+info. See http://beanshell.org for using BeanShell.

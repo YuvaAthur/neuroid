@@ -6,9 +6,6 @@ package neuroidnet.ntr;
  * methods for neuroidnet simulations. Loads a rc.bsh file from the
  * current dir for this objective.
  *
- * OBSOLETE: See BeanShell related work for same purpose.
- * Initial effort spent to add functionality to Network methods,
- * later to be replaced by NeuroShell (extending BeanShell).
  * <p>Debugger style shell wrapper to drive the neuroidal simulator.
  * Contains a read-eval-print loop
  * for running the simulation and observing its status. 
