@@ -1,18 +1,71 @@
+//trace_2002-10-22_13:22:13
+// --------------------
+//trace_2002-10-22_12:44:23
+// --------------------
+//trace_2002-10-21_14:17:31
+// --------------------
+//trace_2002-10-21_14:09:15
+// --------------------
+//trace_2002-10-21_14:00:26
+// --------------------
+//trace_2002-10-21_13:18:33
+// --------------------
+// Needs working on superposedPlot
+//trace_2002-10-21_12:30:28
+// --------------------
+// Labeling of graphs was improved. Working on superposedPlot
+//trace_2002-10-20_23:14:18
+// --------------------
+//trace_2002-10-20_22:44:27
+// --------------------
+//trace_2002-10-20_18:23:42
+// --------------------
+// Got meaningful results with automated evaluation of resulting
+// concepts. Bug in qualityOfConcepts() returning NaN if no concepts
+// present in given set.
+//
+//trace_2002-10-20_17:31:03
+// --------------------
+// Got some automated results with evaluation. Bug in calculation of qualityOfConcepts.
+//trace_2002-10-20_15:17:05
+// --------------------
+// Got some automated results for 3 objects in a 2-layer
+// network. Still lacks automatic evaluation.
+//trace_2002-10-20_15:07:08
+// --------------------
+//trace_2002-10-20_12:14:19
+// --------------------
+//trace_2002-10-20_12:11:30
+// --------------------
+// trace_2002-10-20_12:05:15
+// --------------------
+// Solution: synapse-activity-w/o-weight/mean-activity > 0.7 to be potentiated.
+// Problem with insignificant activity in synapse to be counted. 
+
+// Now no sprurius concepts with this tau_m. Need another test with tau_m = 21
+// Works, but causes little activity in synapse to be counted.
+// Changed T = 0.97 * SugT. => Works
+
+// Problem with spurious (empty concepts) due to synaptic potential
+// being below 0.5 at time of firing.. Reason is as Tau_m gets smaller,
+// the epsp's magnitude is larger.
+
+// Two Layer test with three objects segregated by 2 * sigma = 14 msec
 import edu.ull.cgunay.utils.plots.*;
 import edu.ull.cgunay.utils.*;
 import neuroidnet.ntr.*;
 
 //reloadClasses();
 
-until = 110;
+until = 160;
 
 watchedSet = new java.util.TreeSet();
 //watchedSet.add(new NeuroidName("I1",0));
-//watchedSet.add(new NeuroidName("M1",48));
-//watchedSet.add(new NeuroidName("M1",40));
-//watchedSet.add(new NeuroidName("M2",54));
-//watchedSet.add(new NeuroidName("M2",95));
-watchedSet.add(new NeuroidName("M3",90));
-watchedSet.add(new NeuroidName("M3",73));
+//watchedSet.add(new NeuroidName("M1",24));
+//watchedSet.add(new NeuroidName("M1",66));
+//watchedSet.add(new NeuroidName("M2",67));
+watchedSet.add(new NeuroidName("M2",91));
+watchedSet.add(new NeuroidName("M3",48));
+watchedSet.add(new NeuroidName("M3",32));
 //watchedSet.add(new NeuroidName("M3",29));
 //watchedSet.add(new NeuroidName("M3",5));
