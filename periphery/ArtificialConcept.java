@@ -68,9 +68,9 @@ public class ArtificialConcept extends Neuroid
      */
     void init() {
 	if (conceptSet != null) 
-	    network.conceptArea.put(conceptSet, this); 
+	    ((ConceptArea)area).put(conceptSet, this); 
 	else // Add redundant entry in hashtable if conceptSet is empty
-	    network.conceptArea.put(this, this); 
+	    ((ConceptArea)area).put(this, this); 
     }
 
     /**
