@@ -483,7 +483,7 @@ public class Area implements Runnable, AreaInt, Serializable, Expressive {
 			  numberOfSynapses);
 
 	for (int index = 0; index < numberOfSynapses; index++) {
-	    int retries = 10, // Retries for coincides with previously allocated synapses
+	    int retries = 20, // Retries for coincides with previously allocated synapses
 		retry = retries; 
 
 	    while (retry-- > 0) {
