@@ -16,7 +16,7 @@ import java.util.*;
  */
 
 public class ConceptArea extends Area
-    implements Map {
+    implements Map, DumpsData {
 
     /**
      * Hashtable pointing from vector (set?) of concepts to concepts contained in here.
@@ -65,6 +65,49 @@ public class ConceptArea extends Area
 	retval += (String)neuroidsToStringTask.getValue();
 
 	return retval;
+    }
+
+    /**
+     * Dump synaptic activity of concepts contained to output (matlab file?).
+     * <p>TO DO: do it! put this in an interface
+     *
+     */
+    public String dumpData() {
+	String retval =
+	    "%% Matlab script created by the Neuroidal network\n\n" +
+	    "lastTime = " + time + ";\n" + 
+	    "numberOfConcepts = " + neuroids.size() + ";\n\n";
+	
+	// TODO: make this following class common with the one in Network.toString()
+	Utils.TaskWithReturn toStringTask =
+	    new Utils.TaskWithReturn() {
+		    String retval = new String();
+		    int id = 0;
+		
+		    public void job(Object o) {
+			String conceptId = "concept" + id;
+			retval +=
+			    "%% " + o + "\n" + // Remark
+			    conceptId + "name = '" + o + "';\n" +
+			    conceptId + " = [" + ((ArtificialConcept)o).dumpData() + "];\n" +
+			    "subplot(numberOfConcepts, 1, " + (id + 1) + ");\n" +
+			    "stem(" + conceptId + ", ones(size(" + conceptId + ", 2)), 'filled');\n" +
+			    "axis([0 lastTime 0 1]);\n" +
+			    "text(0, 0.5, '" + o + "');\n\n";
+			id++;
+		    }
+
+		    public Object getValue() {
+			return retval;
+		    }
+		};
+	
+	Iteration.loop(neuroids.iterator(), toStringTask);
+	
+	retval += (String)toStringTask.getValue();
+
+	return retval;
+	
     }
 
     /**
