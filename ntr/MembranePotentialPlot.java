@@ -1,8 +1,8 @@
 
 package neuroidnet.ntr;
 
-import neuroidnet.utils.*;
-import neuroidnet.ntr.plots.*;
+import edu.ull.cgunay.utils.*;
+import edu.ull.cgunay.utils.plots.*;
 
 import java.util.*;
 
@@ -50,7 +50,7 @@ public class MembranePotentialPlot extends Plot {
 
 	final Range maximalRange = new Range(0, 0);
 
-	new Iteration() {
+	new UninterruptedIteration() {
 	    boolean first = true;
 	    public void job(Object o) {
 		Plot plot = ((SynapseProfile)o).getWeightedPotentialPlot();

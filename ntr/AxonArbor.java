@@ -1,7 +1,7 @@
 package neuroidnet.ntr;
 
 import neuroidnet.remote.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.*;
 
 import java.lang.*;
 import java.util.*;
@@ -115,27 +115,23 @@ public class AxonArbor extends Vector implements Input {
      * @param synapse a <code>Synapse</code> value
      * @exception ResynapseException if the <code>synapse</code> is already in arbor.
      */
-    public void addSynapse(Synapse synapse) throws ResynapseException {
+    public void addSynapse(final Synapse synapse) throws ResynapseException {
 
 	// Check all existing synapses for the same postsynaptic neuron
-	Object[] p = { synapse, new Boolean(false) };
-	Iteration.loop(iterator(), new TaskWithParam() { 
-		public void job(Object o, Object[] p) {
-		    Synapse existingSynapse = (Synapse) o;
-		    Synapse newSynapse = (Synapse) p[0];
+	try {
+	    Iteration.loop(iterator(), new Task() { 
+		    public void job(Object o) throws TaskException {
+			if (((Synapse) o).getDestNeuroid().equals(synapse.getDestNeuroid())) 
+			    throw new BreakOutOfIterationException(o);
+		    }});	     
+	} catch (BreakOutOfIterationException e) {
+	    throw new ResynapseException("Synapsing on same " +
+					 ((Synapse)e.getValue()).getDestNeuroid() +
+					 ", try again!");	    
+	} // end of try-catch
 
-		    if (existingSynapse.getDestNeuroid().equals(newSynapse.getDestNeuroid())) {
-			p[1] = new Boolean(true);
-		    } // end of if
-
-		}}, p);
-	
-	if (((Boolean)p[1]).booleanValue()) 
-	    // throw exception if neuroid found in existing synapses
-	    throw new ResynapseException("Synapsing on same neuron, try again!");
-	else 
-	    // otherwise accept new synapse
-	    add(synapse);
+	// otherwise accept new synapse
+	add(synapse);
     }
 
     /**
@@ -185,18 +181,13 @@ public class AxonArbor extends Vector implements Input {
      * Spikes are received at contained synapses.
      */
     public void fire() {
-	Iteration.loop(iterator(), new Task() {
+	UninterruptedIteration.loop(iterator(), new Task() {
 		public void job(Object o) {
-		    if (o instanceof Synapse) 
-			((Synapse)o).receiveSpike();
-		    else {
-			try {
-			    ((SynapseInt)o).receiveSpike();
-			} catch (java.rmi.RemoteException e) {
-			    System.out.println("Cannot call SynapseInt");
-			}
-		    } // end of else
-		    //System.out.println("***synapse");
+		    try {
+			((SynapseInt)o).receiveSpike();
+		    } catch (java.rmi.RemoteException e) {
+			System.out.println("Cannot call SynapseInt");
+		    }
 		}});
     }
 
