@@ -49,7 +49,7 @@ public class Neuroid implements Input {
     double refractoryTimeConstant;
 
     /**
-     * Constant external current for all neuroids in network (N/A)
+     * Constant external current for all neuroids in network (not used!)
      */
     double externalCurrent = 2;
 
@@ -363,7 +363,7 @@ public class Neuroid implements Input {
      * @see Neuroid#sumOfWeights
      */
     void updateWeights() {
-	sumOfCurrentWeights = 0;
+	sumOfCurrentWeights = 0; // currently not used
 
 	// Loop over synapses and update weights according to Winnow learning rule
 	new SynapseActivityTask() {
@@ -419,7 +419,7 @@ public class Neuroid implements Input {
      */
     void makeConcept() {
 
-	// Loop over synapses and update according to Winnow learning rule
+	// Loop over synapses and save their concepts in conceptSet
 	SynapseActivityTask synapseIterator = new SynapseActivityTask() {
 		HashSet conceptSet;
 
@@ -430,8 +430,6 @@ public class Neuroid implements Input {
 
 		public void job(Object o) {
 		    super.job(o);	// main job
-		    Synapse s = (Synapse) o;
-		    toplevel.sumOfCurrentWeights += s.weight;
 		}
 
 		void potentiatedSynapse(Synapse s) {
@@ -454,11 +452,42 @@ public class Neuroid implements Input {
 	} catch (NullPointerException e) { 
 	    concept = new ArtificialConcept(area.network, conceptSet);
 	} 
-	concept.attach(this);
+
+	// An exception should be received in case the replication factor is exceeded.
+	// TODO2: Later make global inhibitory connections limit this number.
+	// 	  One might randomly distribute the timeConstantS with deviation param
+	//	  and the global inhibitory neuroid will suppress late concepts even
+	// 	  from going into UM
+	try {
+	    concept.attach(this);
+	} catch (ConceptSaturatedException e) {
+	    // Back to AM mode? Reset weights ?
+	    reset();
+	} 
     }
 
     /**
-     * Method inherited from java.lang.Object to display text about <code>Neuroid</code>.
+     * Resets the neuroid to its initial <i>pristine</i> state.
+     * Sets the mode to AM and initializes the weights to 1.
+     * Called from makeConcept().
+     * @see #makeConcept
+     */
+    public void reset() {
+	mode.setState(Mode.AM);	// Available memory state
+	mode.setThreshold(area.getActivationThreshold()); // AM -> AM1 threshold
+
+	// Iterate over synapses and set weights to 1
+	Iteration.loop(synapses.iterator(),
+		       new Utils.Task {
+		public void job(Object o) {
+		    ((Synapse) o).setWeight(1);
+		});
+	    }
+    }
+
+    /**
+     * Method inherited from <code>java.lang.Object</code> to display the
+     * <code>Neuroid</code>'s state in text format.
      *
      * @return a <code>String</code> value
      */
@@ -538,7 +567,7 @@ public class Neuroid implements Input {
 	public void setThreshold(double  v) {this.threshold = v;}
 
 	/**
-	 * The total sum of incoming weights to a Neuroid should be fixed.
+	 * The total sum of incoming weights to a Neuroid should be fixed. (Why?)
 	 * @see Neuroid#Neuroid
 	 */
 	double sumOfWeights; 
