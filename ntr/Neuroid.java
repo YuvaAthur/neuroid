@@ -41,7 +41,7 @@ public class Neuroid implements Input {
      * Learning parameter for the Winnow learning algorithm.
      * @see Neuroid#updateWeights
      */
-    double correctTimesRequired = 3;
+    public static double correctTimesRequired = 3;
 
     /**
      * 
@@ -195,19 +195,20 @@ public class Neuroid implements Input {
      * TODO: add external current!
      */
     void calculatePotential() {
-	potential = 0;
-
-	Iteration.loop(synapses.iterator(), new Utils.Task() { 
-		public void job(Object o) {
-		    potential += ((Synapse)o).getPotential();
-/*		    try {
-			potential += ((o instanceof Synapse) ?
-				      ((Synapse)o).getPotential() :
-				      ((Remote.SynapseInt)o).getLocalSynapse().getPotential());
-		    } catch (java.rmi.RemoteException e) {
-			System.out.println("Remote.Synapse cannot be reached.");
-		    }*/
-		}});
+	while (true) {
+	    try {
+		potential = 0;
+		Iteration.loop(synapses.iterator(), new Utils.Task() { 
+			public void job(Object o) {
+			    potential += ((Synapse)o).getPotential();
+			}});
+		break;
+	    } catch (ConcurrentModificationException e) {
+		// do nothing, i.e. restart
+		System.out.println("Concurrent modification in Neuroid.calculatePotential()" +
+				   ", repeating...");
+	    } 
+	} // of while
 	potential += refractoriness(area.time - timeLastFired);
     }
 
@@ -230,6 +231,10 @@ public class Neuroid implements Input {
     public void step() {
 	
 	calculatePotential();
+
+	/*if (potential >= 0.5) {
+	    System.out.println("Activity in: " + this);
+	} */
 
 	switch (mode.getState()) {
 	case Mode.AM:
@@ -282,8 +287,8 @@ public class Neuroid implements Input {
 		fire();
 	    } /*else if (potential >= 0.5) {
 		System.out.println("Not enough activity in: " + this);
-	    } // end of else
-	    */
+	    }*/ // end of else
+	    
 	    break;
 	    
 	default:
