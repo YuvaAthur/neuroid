@@ -23,19 +23,39 @@ public class Synapse implements DumpsData {
     boolean isInhibitory;
 
     /**
-     * Synapse constant dynamic properties.
-     * Delay is currently not used due to the existence of natural delay between areas. (?)
-     * TODO: <code>delay</code> is required for the <code>PhaseSegregator.Network</code>
+     * Synapse constant dynamic properties. The membrane time constant of the postsynaptic neuron. (Why in Snapse? See constructor documentation.)
+     * @see #Synapse
      */
     double timeConstantM;
+
+    /**
+     * Synapse constant dynamic properties. The synaptic rise time constant.
+     */
     double  timeConstantS;
-    double delay; /** delay is not implemented in the parallel version */
+
+    /**
+     * <code>delay</code> is required for the <code>PhaseSegregator.Network</code>
+     * @see PhaseSegregator.Network
+     */
+    double delay; 
 
     /**
      * Incoming weight.
      */
     double weight;
 
+    /**
+       * Get the value of weight.
+       * @return value of weight.
+       */
+    public double getWeight() {return weight;}
+    
+    /**
+       * Set the value of weight.
+       * @param v  Value to assign to weight.
+       */
+    public void setWeight(double  v) {this.weight = v;}
+    
     /**
      * Presynaptic neuroid.
      * TODO:	The remote interfaces for this connection is not done yet.
@@ -122,8 +142,8 @@ public class Synapse implements DumpsData {
      * @see Neuroid#fire
      */
     public void receiveSpike() {
-	/*System.out.println("Received spike at " + this.getStatus() +
-			   " connected to " + destNeuroid);*/
+	System.out.println("Received spike at " + this.getStatus() +
+			   " connected to " + destNeuroid);
 	
 	spikeTrain.add(new Double(destNeuroid.area.time));
 	
@@ -220,28 +240,39 @@ public class Synapse implements DumpsData {
     public String dumpData() {
 	String retval = "";
 	
-	// TODO: make this following class common with the one in Network.toString()
-	Utils.TaskWithReturn toStringTask =
-	    new Utils.TaskWithReturn() {
-		    String retval = new String();
-		    int number = 0;
+	while (true) {
+	    try {
+		// TODO: make this following class common with the one in Network.toString()
+		Utils.TaskWithReturn toStringTask =
+		    new Utils.TaskWithReturn() {
+			String retval = new String();
+			int number = 0;
 		    
 		
-		    public void job(Object o) {
-			number++;
-			retval += ((Double)o) + " "; // spike times separated by space
-			if ((number % 5) == 0) // limit 5 elements per row for text file 
-			    retval += "...\n";
-		    }
+			public void job(Object o) {
+			    number++;
+			    retval += ((Double)o) + " "; // spike times separated by space
+			    if ((number % 5) == 0) // limit 5 elements per row for text file 
+				retval += "...\n";
+			}
 
-		    public Object getValue() {
-			return retval;
-		    }
-		};
+			public Object getValue() {
+			    return retval;
+			}
+		    };
 	
-	Iteration.loop(spikeTrain.iterator(), toStringTask);
+		Iteration.loop(spikeTrain.iterator(), toStringTask);
+
+		retval += (String)toStringTask.getValue();
+
+		break;		// out of while
+	    } catch (ConcurrentModificationException e) {
+		// do nothing, i.e. restart
+		System.out.println("Concurrent modification in Synapse.dumpData(), repeating...");
+	    }	     
+	} // end of while (true)
+
 	
-	retval += (String)toStringTask.getValue();
 
 	return retval;
 	
