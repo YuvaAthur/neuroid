@@ -40,7 +40,7 @@ abstract public class Network {
      * Increment of time for algorithms.
      * TODO: Put it elsewhere; too far to reach!
      */
-    protected double deltaT;
+    public double deltaT;
     
     /**
      * For formatting real values
