@@ -75,14 +75,14 @@ public class  Network extends Base.Network {
 	//	(dump list of Concepts and firing times, to matlab file)
 
 	// Step 
-	double untilTime = 6.0;
+	double untilTime = 1.0;
 	long startTime = System.currentTimeMillis();
 	for (int i = 0; i < untilTime/deltaT; i++) {
 	    //System.out.println("STEP " + i);
 
 	    // Fire both inputs initially
 	    if (i == 0)
-		peripheral.fireInputs();
+		peripheral.testOneInput();
 
 	    /*if (i > 5 && i < 305) { 
 		peripheral.fireRandomNoise();
