@@ -1,13 +1,9 @@
+- make Area implement Remote.AreaInt, etc.
 - TreeSet or HashSet?
-- two ways of textualization (expression): 1- static-long (getStatus), 2- dynamic-short (toString) ?
 - change naming of sensoryneuroid to 'percept'
-- add count of neuroids in a concept to its string value!
 - implement tzeng's network: allocate all assemblies in input area and create all UMs then prune connections and count 'em!
-+ print network info in Netowrk.toString at end of program
 - implement dumpdata in conceptArea
-- move Concept related files to periphery/
-+
- id? naming neuroids? decide by area vector position? decide at time of `attach'ing to area?
+- move Concept related files to periphery/ 
 - Test new synapse scanning constructs for validity.
 - Enable seleciton of dynamic behavior of groups of neurons (delay + membrane characteristic).
 - use AxonArbor for dist communication improvement.
@@ -16,6 +12,11 @@
 - solve problem with constant current
 - enable selection of inhibitory connections and other parameters
 - set global inhibitory connections
++ conceptualize inhibitory neuroids!
++ two ways of textualization (expression): 1- static-long (getStatus), 2- dynamic-short (toString) ?
++ add count of neuroids in a concept to its string value!
++ print network info in Netowrk.toString at end of program
++ id? naming neuroids? decide by area vector position? decide at time of `attach'ing to area?
 + add deltaT to Area and use if in algo.s et al.
 + Visualize somehow
 + Give inputs
