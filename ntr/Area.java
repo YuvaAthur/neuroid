@@ -516,7 +516,7 @@ public class Area implements Runnable, Remote.AreaInt {
      */
     public String getStatus() {
 	return this + ", numberOfNeuroids=" + numberOfNeuroids +
-	    ", replication=" + replication + ", deltaT=" + deltaT;
+	    ", replication=" + replication + ", deltaT=" + deltaT + ", tau_m=" + timeConstantM;
     }
 
     // implementation of java.lang.Runnable interface
@@ -532,11 +532,19 @@ public class Area implements Runnable, Remote.AreaInt {
 	    } catch (InterruptedException e) {
 		//throw new RuntimeException("interrupt!");
 		updateTime();
-		Iteration.loop(neuroids.iterator(), new Utils.Task() {
-			public void job(Object o) {
-			    ((Neuroid)o).step();
-			}
-		    });
+		while (true) {
+		    try {
+			Iteration.loop(neuroids.iterator(), new Utils.Task() {
+				public void job(Object o) {
+				    ((Neuroid)o).step();
+				}
+			    });
+			break;		// out of while
+		    } catch (ConcurrentModificationException ez) {
+			// do nothing, i.e. restart
+			System.out.println("Concurrent modification in Area.step(), repeating...");
+		    }	     
+		} // end of while (true)
 		stepRequested = false; // Completed
 	    }
 	    
