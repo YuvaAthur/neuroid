@@ -102,10 +102,10 @@ public class Peripheral extends neuroidnet.ntr.Peripheral {
     //sensoryAreas = new SensoryArea[inputAreas.length];
     sensoryArea = new SensoryArea(network, "sensory-area"/* + (areaNo + 1)*/);
     for (int areaNo = 0; areaNo < inputAreas.length; areaNo++) {
-      String name = "S" + (areaNo + 1);
+      String name = "S_" + (areaNo + 1);
       for (int concept = 0; concept < numberOfItemsPerArea; concept++) 
 	new SensoryNeuroid(sensoryArea, inputAreas[areaNo],
-			   name + "-" + concept);
+			   name + "^" + concept);
     }
   }
 
