@@ -13,11 +13,11 @@ network.advanceTime(until);
 //area = network.getArea("sensory-1");
 //print(area.neuroids.elementAt(0));
 
-w2 = 81;
+w2 = 90;
 n2 = network.getNeuroid("M2", w2);
 print (n2.getStatus());
 
-w1 = 85; 
+w1 = 45; 
 n = network.getNeuroid("M1", w1);
 print (n.getStatus());
 
@@ -26,13 +26,17 @@ network = load("net.data");
 n = network.getNeuroid("M1", w1);
 n2 = network.getNeuroid("M2", w2); 
 
-network.setWatch(n);
-network.setWatch(n2);
+network.addWatch(n);
+network.addWatch(n2);
 
 network.advanceTime(until);
 save(network, "net.withprofile.data");
 
 grapher = new neuroidnet.ntr.plots.GNUPlot();
 plot = n.getNeuroidProfile().neuroidFirePlot(grapher);
-grapher.display(plot);
+print(grapher.display(plot));
 
+proc =  Runtime.getRuntime().exec("matlab");
+out = new PrintWriter(proc.getOutputStream());
+reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+ while (reader.ready()) { System.out.print((char)reader.read()); }
