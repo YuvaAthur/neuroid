@@ -1,63 +1,61 @@
 package PhaseSegregator;
 import Base.*;
 import Remote.*;
+import periphery.*;
 import java.util.*;
 //import java.rmi.*;
 import Utils.*;
 
 /**
- * Two areas: input and circuit.
- * Two concepts and balancing number of noise concepts in input area.
+ * 3 <code>SensoryArea</code>s and 3 medial <code>Area</code>s.
+ * Inputs are <code>SensoryNeuroid</code>s.
+ * @see SensoryArea
+ * @see SensoryNeuroid
  *
  * Created: Mon Dec 11 02:52:07 2000
+ * Modified: $Date$
  *
  * @author Cengiz Gunay
- * @version
+ * @version $Revision$ for this file
  */
 
 public class Peripheral extends Base.Peripheral {
-    Concept[] concepts;
-    Area[] inputAreas;
-    int numberOfItems;
+    Base.Area[] inputAreas;
+    int numberOfItemsPerArea;
+    SensoryArea[] sensoryAreas;
 
-    public Peripheral (Network network, Area[] inputAreas,
+    public Peripheral (Base.Network network, Base.Area[] inputAreas,
 		       int numberOfItemsPerArea) {
 	super(network);
 	this.inputAreas = inputAreas;
-	this.numberOfItems = numberOfItems;
+	this.numberOfItemsPerArea = numberOfItemsPerArea;
 
-	allocateConcepts();
+	createSensoryInputs();
     }
 
-    void allocateConcepts() {
-	concepts = new Concept[numberOfItems];
-	for (area = 0; area < inputAreas.size; area++) {
-	    for (concept = 0; concept < numberOfItemsPerArea; concept++) {
-		concepts[area*inputAreas.size + concept] = new Concept(inputAreas[area]);
-	    } // end of for (concept = 0; concept < numberOfItems; concept++)
-	} // end of for (area = 0; area < inputAreas.size; area++)
+    /**
+     * Creates sensoryAreas that hold sensoryNeuroids.
+     * Neuroids can be indirectly reached from the areas.
+     */
+    void createSensoryInputs() {
+	sensoryAreas = new SensoryArea[inputAreas.length];
+	for (int area = 0; area < inputAreas.length; area++) {
+	    sensoryAreas[area] = new SensoryArea(network, "sensory-area-" + (area + 1));
+	    String name = "S" + (area + 1);
+	    for (int concept = 0; concept < numberOfItemsPerArea; concept++) 
+		sensoryAreas[area].addNeuroid(new SensoryNeuroid(sensoryAreas[area],
+								 inputAreas[area],
+								 name + "-" + concept));
+	}
     }
 
     public void fireInputs() {
-	a.fire();
-	b.fire();
+	// Fire one input in sensory area 1
+	((Neuroid)sensoryAreas[0].neuroids.elementAt(0)).fire(); 
     }
 
     public void testOneInput() {
-	a.fire();
-    }
-
-    public void fireRandomNoise() {
-	Iteration.loop(noiseConcepts.iterator(), new Task() {
-		int i = 0;
-		public void job(Object o) {
-		    // 1/300 chance should make all of them fire once during 300 steps(!)
-		    int level = (int)(Math.random()*300);
-		    if (level == 1) {
-			((Concept) o).fire();
-			System.out.println("Firing random concept...");
-		    } else return;
-		}});
+	//	a.fire();
     }
 
 }// MultiConceptPeripheral
