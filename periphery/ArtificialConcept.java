@@ -107,7 +107,8 @@ public class ArtificialConcept extends Neuroid
      */
     public void attach(Neuroid neuroid) throws ConceptSaturatedException {
 	    if (synapses.size() >= neuroid.getArea().getReplication()) {
-		System.out.println("Replication limit reached for concept " + this);
+		System.out.println("Replication limit reached for " + this + "\n" +
+				   "Cannot attach " + neuroid + ".");
 		throw new
 		    ConceptSaturatedException("Replication limit reached for concept " +
 					      this);
@@ -146,8 +147,8 @@ public class ArtificialConcept extends Neuroid
     //public static int id = 0; OBSOLETE
 
     /**
-     * Dump synaptic activity to output (matlab file?). TO DO: do it!
-     *
+     * Dump synaptic activity to output (matlab format).
+     * TODO: in gnuplot format?
      */
     public String dumpData() {
 
