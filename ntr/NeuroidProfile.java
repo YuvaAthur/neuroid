@@ -52,8 +52,8 @@ public class NeuroidProfile implements Serializable {
 	modeProfile = new Profile(neuroid.getMode(), new Double(neuroid.getArea().time));
     }
 
-    public SpikePlot neuroidFirePlot(Grapher grapher) {
-	return new SpikePlot(grapher, null, null, spikesEmitted);
+    public SpikePlot spikesEmittedPlot() {
+	return new SpikePlot(null, null, spikesEmitted);
     }
 
 }// NeuroidProfile
