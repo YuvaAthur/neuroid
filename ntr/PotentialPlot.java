@@ -2,7 +2,7 @@
 package neuroidnet.ntr;
 
 import edu.ull.cgunay.utils.StringTask;
-import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.plots.*;
 
 import java.util.*;
 

@@ -1,7 +1,7 @@
 
 package neuroidnet.ntr;
 
-import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.plots.*;
 import neuroidnet.periphery.*;
 import edu.ull.cgunay.utils.*;
 

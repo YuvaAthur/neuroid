@@ -1,6 +1,6 @@
 package neuroidnet.ntr;
 
-import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.plots.*;
 import neuroidnet.periphery.*;
 import edu.ull.cgunay.utils.*;
 //import neuroidnet.remote.*;
@@ -300,6 +300,12 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
     }
 
     /**
+     * N/A
+     *
+     */
+    public void stop() {}
+
+    /**
      * Calculate the <code>potential</code> here.
      * @see #potential
      */
@@ -577,6 +583,12 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
 	}	
 
 	public void init() { }
+
+	/**
+	 * N/A
+	 *
+	 */
+	public void stop() {}
 	
 	/**
 	 * Strip fully qualified class name to leave only the class name.
@@ -644,6 +656,11 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
 	     * Dummy.
 	     */
 	    public void init() {}
+
+	    /**
+	     * Dummy.
+	     */
+	    public void stop() {}
 
 	    /**
 	     * Returns state name.

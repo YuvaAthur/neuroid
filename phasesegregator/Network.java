@@ -1,7 +1,7 @@
 package neuroidnet.phasesegregator;
 
 import neuroidnet.ntr.*;
-import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.plots.*;
 import neuroidnet.periphery.*;
 //import remote.*;
 
@@ -29,7 +29,7 @@ public class Network extends neuroidnet.ntr.Network {
 
     protected int
 	numberOfMedialAreas = 3,
-	numberOfItemsPerArea = 3/*,
+	numberOfItemsPerArea = 4/*,
 	numberOfItems = numberOfItemsPerArea * numberOfMedialAreas*/;
     
     protected double
@@ -147,10 +147,12 @@ public class Network extends neuroidnet.ntr.Network {
 */
     /**
      * Create the network and run for 30 msecs. (Single threaded.)
-     *
+     * @deprecated OBSOLETE! Use the Shell
      * @param args a <code>String[]</code> value
+     * @see Shell
      */
     public static void main (String[] args) {
+	/*
 	neuroidnet.ntr.Network network = new Network(false); // Single threaded!
 	network.run();
 
@@ -177,7 +179,7 @@ public class Network extends neuroidnet.ntr.Network {
 	    throw new Error("Unable to initialize gnuplot..");
 	} // end of catch
 	
-
+	*/
     } // end of main ()
 
     

@@ -1,0 +1,1 @@
+java -cp neuroidnet.jar:javautils.jar:/home/swamp2/maida/cxg9789/local/tmp/BeanShell/classes/bsh.jar bsh.Console

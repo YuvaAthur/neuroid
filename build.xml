@@ -1,0 +1,21 @@
+<project name="neuroidnet" default="build">
+
+<description> Build file for cgunay's neuroidnet. </description>
+
+<property name="src-dir" location=".."/>
+<property name="build-dir" location="classes"/>
+<property name="user-class-dir" location="${user.home}/classes"/>
+
+<target name="build">
+<javac srcdir="${src-dir}"
+       destdir="${build-dir}"
+       includes="neuroidnet/**"
+       excludes="neuroidnet/router/**,neuroidnet/simple/**,neuroidnet/remote/**,neuroidnet/Guinea.java,neuroidnet/ntr/MembranePotentialPlot.java"/>
+</target>
+
+<target name="dist" depends="build">
+<jar jarfile="${ant.project.name}.jar" basedir="classes"/>
+<copy file="${ant.project.name}.jar" todir="${user-class-dir}"/>
+</target>
+
+</project>

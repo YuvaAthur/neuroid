@@ -30,6 +30,11 @@ import edu.ull.cgunay.utils.*;
  */
 
 public class StatisticalInputSequence extends Peripheral  {
+    
+    /**
+     * Can be manipulated by beanshell scripts under <code>scripts/</code>.
+     *
+     */
     int numberOfObjects = 0;
 
     int
@@ -79,13 +84,24 @@ public class StatisticalInputSequence extends Peripheral  {
 	public String toString() {
 	    return getClass().getName() + ": Concept = " + conceptSet;
 	}
+	
+	/**
+	 * Checks equality according to <code>conceptSet</code>s.
+	 *
+	 * @param that an <code>SimObject</code> value
+	 * @return a <code>boolean</code> value
+	 */
+	public boolean equals(Object that) {
+	    return conceptSet.compareTo(((SimObject)that).conceptSet) == 0;
+	}
+	
     }
 
     /**
      * Objects to be fired in the input sequence.
      *
      */
-    SimObject[] simObjects;
+    Vector simObjects;
 
     /**
      * Builds properties of the peripheral object. Here, prepare
@@ -100,35 +116,54 @@ public class StatisticalInputSequence extends Peripheral  {
 	    numberOfObjects = numberOfNeuroids / replication;
 	
 
-	simObjects = new SimObject[numberOfObjects];
+	// BUG: Objects are not inspected for uniqueness, leads to 
+	// misinterpretation of network capacity.
+
+	// TODO: make the following a set capable of contains() for checking existing objects
+	simObjects = new Vector(numberOfObjects);
+
 	for (int objectNum = 0; objectNum < numberOfObjects; objectNum++) {
 	    final SimObject object = new SimObject();
 	    object.percepts = new Input[numberOfMedialAreas + 1];
 
-	    int firstOne = (int) (numberOfItemsPerArea * Math.random());
-	    int secondOne =
-		(int) ((firstOne + ((numberOfItemsPerArea - 1) * Math.random() + 1)) % 
-		       numberOfItemsPerArea);
+	    int retries = 10;
+	    while (--retries > 0) {
+		int firstOne = (int) (numberOfItemsPerArea * Math.random());
+		int secondOne =
+		    (int) ((firstOne + ((numberOfItemsPerArea - 1) * Math.random() + 1)) % 
+			   numberOfItemsPerArea);
 
-	    object.percepts[0] = ((Input[])percepts.get(inputAreas[0]))[firstOne];
-	    object.percepts[1] = ((Input[])percepts.get(inputAreas[0]))[secondOne];
+		object.percepts[0] = ((Input[])percepts.get(inputAreas[0]))[firstOne];
+		object.percepts[1] = ((Input[])percepts.get(inputAreas[0]))[secondOne];
 
-	    for (int areaNum = 1; areaNum < numberOfMedialAreas; areaNum++) {
-		object.percepts[areaNum + 1] =
-		    ((Input[])percepts.get(inputAreas[areaNum]))[(int) (numberOfItemsPerArea * Math.random())];
-	    } // end of for (areaNum = 0; areaNum < numberOfMedialAreas; areaNum++)
+		for (int areaNum = 1; areaNum < numberOfMedialAreas; areaNum++) {
+		    object.percepts[areaNum + 1] =
+			((Input[])percepts.get(inputAreas[areaNum]))[(int) (numberOfItemsPerArea * Math.random())];
+		} // end of for (areaNum = 0; areaNum < numberOfMedialAreas; areaNum++)
 	    
-	    new UninterruptedIteration() {
-		public void job(Object o) {
-		    object.conceptSet.addAll(((ArtificialConcept)((Neuroid)o).getConcept()).getConceptSet());
-		}
-	    }.loop(object.percepts);
+		new UninterruptedIteration() {
+		    public void job(Object o) {
+			object.conceptSet.addAll(((ArtificialConcept)((Neuroid)o).getConcept()).getConceptSet());
+		    }
+		}.loop(object.percepts);
 
-	    simObjects[objectNum] = object;
+		if (!simObjects.contains(object)) break;
+
+		// Retrying, so clean the conceptSet
+		object.conceptSet.clear();
+	    }  // end of while (retries-- > 0)
+
+	    if (retries == 0) 
+		throw new Error("Cannot find another unique object! " +
+				getProperties());
+	    
+	    simObjects.add(object);
 	}
 	
 	initEvents();
     }
+
+    
 
     void initEvents() {
 	// Loop for all objects and register events, 
@@ -157,7 +192,7 @@ public class StatisticalInputSequence extends Peripheral  {
 	    }
 	    }.loop(simObjects);	
 
-    super.initEvents();
+	super.initEvents();
     }
 
     /**

@@ -2,7 +2,7 @@
 package neuroidnet.ntr;
 
 import edu.ull.cgunay.utils.*;
-import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.plots.*;
 
 import java.util.*;
 
@@ -18,7 +18,7 @@ import java.util.*;
  * @version $Revision$ for this file.
  */
 
-public class MembranePotentialPlot extends Plot {
+public class MembranePotentialPlot extends SimplePlot {
 
     /**
      * <code>Vector</code> of <code>WeightedPotentialPlot</code>

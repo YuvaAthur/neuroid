@@ -1,0 +1,1 @@
+java -Xmx256m -Xss4m -Xoss4m -cp neuroidnet.jar:javautils.jar neuroidnet.ntr.Shell $*

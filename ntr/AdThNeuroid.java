@@ -135,6 +135,11 @@ public class AdThNeuroid extends SRMNeuroid  {
 	public void init() {}
 
 	/**
+	 * Dummy.
+	 */
+	public void stop() {}
+
+	/**
 	 * Returns current value of threshold according to
 	 * <code>crossTime</code> and <code>maxPotential</code>.
 	 *

@@ -1,0 +1,11 @@
+SHELL=/usr/bin/bash
+
+# by default
+nothing:
+
+diff:
+	for i in *.bsh; do echo $$i; diff $$i $(HOME)/neuroidnet/scripts/$$i; done
+
+commit:
+	cp -f *.bsh $(HOME)/neuroidnet/scripts/
+	cp -f Makefile ../Makefile.trace
