@@ -7,6 +7,6 @@ network = new neuroidnet.phasesegregator.Network(false);
 network.run();
 save(network, "net.data");
 
-// do a exploratory run
+// do an exploratory run
 network.advanceTime(until);
 print (network.getProperties());

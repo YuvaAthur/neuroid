@@ -1,12 +1,17 @@
 import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.utils.*;
 import neuroidnet.ntr.*;
 
 //reloadClasses();
 
-until = 30;
-w3 = 68;
-w3_1 = 96;
-w2 = 4;
-w2_1 = 9;
-w1 = 38; 
-w1_1 = 11;
+until = 45;
+
+watchedSet = new java.util.HashSet();
+//watchedSet.add(new NeuroidName("I1",0));
+watchedSet.add(new NeuroidName("M1",21));
+watchedSet.add(new NeuroidName("M1",40));
+watchedSet.add(new NeuroidName("M2",2));
+watchedSet.add(new NeuroidName("M2",19));
+watchedSet.add(new NeuroidName("M3",12));
+watchedSet.add(new NeuroidName("M3",41));
+watchedSet.add(new NeuroidName("M3",26));

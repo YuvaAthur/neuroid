@@ -1,19 +1,14 @@
 source("preamble.bsh");
 
-n3 = network.getNeuroid("M3", w3);
-print (n3.getProperties());
+Task t = new Task() {
+  int count = 0;
+  void job(Object o) {
+    Neuroid n = getNeuroid((NeuroidName)o);
+    eval("super.super.n" + ++super.count +
+	 " = n;");
+    //eval("print(super + \": \" + super.variables);");
+    print ("n" + super.count + "-> " + n.getProperties());
+  }
+};
 
-n3_1 = network.getNeuroid("M3", w3_1);
-print (n3_1.getProperties());
-
-n2 = network.getNeuroid("M2", w2);
-print (n2.getProperties());
-
-n2_1 = network.getNeuroid("M2", w2_1);
-print (n2_1.getProperties());
-
-n1 = network.getNeuroid("M1", w1);
-print (n1.getProperties());
-
-n1_1 = network.getNeuroid("M1", w1_1);
-print (n1_1.getProperties());
+UninterruptedIteration.loop(watchedSet, t);
