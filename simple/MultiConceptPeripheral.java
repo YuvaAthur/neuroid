@@ -16,7 +16,7 @@ import Utils.*;
  */
 
 public class MultiConceptPeripheral extends Base.Peripheral {
-    Concept a, b;
+    Peripheral.Concept a, b;
     Vector noiseConcepts;
     Object inputArea, circuitArea;
 
@@ -39,11 +39,11 @@ public class MultiConceptPeripheral extends Base.Peripheral {
 
     void allocateConcepts() {
 	if (inputArea instanceof Base.Area) {
-	    a = new Concept((Base.Area)inputArea);
-	    b = new Concept((Base.Area)inputArea);
+	    a = new Peripheral.Concept((Base.Area)inputArea);
+	    b = new Peripheral.Concept((Base.Area)inputArea);
 	} else {
-	    a = new Concept((Remote.AreaInt)inputArea);
-	    b = new Concept((Remote.AreaInt)inputArea);
+	    a = new Peripheral.Concept((Remote.AreaInt)inputArea);
+	    b = new Peripheral.Concept((Remote.AreaInt)inputArea);
 	} // end of else
 
 	int inputReplication, destReplication, destNumberOfNeuroids;
@@ -76,9 +76,9 @@ public class MultiConceptPeripheral extends Base.Peripheral {
 	noiseConcepts = new Vector();
 	for (int i = 0; i < remainingConcepts; i++) {
 	    if (inputArea instanceof Base.Area) {
-		noiseConcepts.add(new Concept((Base.Area)inputArea));
+		noiseConcepts.add(new Peripheral.Concept((Base.Area)inputArea));
 	    } else {
-		noiseConcepts.add(new Concept((Remote.AreaInt)inputArea));
+		noiseConcepts.add(new Peripheral.Concept((Remote.AreaInt)inputArea));
 	    } // end of else
 	    
 	} // end of for (int i = 0; i < remainingConcepts; i++)
@@ -100,7 +100,7 @@ public class MultiConceptPeripheral extends Base.Peripheral {
 		    // 1/300 chance should make all of them fire once during 300 steps(!)
 		    int level = (int)(Math.random()*300);
 		    if (level == 1) {
-			((Concept) o).fire();
+			((Peripheral.Concept) o).fire();
 			System.out.println("Firing random concept...");
 			
 		    } else 
@@ -116,7 +116,7 @@ public class MultiConceptPeripheral extends Base.Peripheral {
 		    if (i++ < noiseConcepts.size()/2) 
 			return;
 		    else 		    
-			((Concept) o).fire();
+			((Peripheral.Concept) o).fire();
 		}
 	    });
     }
@@ -129,7 +129,7 @@ public class MultiConceptPeripheral extends Base.Peripheral {
 			return;
 		    } // end of if (i++ > noiseConcepts.size()/2)
 		    
-		    ((Concept) o).fire();
+		    ((Peripheral.Concept) o).fire();
 		}
 	    });
     }
