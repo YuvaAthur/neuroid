@@ -1,12 +1,12 @@
-
 /**
- * SimpleNetwork.java
- * Create a simple test network.
+ * Builds a network to test theoretical phase segregation properties.
+ * TODO: Instead of n input areas, put all input concepts in the same area,
+ * similar to that of V1-V3, V5 example.
  *
  * Created: Thu Nov 23 03:09:39 2000
  *
  * @author Cengiz Gunay
- * @version
+ * @version $version$
  */
 
 public class  PhaseSegregatorNetwork extends Network {
@@ -17,7 +17,7 @@ public class  PhaseSegregatorNetwork extends Network {
     }
 
     /**
-     * 
+     * n input areas and m medial areas. See scheme depicted in EX[6]-0].
      */
     public void build() {
 	//TO DO: Implement this method.
@@ -26,12 +26,13 @@ public class  PhaseSegregatorNetwork extends Network {
 	    replication = 5;
 
 	double period = Neuroid.defaultPeriod();
-	int numberOfMedialAreas = 3;
-	int numberOfItems = 3 * numberOfMedialAreas;
+	int numberOfMedialAreas = 3,
+	    numberOfItemsPerArea = 3,
+	    numberOfItems = numberOfItemsPerArea * numberOfMedialAreas;
 
-	Area inputArea = new Area("I", numberOfItems*replication, replication,
+	/*Area inputArea = new Area("I", numberOfItems*replication, replication,
 				  deltaT, period, 0.9);
-	areas.add(inputArea);
+	areas.add(inputArea);*/
 
 	Area[] inputAreas = new Area[numberOfMedialAreas];
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
@@ -46,11 +47,17 @@ public class  PhaseSegregatorNetwork extends Network {
 	     medialAreas[medialArea] =
 		 new Area("M"+(medialArea+1), numberOfNeuroids, replication, deltaT, period, 2*0.9);
 	     areas.add(medialAreas[medialArea]);
+
+	     // Direct connections from input areas
 	     inputAreas[medialArea].connectToArea(medialAreas[medialArea]); 
-	} // end of for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++)
+
+	     // Relay connections between medial areas
+	     if (medialArea > 0) 
+		 medialAreas[medialArea - 1].connectToArea(medialAreas[medialArea]); 
+	} // end of for
 
 	peripheral =
-	    new PhaseSegregatorPeripheral(this, inputArea1, circuitArea);
+	    new PhaseSegregatorPeripheral(this, inputAreas, numberOfItemsPerArea);
     }
 
     /**
@@ -91,7 +98,6 @@ public class  PhaseSegregatorNetwork extends Network {
 	}
 	System.out.println("Elapsed time: " + (System.currentTimeMillis() - startTime) + " milliseconds.");
     }
-
 
     public static void main (String[] args) {
 	new SimpleNetwork(false); // Single threaded!
