@@ -1,3 +1,16 @@
+- put title on graph
+- make debugger-style simulator
+	- make a shell read-eval-print loop that drives Base.Network
+	- that builds the net from another network file but then takes over in simulation()
+	- save the network after build(), use serialization, don't save all spikes, 
+		just the ones being debugged
+ 	- allow debug switches on all objects (corresponding to watching)
+	- allow re-runs (by saving network state in binary with serialization
+		(make everything serializable))
+-errors:
+	- spurious concepts, due to infinite weights
+	+ sumOfCurrentWeights overflow?
+	- burst firing, due to primitive refractory effect? no, infinite weights
 - area name as a concept? or area representing neuroids?
 + limit recruitment by throwing an exception in Concept.attach
 - put step inside Neuroid.Mode?
