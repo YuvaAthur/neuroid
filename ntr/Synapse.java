@@ -15,7 +15,7 @@ import java.util.*;
  * @since 1.0
  */
 
-public class Synapse implements DumpsData {
+public class Synapse implements DumpsData, Serializable {
     /**
      * List of times when spikes are received
      */
@@ -34,6 +34,7 @@ public class Synapse implements DumpsData {
     double  timeConstantS;
 
     /**
+     * Axonal delay associated with this synapse (simplified). 
      * <code>delay</code> is required for the <code>PhaseSegregator.Network</code>
      * @see PhaseSegregator.Network
      */
@@ -51,10 +52,12 @@ public class Synapse implements DumpsData {
     public double getWeight() {return weight;}
     
     /**
-       * Set the value of weight.
+       * Set the value of weight. Maximum allowed value is determined by
+       * constant <code>maxWeight</code>.
        * @param v  Value to assign to weight.
+       * @see #maxWeight
        */
-    public void setWeight(double  v) {this.weight = v;}
+    public void setWeight(double  v) {this.weight = Math.max(maxWeight, v);}
     
     /**
      * Presynaptic neuroid.
@@ -80,13 +83,24 @@ public class Synapse implements DumpsData {
        * @param v  Value to assign to destNeuroid.
        */
     public void setDestNeuroid(Neuroid  v) {this.destNeuroid = v;}
-    
+
+    /**
+     * Constant <code>maxWeight</code> is the upper limit any synapse weight can have.
+     * @see #setWeight
+     */
+    public final static double maxWeight = 5;
 
     // TODO: Make subclasses where excitory/inhib or phase/period behavior can be specified
     /**
-     * Creates a new <code>Synapse</code> instance. Attaches itself to <code>destNeuroid</code>.
-     * Default weight is 1.
-     * <p>TODO: timeConstantM might need to be associated with the neuroid, but then we lose the flexibility of assigning synapses with different time constants.
+     * Creates a new <code>Synapse</code> instance. Attaches itself to
+     * <code>destNeuroid</code>.  Default weight is 1.  
+     *
+     * <p>TODO: timeConstantM might need to be associated with the
+     * neuroid, but then we lose the flexibility of assigning synapses
+     * with different time constants. In "Brief history of time
+     * constants" by C. Koch et al. it is claimed that synaptic
+     * effects change according to location of synapse on dendridic
+     * arbor.
      * @see Neuroid#synapses
      * @param destNeuroid a <code>Neuroid</code> value
      * @param timeConstantM a <code>double</code> value
@@ -126,6 +140,7 @@ public class Synapse implements DumpsData {
     /**
      * Initialization code called from various constructors.
      * Init weights and adds <code>Synapse</code> to <code>destNeuroid.synapses</code>
+     * @see Base.Neuroid#synapses
      */
     final private void init() {
 	weight = 1;
@@ -137,25 +152,30 @@ public class Synapse implements DumpsData {
     }
 
     /**
-     * Receive a spike at this time instant, called by the presynaptic <code>Neuroid</code>.
+     * Receive a spike at this time instant. Called by the presynaptic <code>Neuroid</code>.
      * TODO: don't remove old spikes, rather just disregard them in the potential calculation.
+     * on 2nd thought, if not removed takes too much space, -> just keep'em if destneuroid is
+     * being watched
      * @see Neuroid#fire
+     * @see Neuroid#watch
      */
     public void receiveSpike() {
-	System.out.println("Received spike at " + this.getStatus() +
-			   " connected to " + destNeuroid);
+	/*System.out.println("Received spike at " + this.getStatus() +
+			   " connected to " + destNeuroid);*/
+	double time = destNeuroid.area.time;
+	// Add new spike at this time
+	spikeTrain.add(new Double(time));
 	
-	spikeTrain.add(new Double(destNeuroid.area.time));
-	
-	/*
-	for (Iterator i = spikeTrain.iterator(); i.hasNext();) {
-	    if (((Double)i.next()).doubleValue() < (destNeuroid.area.time - timeConstantM))
-		i.remove();	// Delete expired spikes from start
-	    else 
-		break;
-	    
-	} // end of for (Iterator i = spikeTrain.iterator(); i.hasNext();)
-	*/
+	// If the destneuroid isn't being watched, forget spikes received earlier
+	// than 2 timeConstantMs ago.
+	if (!destNeuroid.watch) {
+	    for (Iterator i = spikeTrain.iterator(); i.hasNext();) {
+		if (((Double)i.next()).doubleValue() < (time - 2*timeConstantM))
+		    i.remove();	// Delete expired spikes from start
+		else 
+		    break;
+	    } // end of for (Iterator i = spikeTrain.iterator(); i.hasNext();)
+	} // end of if (!destNeuroid.debug)
     }
     
     /**
@@ -205,15 +225,16 @@ public class Synapse implements DumpsData {
      * Returns true if Synapse received a spike a short time back.
      *
      * @return <code>true</code> if potential before multiplication with weight is
-     * above an arbitrary value (0.5)
+     * above an arbitrary value (0.1)
      */
     boolean isPotentiated() {
 	return ( getPotential()/weight > 0.1);
     }
 
     /**
-     * Method inherited from java.lang.Object to display text about <code>Synapse</code>.
-     * TODO: getthe potential from a variable instead of calling getPotential
+     * Method inherited from <code>java.lang.Object</code> to describe this
+     * <code>Synapse</code>.
+     * <p>TODO: get the potential from a variable instead of calling getPotential
      * @return a <code>String</code> value
      */
     public String toString() {
