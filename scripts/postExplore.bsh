@@ -6,11 +6,15 @@ n1 = network.getNeuroid("M1", w1);
 n1_1 = network.getNeuroid("M1", w1_1); 
 n2 = network.getNeuroid("M2", w2); 
 n2_1 = network.getNeuroid("M2", w2_1); 
+n3 = network.getNeuroid("M3", w3); 
+n3_1 = network.getNeuroid("M3", w3_1); 
 
 network.addWatch(n1);
 network.addWatch(n1_1);
 network.addWatch(n2);
 network.addWatch(n2_1);
+network.addWatch(n3);
+network.addWatch(n3_1);
 
 network.advanceTime(until);
 save(network, "net.withprofile.data");
