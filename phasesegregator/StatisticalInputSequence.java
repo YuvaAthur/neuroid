@@ -126,7 +126,7 @@ public class StatisticalInputSequence extends Peripheral  {
 	    final SimObject object = new SimObject();
 	    object.percepts = new Input[numberOfMedialAreas + 1];
 
-	    int retries = 10;
+	    int retries = 30;
 	    while (--retries > 0) {
 		int firstOne = (int) (numberOfItemsPerArea * Math.random());
 		int secondOne =
