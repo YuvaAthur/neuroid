@@ -89,9 +89,10 @@ public class Area implements Runnable {
 
     /**
      * List of <code>Neuroid</code>s contained in <code>Area</code>.
+     * TODO: Fix access modifier from public, becuase of peripherals..
      * @see Neuroid
      */
-    Vector neuroids;
+    public Vector neuroids;
 
     /**
      * 
@@ -142,8 +143,14 @@ public class Area implements Runnable {
 
     /**
      * Pointer to parent network
+     * TODO: Fix access modifier from public, problem with SensoryNeuroid
      */
-    Network network;
+    public Network network;
+
+    /**
+     * True if the area contains a inhibitroy inter-neuroid.
+     */
+    boolean inhibInter;
 
     /**
      * Constructor for plain Area (no inhibitory interneuron). Calls <code>init()</code>.
@@ -185,6 +192,7 @@ public class Area implements Runnable {
      * <code>Neuroids</code>.
      * <p>TODO: If a allocate-on-demand approach is used for Neuroids none
      * should be allocated at this time.
+     * <p>TODO: Automatically add areas to network?
      * @see Neuroid
      *
      * @param network a <code>Network</code> value
@@ -204,6 +212,7 @@ public class Area implements Runnable {
 	this.period = period;
 	this.name = name;
 	this.network = network;
+	this.inhibInter = inhibInter;
 
 	// Neuroids in Area (one for the inhib. inter-neuron)
 	neuroids = new Vector(numberOfNeuroids+(inhibInter?1:0)); 
@@ -212,35 +221,41 @@ public class Area implements Runnable {
 	    // Add inhibitory inter-neuron: one neuron that takes input from all neuroids and
 	    // projects to all. Threshold is fixed to fire above 2*replication inputs
 	    // weights and threshold should *not* be modified? refraction?
-	    inhibitoryInterNeuroid = new Neuroid(this, numberOfNeuroids, /*2**/replication*0.9, 1);
+	    inhibitoryInterNeuroid = new Neuroid(this, /*numberOfNeuroids,*/ /*2**/replication*0.9, 1);
 	    neuroids.add(inhibitoryInterNeuroid);
 	} // end of if (inhibInter)
 
-	Vector inhibitorySynapseVector = new Vector();	
-
 	// Instantiate Neuroids
-	for (int i = 0; i < numberOfNeuroids; i++) { // Enumerate neuroids
-	    Neuroid neuroid = new Neuroid(this, i, threshold, 1);
-	    neuroids.add(neuroid); // refractoryTimeConstant=1
-
-	    if (inhibInter) {
-		// Add inhibitory synapse to neuroid from inhibitoryInterNeuroid
-		inhibitorySynapseVector.add(new Synapse(inhibitoryInterNeuroid, neuroid,
-							1, deltaT, true)); 
-
-		// Add an initial excitory synapse to inhibitoryInterNeuroid from neuroid
-		Vector oneSynapse = new Vector();
-		oneSynapse.add(new Synapse(neuroid,inhibitoryInterNeuroid, 1, deltaT, false)); 
-		axons.put(neuroid, oneSynapse);
-	    } // end of if (inhibInter)
-	}
-
-	if (inhibInter) 
-	    axons.put(inhibitoryInterNeuroid, inhibitorySynapseVector);
+	for (int i = 0; i < numberOfNeuroids; i++)  // Enumerate neuroids
+	    addNeuroid(new Neuroid(this, /*i,*/ threshold, 1)); // refractoryTimeConstant=1
 
 	// Create a thread to do the step()s
 	thread = new Thread(this);
 	thread.start();
+    }
+
+    /**
+     * Adds a neuroid to the <code>Area</code>.
+     *
+     * @param neuroid a <code>Neuroid</code> value
+     */
+    public void addNeuroid(Neuroid neuroid) {
+	neuroids.add(neuroid);
+
+	if (inhibInter) {
+	    Vector inhibitorySynapseVector = new Vector();	
+
+	    // Add inhibitory synapse to neuroid from inhibitoryInterNeuroid
+	    inhibitorySynapseVector.add(new Synapse(inhibitoryInterNeuroid, neuroid,
+						    1, deltaT, true)); 
+
+	    // Add an initial excitory synapse to inhibitoryInterNeuroid from neuroid
+	    Vector oneSynapse = new Vector();
+	    oneSynapse.add(new Synapse(neuroid,inhibitoryInterNeuroid, 1, deltaT, false)); 
+	    axons.put(neuroid, oneSynapse);
+
+	    axons.put(inhibitoryInterNeuroid, inhibitorySynapseVector);
+	} // end of if (inhibInter)
     }
 
     /**
@@ -316,7 +331,11 @@ public class Area implements Runnable {
      * @param fromNeuroid the presynaptic <code>Neuroid</code> in this <code>Area</code>.
      * @param synapses the <code>Vector</code> to be associated with <code>fromNeuroid</code>
      */
-    void addAxon(Neuroid fromNeuroid, Vector synapses) {
+    public void addAxon(Neuroid fromNeuroid, Vector synapses) {
+	// Raise an exception if neuroid is not found in area.
+	if (!neuroids.contains(fromNeuroid)) 
+	    throw new RuntimeException("Neuroid " + fromNeuroid + " not found in Area.");
+	
 	// Add to existing Vector in hash if connections already exist 
 	Vector existingSynapses = (Vector) axons.get(fromNeuroid);
 	if (existingSynapses == null)
@@ -450,10 +469,10 @@ public class Area implements Runnable {
 	// wait until released
 	while (stepRequested) Thread.yield();
 	//synchronized (isCalculating) { // Wait if thread still doing the calculation
-	if (stepRequested) {
+	if (stepRequested) 
 	    throw new RuntimeException("Mutual exclusion failed!");
-	}
-	stepRequested = true;
+	
+	stepRequested = true;	// Notify waiting thread of request
 	thread.interrupt();
 	//}
 
