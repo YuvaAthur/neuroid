@@ -169,9 +169,10 @@ public class Area implements Runnable, Remote.AreaInt {
      * @param threshold a <code>double</code> value
      */
     public Area(Network network, String name, int numberOfNeuroids,
-		int replication, double period, double threshold, double timeConstantM) {
+		int replication, double period, double threshold, double timeConstantM,
+		double refractoryTimeConstant) {
 	init(network, name, numberOfNeuroids, replication, period, threshold, false,
-	     timeConstantM);
+	     timeConstantM, refractoryTimeConstant);
     }
 
     /**
@@ -188,9 +189,10 @@ public class Area implements Runnable, Remote.AreaInt {
      * @param inhibInter a <code>boolean</code> value
      */
     public Area(Network network, String name, int numberOfNeuroids, int replication,
-		double period, double threshold, boolean inhibInter, double timeConstantM) {
+		double period, double threshold, boolean inhibInter, double timeConstantM,
+		double refractoryTimeConstant) {
 	init(network, name, numberOfNeuroids, replication, period,
-	     threshold, inhibInter, timeConstantM);
+	     threshold, inhibInter, timeConstantM, refractoryTimeConstant);
     }
 
     /**
@@ -212,7 +214,8 @@ public class Area implements Runnable, Remote.AreaInt {
      * @param inhibInter a <code>boolean</code> value
      */
     void init(Network network, String name, int numberOfNeuroids, int replication,
-	      double period, double threshold, boolean inhibInter, double timeConstantM) {
+	      double period, double threshold, boolean inhibInter, double timeConstantM,
+	      double refractoryTimeConstant) {
 	this.numberOfNeuroids = numberOfNeuroids;
 	this.replication = replication;
 	this.deltaT = network.deltaT;
@@ -229,7 +232,7 @@ public class Area implements Runnable, Remote.AreaInt {
 	    // Add inhibitory inter-neuron: one neuron that takes input from all neuroids and
 	    // projects to all. Threshold is fixed to fire above 2*replication inputs
 	    // weights and threshold should *not* be modified? refraction?
-	    inhibitoryInterNeuroid = new Neuroid(this, /*numberOfNeuroids,*/ /*2**/replication*0.9, 1);
+	    inhibitoryInterNeuroid = new Neuroid(this, /*numberOfNeuroids,*/ /*2**/replication*0.9, refractoryTimeConstant);
 	    // Create concept
 	    (new periphery.SensoryConcept(network, "Area: " + name + " inhibitory neuroid")).
 		attach(inhibitoryInterNeuroid);
@@ -237,7 +240,7 @@ public class Area implements Runnable, Remote.AreaInt {
 
 	// Instantiate Neuroids
 	for (int i = 0; i < numberOfNeuroids; i++)  // Enumerate neuroids
-	    new Neuroid(this, /*i,*/ threshold, 1); // refractoryTimeConstant=1
+	    new Neuroid(this, /*i,*/ threshold, refractoryTimeConstant);
 
 	// Create a thread to do the step()s
 	thread = new Thread(this);
@@ -290,7 +293,8 @@ public class Area implements Runnable, Remote.AreaInt {
 	}
 	
 	// Valiant's connection probability for random multipartite graphs 
-	double connProb = Math.sqrt((double)destReplication /
+	double nuBoost = 3;	// Boosting parameter for connections
+	double connProb = Math.sqrt((double)nuBoost * destReplication /
 				    (destNumberOfNeuroids * replication * replication ));
 	// Number of neuroids in the destination to be connected to each neuroid here
 	int numberOfConnections = (int) (destNumberOfNeuroids * connProb);
