@@ -9,12 +9,8 @@ setAccessibility(true);
 source("preamble.bsh");
 source("stats.bsh");
 
-minCorrectProfile = new Profile();
-maxCorrectProfile = new Profile();
-meanCorrectProfile = new Profile();
-minSpuriousProfile = new Profile();
-maxSpuriousProfile = new Profile();
-meanSpuriousProfile = new Profile();
+correctProfile = new Profile();
+spuriousProfile = new Profile();
 
 maxTrials = 10;
 numberOfMedialAreas = 2;
@@ -38,37 +34,29 @@ for (timeConstantM = 7; timeConstantM < (numberOfMedialAreas + 1) * 2 * 7; timeC
     meanQc /= maxTrials;
     meanQs /= maxTrials;
 
-    minCorrectProfile.put(new Double(timeConstantM), new ProfilableDouble(minQc));
-    maxCorrectProfile.put(new Double(timeConstantM), new ProfilableDouble(maxQc));
-    meanCorrectProfile.put(new Double(timeConstantM), new ProfilableDouble(meanQc));
-    minSpuriousProfile.put(new Double(timeConstantM), new ProfilableDouble(minQs));
-    maxSpuriousProfile.put(new Double(timeConstantM), new ProfilableDouble(maxQs));
-    meanSpuriousProfile.put(new Double(timeConstantM), new ProfilableDouble(meanQs));
+    correctProfile.put(new Double(timeConstantM), new ErrorValue(meanQc, minQc, maxQc));
+    spuriousProfile.put(new Double(timeConstantM), new ErrorValue(meanQs, minQs, maxQs));
 
      
 } // end of for (numberOfObjects = 1; numberOfObjects < 5; numberOfObjects++)
 
-print("correct concept qualities = " + meanCorrectProfile);
-print("spurious concept quality = " + meanSpuriousProfile);
+print("correct concept qualities = " + correctProfile);
+print("spurious concept quality = " + spuriousProfile);
 
-matlab();
-correctPlots = new LinkedList();
-correctPlots.add(new ProfilePlot("Min", null, minCorrectProfile));
-correctPlots.add(new ProfilePlot("Max", null, maxCorrectProfile));
-correctPlots.add(plot = new ProfilePlot("Mean", null, meanCorrectProfile));
-plot.setXLabel("Membrane Time Constant \\tau_m");
-plot.setYLabel("Quality");
-h1 = grapher.superposedPlot("Performance of Correct Concepts with " + numberOfMedialAreas + " Layers over " + maxTrials + " Trials, " + numberOfObjects + " Objects", correctPlots, null);
-//plot.setTitle();
-/*
-display(plot);*/
+if (grapher == null || grapher == void)
+    matlab();
 
-spuriousPlots = new LinkedList();
-spuriousPlots.add(new ProfilePlot("Min", null, minSpuriousProfile));
-spuriousPlots.add(new ProfilePlot("Max", null, maxSpuriousProfile));
-spuriousPlots.add(plot = new ProfilePlot("Mean", null, meanSpuriousProfile));
-plot.setXLabel("Membrane Time Constant \\tau_m");
-plot.setYLabel("Quality");
-h2 = grapher.superposedPlot("Performance of Spurious Concepts with " + numberOfMedialAreas + " Layers over " + maxTrials + " Trials, " + numberOfObjects + " Objects", spuriousPlots, null);
+correctData = new Grapher.ErrorData(grapher, "Correct concepts", correctProfile);
+spuriousData = new Grapher.ErrorData(grapher, "Spurious concepts", spuriousProfile);
+
+Grapher.Data[] datas = {correctData, spuriousData};
+
+p = new SuperposedDataPlot(null, datas);
+p.setTitle("Performance with " + numberOfMedialAreas + " Layers over " +
+	   maxTrials + " Trials, " + numberOfObjects + " Objects");
+p.setXLabel("Membrane Time Constant \\tau_m");
+p.setYLabel("Quality");
+
+h = grapher.display(p, null);
 
 print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime) + " msec");
