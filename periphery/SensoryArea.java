@@ -18,7 +18,7 @@ public class SensoryArea extends Base.Area {
     public SensoryArea (Base.Network network, String name) {
 	// threshold 0.9? get it from somewhere?
 	super(network, name, 0, 1, 0, 0.9, false,
-	      network.deltaT * 100); 
+	      network.deltaT * 100, 0.001); // refractoryTimeConstant not applicable, dummy value
 	network.addArea(this);	// TODO: add areas to network automatically? what about remoteareas?
     }
     
