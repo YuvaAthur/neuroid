@@ -2,8 +2,10 @@ package neuroidnet.phasesegregator;
 import neuroidnet.ntr.*;
 import neuroidnet.remote.*;
 import neuroidnet.periphery.*;
+
 import java.util.*;
-//import java.rmi.*;
+import java.io.*;
+
 import edu.ull.cgunay.utils.*;
 
 /**
@@ -23,14 +25,45 @@ public class Peripheral extends neuroidnet.ntr.Peripheral {
     neuroidnet.ntr.Area[] inputAreas;
     int numberOfItemsPerArea;
     SensoryArea sensoryArea;
+    double segregation;
+    Map events = new TreeMap();
+    transient Iterator eventIterator;
+    Double nextTime;
     
     public Peripheral (neuroidnet.ntr.Network network, neuroidnet.ntr.Area[] inputAreas,
-		       int numberOfItemsPerArea) {
+		       int numberOfItemsPerArea, double segregation) {
 	super(network);
 	this.inputAreas = inputAreas;
 	this.numberOfItemsPerArea = numberOfItemsPerArea;
+	this.segregation = segregation;
 
 	createSensoryInputs();
+
+	events.put(new Double(0.00), new Task() {
+		public void job(Object o) {
+		    fireObjectA();
+		}});
+
+	events.put(new Double(segregation), new Task() {
+		public void job(Object o) {
+		    fireObjectB();
+		}});
+
+	events.put(new Double(2 * segregation), new Task() {
+		public void job(Object o) {
+		    fireObjectC();
+		}});
+
+	eventIterator = events.keySet().iterator();
+	getNext();
+    }
+
+    void getNext() {
+	try {
+	    nextTime = (Double) eventIterator.next();	     
+	} catch (NoSuchElementException e) {
+	    nextTime = new Double(Double.POSITIVE_INFINITY);
+	} // end of try-catch
     }
 
     /**
@@ -38,9 +71,24 @@ public class Peripheral extends neuroidnet.ntr.Peripheral {
      * @see #testOneInput
      */
     protected void eventsAtThisTime() {
+
+	if (time > nextTime.doubleValue()) {
+	    try {
+		((Task)events.get(nextTime)).job(null);
+		getNext();
+	    } catch (TaskException e) {
+		throw new Error("Fatal: " + e);
+	    } // end of try-catch
+	} // end of if (time > nextTime)
+	/*
 	// Fire both inputs initially
 	if (time == 0.00)
-	    testOneInput();
+	    fireObjectA();
+	else if (time == segregation)
+	    fireObjectB();
+	else if (time == 2*segregation)
+	    fireObjectC();
+*/
     }
 
     /**
@@ -49,24 +97,51 @@ public class Peripheral extends neuroidnet.ntr.Peripheral {
      */
     void createSensoryInputs() {
 	//sensoryAreas = new SensoryArea[inputAreas.length];
-	sensoryArea/*s[areaNo]*/ = new SensoryArea(network, "sensory-area"/* + (areaNo + 1)*/);
+	sensoryArea = new SensoryArea(network, "sensory-area"/* + (areaNo + 1)*/);
 	for (int areaNo = 0; areaNo < inputAreas.length; areaNo++) {
 	    String name = "S" + (areaNo + 1);
 	    for (int concept = 0; concept < numberOfItemsPerArea; concept++) 
-		new SensoryNeuroid(sensoryArea/*s[areaNo]*/, inputAreas[areaNo],
+		new SensoryNeuroid(sensoryArea, inputAreas[areaNo],
 				   name + "-" + concept);
 	}
     }
 
-    public void fireInputs() {
+    void fireObjectA() {
+	fireObject(0, 1, 0, 0);
     }
 
-    public void testOneInput() {
-	// Fire one input in sensory area 1
-	((Neuroid)sensoryArea/*s[0]*/.neuroids.elementAt(0)).fire(); 
-	((Neuroid)sensoryArea/*s[0]*/.neuroids.elementAt(1)).fire(); 
-	((Neuroid)sensoryArea/*s[1]*/.neuroids.elementAt(0 + numberOfItemsPerArea)).fire(); 
-	((Neuroid)sensoryArea/*s[2]*/.neuroids.elementAt(0 + numberOfItemsPerArea*2)).fire(); 
+    void fireObjectB() {
+	fireObject(1, 2, 0, 1);
+    }
+
+    void fireObjectC() {
+	fireObject(0, 2, 2, 2);
+    }
+
+    void fireObject(int a1, int a1_1, int a2, int a3) {
+	((Neuroid)sensoryArea.neuroids.elementAt(a1)).fire(); 
+	((Neuroid)sensoryArea.neuroids.elementAt(a1_1)).fire(); 
+	((Neuroid)sensoryArea.neuroids.elementAt(a2 + numberOfItemsPerArea)).fire(); 
+	((Neuroid)sensoryArea.neuroids.elementAt(a3 + numberOfItemsPerArea*2)).fire(); 
+    }
+
+    void testOneInput() {
+	// Fire one input in sensory area
+	((Neuroid)sensoryArea.neuroids.elementAt(0)).fire(); 
+    }
+
+    private void readObject(java.io.ObjectInputStream in)
+	throws IOException, ClassNotFoundException {
+	in.defaultReadObject(); // Real method that does reading
+	
+	// Transient variables
+	eventIterator = events.keySet().iterator();
+
+	Double fromStart;
+	do {
+	    fromStart = (Double) eventIterator.next();
+	} while (!nextTime.equals(fromStart)); // end of while (nextTime.equals())
+	
     }
 
 }
