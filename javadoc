@@ -1,1 +1,1 @@
-javadoc -d doc/ -author -package -use -windowtitle "Neuroidal Network in Java" *.java
+javadoc -d ~/public_html/neuroidal_doc/ -author -package -use -windowtitle "Neuroidal Network in Java" *.java Utils/*.java
