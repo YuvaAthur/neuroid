@@ -57,7 +57,6 @@ public class ThreeLevelInputSequence extends Peripheral  {
       fireObjectInArea(1, 1);
       fireObjectInArea(2, 0);
       fireObjectInArea(3, 0);
-      //fireObject(0, 1, 0, 0);
     }
 
     void fireObjectB() {
@@ -65,7 +64,6 @@ public class ThreeLevelInputSequence extends Peripheral  {
       fireObjectInArea(1, 2);
       fireObjectInArea(2, 0);
       fireObjectInArea(3, 1);
-      //fireObject(1, 2, 0, 1);
     }
 
     void fireObjectC() {
@@ -73,7 +71,6 @@ public class ThreeLevelInputSequence extends Peripheral  {
       fireObjectInArea(1, 2);
       fireObjectInArea(2, 2);
       fireObjectInArea(3, 2);
-      //fireObject(0, 2, 2, 2);
     }
 
     void fireObject(int a1, int a1_1, int a2, int a3) {

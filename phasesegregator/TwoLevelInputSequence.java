@@ -45,10 +45,10 @@ public class TwoLevelInputSequence extends Peripheral  {
 	  fireObjectB();
 	}});
 
-    /*events.put(new Double(2 * segregation), new Task() {
+    events.put(new Double(2 * segregation), new Task() {
 	public void job(Object o) {
 	  fireObjectC();
-	  }});*/
+	  }});
 
     super.initEvents();
   }
