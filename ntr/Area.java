@@ -135,11 +135,11 @@ public class Area implements Runnable, Remote.AreaInt {
      */
     int conceptCount = 0;
 
-    /**
-     * The concept that this neuroid belongs to.
+    /*
+     * The concept that this neuroid belongs to. Mistake?? should be in neuroid
      * @see Concept
      */
-    Concept concept;
+    // Concept concept;
 
     /**
      * Pointer to parent network
@@ -156,6 +156,25 @@ public class Area implements Runnable, Remote.AreaInt {
      * Membrane time constant of all neurons in this area.
      */
     public double timeConstantM;
+
+    /**
+     * The threshold to change a Neuroid from AM to AM1 mode.
+     * @see Neuroid.step
+     */
+    double activationThreshold;
+    
+    /**
+       * Get the value of activationThreshold.
+       * @return value of activationThreshold.
+       */
+    public double getActivationThreshold() {return activationThreshold;}
+    
+    /**
+       * Set the value of activationThreshold.
+       * @param v  Value to assign to activationThreshold.
+       */
+    public void setActivationThreshold(double  v) {this.activationThreshold = v;}
+    
 
     /**
      * Constructor for plain Area (no inhibitory interneuron). Calls <code>init()</code>.
@@ -238,9 +257,13 @@ public class Area implements Runnable, Remote.AreaInt {
 		attach(inhibitoryInterNeuroid);
 	} // end of if (inhibInter)
 
+	// The activation threshold that makes neuroids go from AM to AM1
+	// @see Neuroid.step
+	activationThreshold = threshold;
+
 	// Instantiate Neuroids
 	for (int i = 0; i < numberOfNeuroids; i++)  // Enumerate neuroids
-	    new Neuroid(this, /*i,*/ threshold, refractoryTimeConstant);
+	    new Neuroid(this, /*i,*/ activationThreshold, refractoryTimeConstant);
 
 	// Create a thread to do the step()s
 	thread = new Thread(this);
@@ -281,7 +304,7 @@ public class Area implements Runnable, Remote.AreaInt {
      * @see Neuroid
      * @param destArea the <code>Area</code> to which this one is connected.
      */
-    public void connectToArea(Remote.AreaInt destArea, double timeConstantS, double delay) {
+    public void connectToArea(Remote.AreaInt destArea, double timeConstantS, double delay, double nuBoost) {
 	// TODO: don't connect inhibitoryInterNeuroid!
 	int destReplication, destNumberOfNeuroids;
 
@@ -293,7 +316,7 @@ public class Area implements Runnable, Remote.AreaInt {
 	}
 	
 	// Valiant's connection probability for random multipartite graphs 
-	double nuBoost = 3;	// Boosting parameter for connections
+
 	double connProb = Math.sqrt((double)nuBoost * destReplication /
 				    (destNumberOfNeuroids * replication * replication ));
 	// Number of neuroids in the destination to be connected to each neuroid here
