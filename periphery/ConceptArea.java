@@ -41,10 +41,10 @@ public class ConceptArea extends Area
     /**
      * Report on concepts in this area one by one.
      *
-     * @return a <code>String</code> value
+     * @return the description to be printed out as a <code>String</code> value
      */
     public String getStatus() {
-	String retval = new String();
+	String retval = super.getStatus() + "\n";
 	
 	// TODO: make this following class common with the one in Network.toString()
 	Utils.TaskWithReturn neuroidsToStringTask =
@@ -52,7 +52,7 @@ public class ConceptArea extends Area
 		String retval = new String();
 		
 		public void job(Object o) {
-		    retval += "" + o + "\n";
+		    retval += "" + ((ArtificialConcept)o).getStatus() + "\n";
 		}
 
 		public Object getValue() {
