@@ -8,8 +8,11 @@ import neuroidnet.periphery.*;
 // $Id$
 /**
  * Builds a network to test theoretical phase segregation properties.
- * <p>TODO: Instead of n input areas, put all input concepts in the same area,
- * similar to that of V1-V3, V5 example.
+ * <p>TODO: Instead of n input areas, put all input concepts in the
+ * same area, similar to that of V1-V3, V5 example. [requires
+ * separation of paths of computation somehow]
+ *
+ * <p> This class works as a bean with all properties modifiable from the bsh console.
  *
  * <p>Created: Thu Nov 23 03:09:39 2000
  *
@@ -20,41 +23,67 @@ import neuroidnet.periphery.*;
 public class Network extends neuroidnet.ntr.Network {
     Peripheral peripheral; //note that it's a phasesegregator.Peripheral
 
-    public Network (boolean isConcurrent) { // 
-	super(0.1, isConcurrent);		// sets deltaT
+    protected int
+	numberOfNeuroids = 100,
+	replication = 10;
+
+    protected int
+	numberOfMedialAreas = 3,
+	numberOfItemsPerArea = 3/*,
+	numberOfItems = numberOfItemsPerArea * numberOfMedialAreas*/;
+    
+    protected double
+	period = SRMNeuroid.defaultPeriod(),
+	delay = 3,
+	timeConstantS = 7,
+	timeConstantM = Double.NaN,
+	refractoryTimeConstant = 10,
+	segregation = Double.NaN,
+	threshold,
+	nuBoost = 6.0;	// nu parameter to increase probability of connection
+
+
+    public Network (boolean isConcurrent, double timeConstantM, double segregation) { // 
+	this(isConcurrent, timeConstantM);
+	this.segregation = segregation;	
     }
 
+    public Network (boolean isConcurrent, double timeConstantM) { // 
+	this(isConcurrent);
+	this.timeConstantM = timeConstantM;
+    }
+
+    public Network (boolean isConcurrent) { // 
+	super(0.1, isConcurrent);		// sets deltaT
+	
+    }
+
+    protected Area[] inputAreas;
+    protected Area[] medialAreas;
+
     /**
-     * n input areas and m medial areas. See scheme depicted page EX[6]-0] in notes .
+     * n input areas and n medial areas. See scheme depicted on page EX[6]-0] or EX[N in notes.
      */
     public void build() {
-	int
-	    numberOfNeuroids = 100,
-	    replication = 10;
 
-	double
-	    period = SRMNeuroid.defaultPeriod(),
-	    delay = 3,
-	    timeConstantS = 7,
-	    timeConstantM = 21,	// 3*timeConstantS
-	    refractoryTimeConstant = 10,
-	    segregation = timeConstantS + 2*timeConstantM + delay,
-	    threshold,
-	    nuBoost = 6.0;	// nu parameter to increase probability of connection
+	// Set params if they are not defined explicitly
+	if (new Double(timeConstantM).isNaN()) 
+	    timeConstantM = (numberOfMedialAreas + 1)*timeConstantS;	     
+
+	if (new Double(segregation).isNaN()) 
+	    segregation = timeConstantS + 2*timeConstantM + delay;	     
 
 	System.out.println("Segregation parameter=" + segregation);
+	System.out.println("timeConstantM parameter=" + timeConstantM);
 	
 	Class neuroidType = PeakerNeuroid.class;
 	
-	int numberOfMedialAreas = 3,
-	    numberOfItemsPerArea = 3,
-	    numberOfItems = numberOfItemsPerArea * numberOfMedialAreas;
 
 	/*Area inputArea = new Area("I", numberOfItems*replication, replication,
 	  deltaT, period, 0.9);
 	  areas.add(inputArea);*/
 
-	Area[] inputAreas = new Area[numberOfMedialAreas];
+	inputAreas = new Area[numberOfMedialAreas];
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
 	    threshold = 0.9;
 	    inputAreas[medialArea] =
@@ -64,7 +93,7 @@ public class Network extends neuroidnet.ntr.Network {
 	    areas.add(inputAreas[medialArea]);
 	} // end of for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++)
 
-	Area[] medialAreas = new Area[numberOfMedialAreas];
+	medialAreas = new Area[numberOfMedialAreas];
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
 	    threshold = 2 * 0.6; // lowered because of long timeConstantS
 	    medialAreas[medialArea] =
@@ -83,9 +112,9 @@ public class Network extends neuroidnet.ntr.Network {
 							  delay, nuBoost); 
 	} // end of for
 
-	peripheral =
+	/*peripheral =
 	    new TwoLevelInputSequence(this, inputAreas,
-				      numberOfItemsPerArea, segregation);
+				      numberOfItemsPerArea, segregation);*/
     }
 
     /**
