@@ -414,7 +414,11 @@ public class Synapse implements SynapseInt, DumpsData, Serializable, Expressive 
      * @return a <code>String</code> value
      */
     public String toString() {
-	return "Synapse #" + id + " of " + destNeuroid;
+	return nameString() + " of " + destNeuroid;
+    }
+
+    public String nameString() {
+	return "Synapse #" + id;
     }
 
     /**
@@ -424,8 +428,12 @@ public class Synapse implements SynapseInt, DumpsData, Serializable, Expressive 
      * @return a <code>String</code> value
      */
     public String getStatus() {
+	return this + " with " + statusString();
+    }
+
+    public String statusString() {
 	return
-	    this + " with p=" + Network.numberFormat.format(getPotential()) +
+	    "p=" + Network.numberFormat.format(getPotential()) +
 	    ", w=" + (isInhibitory?"-":"") + Network.numberFormat.format(getWeight());
     }
     
