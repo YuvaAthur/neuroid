@@ -1,3 +1,27 @@
+2002-05-18  Cengiz Gunay  <cengiz@ull.edu>
+
+	* ntr/SRMNeuroid.java (Repository): Spin-off from former neuroid that keeps 
+	everything that is specific to the SRM.
+
+	* ntr/PeakerNeuroid.java (Repository): New neuroid with real continuous state
+	machine that controls the discrete state machine in the SRMNeuroid. It's based
+	on observing the derivative of the membrane potential.
+
+	* scripts (Repository): Improved the way to keep watched neuroid information
+	over multiple runs of the simulation.
+
+	* ntr/NeuroidName.java (Repository): Identifying name of a neuroid in a network
+	without the neuroid itself. Used for invariant representation of neuroids between
+	different simulation runs.
+
+	* ntr/Neuroid.java (Repository): Is now an abstract class for neuroids in general.
+	Previous contents moved to new class SRMNeuroid.
+
+	* ntr/AdThNeuroid.java (Repository): Experimental attempt for a dynamic threshold
+	neuroid. Its failure resulted in the PeakerNeuroid.
+
+	* ntr/Area.java (Repository): Takes a parameter on which neuroids to instantiate.
+
 2002-05-02  Cengiz Gunay  <cengiz@ull.edu>
 
 	* ntr/Expressive.java (Repository): Changed entity names to conform to new

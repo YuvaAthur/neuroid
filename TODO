@@ -1,26 +1,33 @@
 - general:
 	+ make an interface that step()s [utils.Simulation]
 - naming:
-	- create a NeuroidId class that holds name, id for neuroids?
-		- Add this to the watchList in Network.
-	- make watchList a Set.
-	- in bsh: before any loading, extract the watchSet of previous net and add it to the loaded one
+	+ create a NeuroidName class that holds name, id for neuroids?
+		+ Add this to the watchList in Network [no, I put it in beanshell watchedSet]
+	+ make watchList a Set.
+	X in bsh: before any loading, extract the watchSet of previous net and add it to the loaded one [not really, watchedSet should be kept in bsh, i.e. the SimulationController]
 	+ add an id to Synapse according to place in Neuroid.synapses Vector
 	+ change all names! neuroid should just mention its number and area name !
 		+ toString: name & id
 		+ change getStatus to getProperties
 		+ getStatus returns transient state
 		+ put all of these in an interface and explain
-- Neuroids:
-	- make a SRMNeuroid and move everything out of Neuroid
-		- then make the new adaptiveTNeuroid
+- ntr:
+	- make Area abstract and derive special subclasses
+	+ make Area take a neuroid template, so that it can instantiate different neuroids
+		[ it's taking Class param to instantiate neuroids ]
+	+ make a SRMNeuroid and move everything out of Neuroid
+		- then make the new AdaptiveThresholdNeuroid 
+			[ made PeakerNeuroid as intermediate step]
+		- Change modeprofile to lookup properties from Mode instances using
+			reflection instead of explicit functions for each property.
 	+ put step inside Neuroid.Mode?
 	X move Mode to its own class and make each state a new class. 
-		- keep Mode under neuroid, but extend neuroid and extend Mode inside
-		- make new algorithms stand in their own packages, i.e. UMT
-	- remove debug switch from neuroid
+		+ keep Mode under neuroid, but extend neuroid and extend Mode inside
+		- make new algorithms stand in their own packages, i.e. UMT or SRM?
+	X remove debug switch from neuroid [I need it]
 	- calculate new probabilities and change threshold? (in network.build?)
 		- alternatively: make adaptive threshold? (see the new electrical circuit model)
+		+ made continuous state machine that drives the discrete state machine
 - packages: 
 	- move plot related classes in neuroidnet.ntr to neuroidnet.ntr.plots
 	+ move neuroinet independent stuff in neuroinet.ntr.plots.* to utils.plots.* out of neuroidnet!
@@ -67,7 +74,7 @@ X extend the Vectors that holds neuroids, etc. so that they show up in organizat
 	+ allow re-runs (by saving network state in binary with serialization
 		(make everything serializable))
 -errors:
-	- rigid threshold causing problems, need adaptive max taking threshold
+	+ rigid threshold causing problems, need adaptive max taking threshold
 	+ spurious concepts, due to infinite weights after ConceptSaturatedException
 		+ need better debugging env to tackle these problems [see beanshell]
 	+ burst firing, due to primitive refractory effect? [yes] no, infinite weights

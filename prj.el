@@ -104,7 +104,7 @@
  '(jde-run-option-verbose (quote (nil nil nil)))
  '(jde-bug-jdk-directory "e:/jdk1.3/")
  '(jde-bug-breakpoint-cursor-colors (quote ("cyan" . "brown")))
- '(jde-global-classpath nil)
+ '(jde-global-classpath (quote ("~/javarun")))
  '(jde-bug-vm-includes-jpda-p nil)
  '(jde-javadoc-describe-class-template "\"* Describe class \" (jde-javadoc-code name) \" here.\"")
  '(jde-run-application-class "neuroidnet.phasesegregator.Network")
