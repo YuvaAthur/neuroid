@@ -53,6 +53,22 @@ public class Neuroid implements Input, Serializable {
      * 
      */
     double refractoryTimeConstant;
+    
+    /**
+     * Get the value of refractoryTimeConstant.
+     * @return value of refractoryTimeConstant.
+     */
+    public double getRefractoryTimeConstant() {
+	return refractoryTimeConstant;
+    }
+    
+    /**
+     * Set the value of refractoryTimeConstant.
+     * @param v  Value to assign to refractoryTimeConstant.
+     */
+    public void setRefractoryTimeConstant(double  v) {
+	this.refractoryTimeConstant = v;
+    }
 
     /**
      * Constant external current for all neuroids in network (not used!)
@@ -315,6 +331,7 @@ public class Neuroid implements Input, Serializable {
      * Iterate through Synapses and add kernel values and decrease refractoriness
      * at this time value.
      * TODO: add external current!
+     * @see #fire
      */
     void calculatePotential() {
 	while (true) {
@@ -332,8 +349,17 @@ public class Neuroid implements Input, Serializable {
 	    } 
 	} // of while
 	// TODO: refractoriness can be calculated by looking at previous firing times in spikeTrain
-	double refr = refractoriness(area.time - timeLastFired); 
-	potential += refr;
+	//double refr = refractoriness(area.time - timeLastFired); 
+	//potential += refr;
+
+	// Refractory effect for all spikes emitted (see #fire())
+	new Iteration() {
+	    public void job(Object o) throws IterationException {
+		double spikeTime = ((Double)o).doubleValue();
+		potential += refractoriness(area.time - spikeTime);
+	    }
+	}.loop(spikeTrain);
+
 /*	if (refr < 0) 
 	    System.out.println("Refractoriness = " + Network.numberFormat.format(refr) +
 			       ", at time = " + Network.numberFormat.format(area.time) +
@@ -350,10 +376,20 @@ public class Neuroid implements Input, Serializable {
 	System.out.println("Fire " + this);
 	timeLastFired = area.time;
 	area.fireNeuroid(this);
-	if (watch) {
+	spikeTrain.add(new Double(timeLastFired)); 
+	if (!watch) {
+	    new Iteration() {
+		public void job(Object o) throws IterationException {
+		    double spikeTime = ((Double)o).doubleValue();
+		    if (spikeTime < (area.time - 3 * refractoryTimeConstant)) 
+			throw new RemoveFromIterationException(); // Remove spike from list
+		    else 
+			throw new BreakOutOfIterationException(); // End iteration
+		}
+	    }.loop(spikeTrain);
+
 	    // REDUNDANT, remove one! See note above in calculatePotential
-	    spikeTrain.add(new Double(timeLastFired)); 
-	    profile.spikesEmitted.add(new Double(timeLastFired)); 
+	    //profile.spikesEmitted.add(new Double(timeLastFired)); 
 	}
     }
 
