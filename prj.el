@@ -7,7 +7,7 @@
  '(jde-run-option-heap-profile (quote (nil "./java.hprof" 5 20 "Allocation objects")))
  '(jde-compile-option-encoding nil)
  '(jde-compile-option-optimize nil)
- '(jde-run-executable-args nil)
+ '(jde-run-executable-args (quote ("> run.txt")))
  '(jde-compile-option-verbose nil)
  '(jde-gen-buffer-templates (quote (("Class" . jde-gen-class) ("Console" . jde-gen-console) ("Swing App" . jde-gen-jfc-app))))
  '(jde-run-option-classpath nil)
