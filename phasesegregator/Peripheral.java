@@ -22,114 +22,113 @@ import edu.ull.cgunay.utils.*;
  */
 
 public class Peripheral extends neuroidnet.ntr.Peripheral {
-    neuroidnet.ntr.Area[] inputAreas;
-    int numberOfItemsPerArea;
-    SensoryArea sensoryArea;
-    double segregation;
-    Map events = new TreeMap();
-    transient Iterator eventIterator;
-    Double nextTime;
+  neuroidnet.ntr.Area[] inputAreas;
+  int numberOfItemsPerArea;
+  SensoryArea sensoryArea;
+  double segregation;
+  Map events = new TreeMap();
+  transient Iterator eventIterator;
+  Double nextTime;
     
-    public Peripheral (neuroidnet.ntr.Network network, neuroidnet.ntr.Area[] inputAreas,
-		       int numberOfItemsPerArea, double segregation) {
-	super(network);
-	this.inputAreas = inputAreas;
-	this.numberOfItemsPerArea = numberOfItemsPerArea;
-	this.segregation = segregation;
+  public Peripheral (neuroidnet.ntr.Network network,
+		     neuroidnet.ntr.Area[] inputAreas,
+		     int numberOfItemsPerArea, double segregation) {
+    super(network);
+    this.inputAreas = inputAreas;
+    this.numberOfItemsPerArea = numberOfItemsPerArea;
+    this.segregation = segregation;
 
-	createSensoryInputs();
+    createSensoryInputs();
 
-	events.put(new Double(0.00), new Task() {
-		public void job(Object o) {
-		    fireObjectA();
-		}});
+    initEvents();
+  }
 
-	events.put(new Double(segregation), new Task() {
-		public void job(Object o) {
-		    fireObjectB();
-		}});
+  /**
+   * Sets the <code>eventIterator</code> to first position.
+   * @see #eventIterator
+   * @see #getNext
+   */
+  void initEvents() {
+    eventIterator = events.keySet().iterator();
+    getNext();
+  }
 
-	events.put(new Double(2 * segregation), new Task() {
-		public void job(Object o) {
-		    fireObjectC();
-		}});
+  /**
+   * Iterates to next event. Events are ordered according to time of
+   * occurrance.
+   * @see #eventIterator
+   * @see #nextTime
+   */
+  final void getNext() {
+    try {
+      nextTime = (Double) eventIterator.next();	     
+    } catch (NoSuchElementException e) {
+      nextTime = new Double(Double.POSITIVE_INFINITY);
+    } // end of try-catch
+  }
 
-	eventIterator = events.keySet().iterator();
+  /**
+   * If <code>nextTime</code> is reached, call <code>job()</code>.
+   * For all registered <code>events</code>, pop and check for if
+   * its time has come. 
+   * @see #events
+   */
+  protected void eventsAtThisTime() {
+
+    if (time > nextTime.doubleValue()) {
+      try {
+	((Task)events.get(nextTime)).job(null);
 	getNext();
+      } catch (TaskException e) {
+	throw new Error("Fatal: " + e);
+      } // end of try-catch
+    } // end of if (time > nextTime)
+    /*
+    // Fire both inputs initially
+    if (time == 0.00)
+    fireObjectA();
+    else if (time == segregation)
+    fireObjectB();
+    else if (time == 2*segregation)
+    fireObjectC();
+    */
+  }
+
+  /**
+   * Creates sensoryAreas that hold sensoryNeuroids.
+   * Neuroids can be indirectly reached from the areas.
+   */
+  final void createSensoryInputs() {
+    //sensoryAreas = new SensoryArea[inputAreas.length];
+    sensoryArea = new SensoryArea(network, "sensory-area"/* + (areaNo + 1)*/);
+    for (int areaNo = 0; areaNo < inputAreas.length; areaNo++) {
+      String name = "S" + (areaNo + 1);
+      for (int concept = 0; concept < numberOfItemsPerArea; concept++) 
+	new SensoryNeuroid(sensoryArea, inputAreas[areaNo],
+			   name + "-" + concept);
+    }
+  }
+
+
+  /**
+   * Fire one input in sensory area.
+   */
+  void testOneInput() {
+    ((Neuroid)sensoryArea.neuroids.elementAt(0)).fire(); 
+  }
+
+    void fireObjectInArea(int inputArea, int offset) {
+	((Neuroid)sensoryArea.neuroids.elementAt(offset + numberOfItemsPerArea*(inputArea - 1))).fire(); 
     }
 
-    void getNext() {
-	try {
-	    nextTime = (Double) eventIterator.next();	     
-	} catch (NoSuchElementException e) {
-	    nextTime = new Double(Double.POSITIVE_INFINITY);
-	} // end of try-catch
-    }
 
     /**
-     * Calls <code>testOneInput()</code> at time 0.
-     * @see #testOneInput
+     * For serialization support.
+     *
+     * @param in a <code>java.io.ObjectInputStream</code> value
+     * @exception IOException if an error occurs
+     * @exception ClassNotFoundException if an error occurs
      */
-    protected void eventsAtThisTime() {
-
-	if (time > nextTime.doubleValue()) {
-	    try {
-		((Task)events.get(nextTime)).job(null);
-		getNext();
-	    } catch (TaskException e) {
-		throw new Error("Fatal: " + e);
-	    } // end of try-catch
-	} // end of if (time > nextTime)
-	/*
-	// Fire both inputs initially
-	if (time == 0.00)
-	    fireObjectA();
-	else if (time == segregation)
-	    fireObjectB();
-	else if (time == 2*segregation)
-	    fireObjectC();
-*/
-    }
-
-    /**
-     * Creates sensoryAreas that hold sensoryNeuroids.
-     * Neuroids can be indirectly reached from the areas.
-     */
-    void createSensoryInputs() {
-	//sensoryAreas = new SensoryArea[inputAreas.length];
-	sensoryArea = new SensoryArea(network, "sensory-area"/* + (areaNo + 1)*/);
-	for (int areaNo = 0; areaNo < inputAreas.length; areaNo++) {
-	    String name = "S" + (areaNo + 1);
-	    for (int concept = 0; concept < numberOfItemsPerArea; concept++) 
-		new SensoryNeuroid(sensoryArea, inputAreas[areaNo],
-				   name + "-" + concept);
-	}
-    }
-
-    void fireObjectA() {
-	fireObject(0, 1, 0, 0);
-    }
-
-    void fireObjectB() {
-	fireObject(1, 2, 0, 1);
-    }
-
-    void fireObjectC() {
-	fireObject(0, 2, 2, 2);
-    }
-
-    void fireObject(int a1, int a1_1, int a2, int a3) {
-	((Neuroid)sensoryArea.neuroids.elementAt(a1)).fire(); 
-	((Neuroid)sensoryArea.neuroids.elementAt(a1_1)).fire(); 
-	((Neuroid)sensoryArea.neuroids.elementAt(a2 + numberOfItemsPerArea)).fire(); 
-	((Neuroid)sensoryArea.neuroids.elementAt(a3 + numberOfItemsPerArea*2)).fire(); 
-    }
-
-    void testOneInput() {
-	// Fire one input in sensory area
-	((Neuroid)sensoryArea.neuroids.elementAt(0)).fire(); 
-    }
-
     private void readObject(java.io.ObjectInputStream in)
 	throws IOException, ClassNotFoundException {
 	in.defaultReadObject(); // Real method that does reading

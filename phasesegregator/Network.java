@@ -82,7 +82,8 @@ public class Network extends neuroidnet.ntr.Network {
 	} // end of for
 
 	peripheral =
-	    new Peripheral(this, inputAreas, numberOfItemsPerArea, segregation);
+	    new TwoLevelInputSequence(this, inputAreas,
+				      numberOfItemsPerArea, segregation);
     }
 
     /**
