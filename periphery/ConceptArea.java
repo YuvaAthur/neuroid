@@ -69,9 +69,9 @@ public class ConceptArea extends Area
     }
 
     /**
-     * Dump synaptic activity of concepts contained to output (matlab file?).
-     * <p>TO DO: do it! put this in an interface
-     *
+     * Dump synaptic activity of concepts contained to output (matlab file?). Called by:
+     * <p>TO DO: 
+     * @see Network#finale
      */
     public String dumpData() {
 	String retval =
@@ -132,7 +132,7 @@ public class ConceptArea extends Area
 	return set;
     }
 
-    // Map interface functions
+    // Map interface functions delegated to conceptLookup (with additional checks)
     public void clear() { conceptLookup.clear(); }
     public boolean containsKey(Object key) { return conceptLookup.containsKey(convertKey(key)); }
     public boolean containsValue(Object value) { return conceptLookup.containsValue(value); }
