@@ -1,4 +1,6 @@
-- Enable seleciton of dynamic behavior of groups of neurons.
+- id? naming neuroids? decide by area vector position? decide at time of `attach'ing to area?
+- Test new synapse scanning constructs for validity.
+- Enable seleciton of dynamic behavior of groups of neurons (delay + membrane characteristic).
 - use AxonArbor for dist communication improvement.
 - migrate functions into AxonArbor.
 ? do something about too many updates to the algorithm
