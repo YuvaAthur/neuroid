@@ -4,14 +4,15 @@ import neuroidnet.ntr.*;
 
 //reloadClasses();
 
-until = 45;
+until = 150;
 
-watchedSet = new java.util.HashSet();
+watchedSet = new java.util.TreeSet();
 //watchedSet.add(new NeuroidName("I1",0));
-watchedSet.add(new NeuroidName("M1",21));
-watchedSet.add(new NeuroidName("M1",40));
-watchedSet.add(new NeuroidName("M2",2));
-watchedSet.add(new NeuroidName("M2",19));
-watchedSet.add(new NeuroidName("M3",12));
-watchedSet.add(new NeuroidName("M3",41));
-watchedSet.add(new NeuroidName("M3",26));
+//watchedSet.add(new NeuroidName("M1",10));
+//watchedSet.add(new NeuroidName("M1",40));
+//watchedSet.add(new NeuroidName("M2",93));
+//watchedSet.add(new NeuroidName("M2",19));
+watchedSet.add(new NeuroidName("M3",55));
+watchedSet.add(new NeuroidName("M3",83));
+watchedSet.add(new NeuroidName("M3",29));
+watchedSet.add(new NeuroidName("M3",5));
