@@ -14,11 +14,14 @@ testTolerance() {
 	     timeConstantM < toTimeConstantM;
 	     timeConstantM += (toTimeConstantM - fromTimeConstantM) / dataPoints ) {
 
+	    // Calculated according to timeConstantM
+	    super.segregation = timeConstantS + 2*(timeConstantM - timeConstantS);
+
 	    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
 	    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
 
 	    for (numberOfTrials = 0; numberOfTrials < maxTrials; numberOfTrials++) {
-		runOnce(numberOfObjects, numberOfMedialAreas, timeConstantM, Double.NaN);
+		runOnce(numberOfObjects, numberOfMedialAreas, timeConstantM, segregation);
 		meanQc += qc;
 		meanQs += qs;
 		minQc = Math.min(minQc, qc);
@@ -59,7 +62,7 @@ testTolerance() {
     void batch() {
 	startTime = System.currentTimeMillis();
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 2; i++) {
 	    super.numberOfMedialAreas = 2 + i;
 	    super.maxTrials = 10;
 	    run();
@@ -75,7 +78,8 @@ testTolerance() {
 
 	super.calcTimeConstantM = (numberOfMedialAreas) * timeConstantS;
 
-	super.fromTimeConstantM = calcTimeConstantM - 2 * timeConstantS;
+
+	super.fromTimeConstantM = calcTimeConstantM - timeConstantS;
 	super.toTimeConstantM = 2 * calcTimeConstantM;
 
 	super.idString =

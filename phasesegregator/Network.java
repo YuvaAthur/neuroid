@@ -71,7 +71,7 @@ public class Network extends neuroidnet.ntr.Network {
 	    timeConstantM = (numberOfMedialAreas + 1)*timeConstantS;	     
 
 	if (new Double(segregation).isNaN()) 
-	    segregation = timeConstantS + 2*timeConstantM + delay;	     
+	    segregation = timeConstantS + 2*timeConstantM + delay;
 
 	System.out.println("Segregation parameter=" + segregation);
 	System.out.println("timeConstantM parameter=" + timeConstantM);

@@ -4,33 +4,43 @@
  * statistically significant performance results.
  */
 
-void runOnce(int numberOfObjects, int numberOfMedialAreas,
-	     double timeConstantM, double segregation) {
+void runOnce(testObject) {
     network = new neuroidnet.phasesegregator.Network(false);
-    network.numberOfMedialAreas = numberOfMedialAreas; 
+    network.numberOfMedialAreas = testObject.numberOfMedialAreas; 
 
     //print("\tau_m = " + network.timeConstantM);
-    if (!new Double(timeConstantM).isNaN())
-	network.timeConstantM = timeConstantM; 
-    if (!new Double(segregation).isNaN())
-	network.segregation = segregation; 
+    if (!new Double(testObject.timeConstantM).isNaN())
+	network.timeConstantM = testObject.timeConstantM; 
+    if (!new Double(testObject.segregation).isNaN())
+	network.segregation = testObject.segregation; 
     //print("\tau_m = " + network.timeConstantM);
 
     network.run();
     peripheral = new neuroidnet.phasesegregator.StatisticalInputSequence(network);
-    peripheral.numberOfObjects = numberOfObjects;
+    peripheral.numberOfObjects = testObject.numberOfObjects;
     peripheral.build();
 
     //save(network, "net.data");
 
-    // do an exploratory run
-    network.advanceTime(peripheral.numberOfObjects * (network.segregation + 1));
+    // run for all objects plus initial onset (we need to wait until they arrive at destination!)
+    network.advanceTime(testObject.numberOfMedialAreas * testObject.delay +
+			//testObject.timeConstantS + 
+			peripheral.numberOfObjects * network.segregation +
+			5); // some additional msecs
     print (network.getProperties());
 
     peripheral.evaluateResults();
     this.caller.cc = peripheral.correctConcepts();
-    this.caller.qc = peripheral.qualityOfConcepts(this.caller.cc);
-    print(this.caller.cc.size() + " correct concept quality = " + this.caller.qc);
+    //this.caller.qc = peripheral.qualityOfConcepts(this.caller.cc);
+    // TODO: Maybe should be:
+    this.caller.qc =
+	this.caller.cc.size() * peripheral.qualityOfConcepts(this.caller.cc) /
+	testObject.numberOfObjects;
+
+    this.caller.rc = (double) this.caller.cc.size() / testObject.numberOfObjects;
+
+    print(this.caller.cc.size() + " of " + testObject.numberOfObjects +
+	  " (" + this.caller.rc + ") correct concept quality = " + this.caller.qc);
 
     this.caller.sc = peripheral.spuriousConcepts();
     //print(sc);
@@ -79,8 +89,10 @@ void combinedProfilePlot(testObject) {
 	new Grapher.ErrorData(nsh.grapher, "Correct concepts", testObject.correctProfile);
     spuriousData =
 	new Grapher.ErrorData(nsh.grapher, "Spurious concepts", testObject.spuriousProfile);
+    correctRatioData =
+	new Grapher.ErrorData(nsh.grapher, "Recruited ratio", testObject.correctRatioProfile);
 
-    Grapher.Data[] datas = {correctData, spuriousData};
+    Grapher.Data[] datas = {correctData, spuriousData}; // removed: correctRatioData (see above)
 
     testObject.createPlot(new Vector(Arrays.asList(datas)));
 }

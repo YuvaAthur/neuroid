@@ -82,7 +82,9 @@ public class StatisticalInputSequence extends Peripheral  {
 	 * @return <description>
 	 */
 	public String toString() {
-	    return getClass().getName() + ": Concept = " + conceptSet;
+	    return
+		getClass().getName() + ": Concept = " +
+		ArtificialConcept.conceptName(conceptSet);
 	}
 	
 	/**
@@ -116,10 +118,10 @@ public class StatisticalInputSequence extends Peripheral  {
 	    numberOfObjects = numberOfNeuroids / replication;
 	
 
-	// BUG: Objects are not inspected for uniqueness, leads to 
+	// Objects need to be inspected for uniqueness, otherwise leads to 
 	// misinterpretation of network capacity.
 
-	// TODO: make the following a set capable of contains() for checking existing objects
+	// The following is a set capable of contains() for checking existing objects
 	simObjects = new Vector(numberOfObjects);
 
 	for (int objectNum = 0; objectNum < numberOfObjects; objectNum++) {
@@ -168,8 +170,12 @@ public class StatisticalInputSequence extends Peripheral  {
     void initEvents() {
 	// Loop for all objects and register events, 
 	new UninterruptedIteration() {
-	    /** Time offset */
+	    /** Time offset. WRONG: Initially we have to start from the
+	     * initial onset delay. That is the starting of the
+	     * shortest tolerance window. */
 	    int offset = 0;
+		/*(int) Math.ceil(((double)numberOfMedialAreas) * ((Network)network).delay +
+				((Network)network).timeConstantS);*/
 	    
 	    public void job(Object o) {
 		final SimObject object = (SimObject)o;
@@ -275,7 +281,7 @@ public class StatisticalInputSequence extends Peripheral  {
 			if (conceptSet.size() == 1) 
 			    throw new RemoveFromIterationException();
 			
-			// Remove if it's a subset of the object
+			// Remove if it's a subset of the object, meaning correct concept
 			if (object.conceptSet.containsAll(conceptSet))
 			    throw new RemoveFromIterationException();
 		    }

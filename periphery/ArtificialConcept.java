@@ -82,7 +82,13 @@ public class ArtificialConcept extends SRMNeuroid
 	this.conceptSet = conceptSet;
 
 	// Create a name for the concept by concatanating causing concept names
-	name = new StringTask("[ ", " ]") {
+	name = conceptName(conceptSet);
+
+	init2();
+    }
+
+    public static String conceptName(Set conceptSet) {
+	return new StringTask("[ ", " ]") {
 		// concept names separated by comma
 		boolean first = true;
 		public void job(Object o) {
@@ -93,8 +99,6 @@ public class ArtificialConcept extends SRMNeuroid
 		    super.job(((ArtificialConcept)o).getName()); 
 		}
 	    }.getString(conceptSet);
-
-	init2();
     }
 
     /**

@@ -10,27 +10,35 @@ testSegregation() {
 
 	startTime = System.currentTimeMillis();
 
-	for (segregation = fromSegregation;
-	     segregation < toSegregation;
-	     segregation += (toSegregation - fromSegregation) / dataPoints) {
+	for (super.segregation = fromSegregation;
+	     super.segregation < toSegregation;
+	     super.segregation += (toSegregation - fromSegregation) / dataPoints) {
 
 	    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
 	    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
+	    meanRc = 0; minRc = Double.MAX_VALUE; maxRc = Double.MIN_VALUE;
 
 	    for (numberOfTrials = 0; numberOfTrials < maxTrials; numberOfTrials++) {
-		runOnce(numberOfObjects, numberOfMedialAreas, Double.NaN, segregation);
+		runOnce(super);
 		meanQc += qc;
 		meanQs += qs;
+		meanRc += rc;
 		minQc = Math.min(minQc, qc);
 		minQs = Math.min(minQs, qs);
+		minRc = Math.min(minRc, rc);
 		maxQc = Math.max(maxQc, qc);
 		maxQs = Math.max(maxQs, qs);
+		maxRc = Math.max(maxRc, rc);
 	    }
 	    meanQc /= maxTrials;
 	    meanQs /= maxTrials;
+	    meanRc /= maxTrials;
 
-	    correctProfile.put(new Double(segregation), new ErrorValue(meanQc, minQc, maxQc));
-	    spuriousProfile.put(new Double(segregation), new ErrorValue(meanQs, minQs, maxQs));
+	    
+	    correctProfile.put(new Double(super.segregation), new ErrorValue(meanQc, minQc, maxQc));
+	    spuriousProfile.put(new Double(super.segregation), new ErrorValue(meanQs, minQs, maxQs));
+	    correctRatioProfile.put(new Double(super.segregation),
+				    new ErrorValue(meanRc, minRc, maxRc));
 
      
 	} // end of for 
@@ -57,7 +65,7 @@ testSegregation() {
     void batch() {
 	startTime = System.currentTimeMillis();
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 2; i++) {
 	    super.numberOfMedialAreas = 2 + i;
 	    super.maxTrials = 10;
 	    run();
@@ -68,15 +76,15 @@ testSegregation() {
     }
 
     void init() {
+	super.correctRatioProfile = new Profile();
 	super.correctProfile = new Profile();
 	super.spuriousProfile = new Profile();
 
 	super.timeConstantM = (numberOfMedialAreas)*timeConstantS;
+	super.calcSegregation = timeConstantS + 2*(timeConstantM - timeConstantS);
 
 	super.fromSegregation = timeConstantS;
 	super.toSegregation = 2*(timeConstantS + 2*timeConstantM + delay);
-
-	super.calcSegregation = timeConstantS + 2*timeConstantM + delay;
 
 	super.idString =
 	    "segregation-" + fromSegregation + "to" + toSegregation + "-"

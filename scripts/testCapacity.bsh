@@ -11,25 +11,35 @@ testCapacity() {
 
 	startTime = System.currentTimeMillis();
 
-	for (numberOfObjects = fromObjects; numberOfObjects < toObjects; numberOfObjects+=3) {
+	for (super.numberOfObjects = fromObjects; super.numberOfObjects < toObjects;
+	     super.numberOfObjects += 2 ) {
 
 	    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
 	    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
+	    meanRc = 0; minRc = Double.MAX_VALUE; maxRc = Double.MIN_VALUE;
 
 	    for (numberOfTrials = 0; numberOfTrials < maxTrials; numberOfTrials++) {
-		runOnce(numberOfObjects, numberOfMedialAreas, timeConstantM, Double.NaN);
+		runOnce(super);
 		meanQc += qc;
 		meanQs += qs;
+		meanRc += rc;
 		minQc = Math.min(minQc, qc);
 		minQs = Math.min(minQs, qs);
+		minRc = Math.min(minRc, rc);
 		maxQc = Math.max(maxQc, qc);
 		maxQs = Math.max(maxQs, qs);
+		maxRc = Math.max(maxRc, rc);
 	    }
 	    meanQc /= maxTrials;
 	    meanQs /= maxTrials;
+	    meanRc /= maxTrials;
 
-	    correctProfile.put(new Double(numberOfObjects), new ErrorValue(meanQc, minQc, maxQc));
-	    spuriousProfile.put(new Double(numberOfObjects), new ErrorValue(meanQs, minQs, maxQs));
+	    correctProfile.put(new Double(super.numberOfObjects),
+			       new ErrorValue(meanQc, minQc, maxQc));
+	    spuriousProfile.put(new Double(super.numberOfObjects),
+				new ErrorValue(meanQs, minQs, maxQs));
+	    correctRatioProfile.put(new Double(super.segregation),
+				    new ErrorValue(meanRc, minRc, maxRc));
      
 	} // end of for (numberOfObjects = 1; numberOfObjects < 5; numberOfObjects++)
 
@@ -64,7 +74,7 @@ testCapacity() {
     void batch() {
 	startTime = System.currentTimeMillis();
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 2; i++) {
 	    super.numberOfMedialAreas = 2 + i;
 	    super.maxTrials = 10;
 	    run();
@@ -77,9 +87,10 @@ testCapacity() {
     void init() {
 	super.correctProfile = new Profile();
 	super.spuriousProfile = new Profile();
+	super.correctRatioProfile = new Profile();
 
-	super.timeConstantM = (numberOfMedialAreas)*timeConstantS;
-	super.segregation = timeConstantS + 2*timeConstantM + delay;
+	super.timeConstantM = numberOfMedialAreas*timeConstantS;
+	super.segregation = timeConstantS + 2*(timeConstantM - timeConstantS);
 
 	super.idString =
 	    "capacity-" + fromObjects + "to" + toObjects + "-"
@@ -99,9 +110,10 @@ testCapacity() {
     delay = 3;
 
     fromObjects = 1;
-    toObjects = 20;
+    toObjects = 10;
+    dataPoints = 7;
 
-    calcObjects = 10;
+    calcObjects = 5;
 
 
 }

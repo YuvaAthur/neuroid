@@ -289,14 +289,24 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
 
 	// There's a rare NullPointerException coming out from the
 	// next line. Maybe catch it here and display debugging info?
+	if (mode == null) {
+	    int countdown = 10;
+	    synchronized (this) {
+		while (--countdown > 0 && mode == null) {
+		    System.out.println("Mode of " + this +
+				       " not initialized yet, waiting some msecs... (" +
+				       countdown + ")");
+		    wait(100);
+		} // end of while (true)
+	    }
+	} // end of else
+	
 	try {
-	    mode.step();	     
+	    mode.step();
 	} catch (NullPointerException e) {
 	    e.printStackTrace();
 	    throw new Error("Fatal error in " + this.getProperties());
 	} // end of try-catch
-	
-
     }
 
     /**
