@@ -21,7 +21,7 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
     /**
      * List of times when spikes are received
      */
-    Vector spikeTrain; // TODO: make time a class?
+    final Vector spikeTrain = new Vector(); // TODO: make time a class?
     
     /**
      * Get the value of spikeTrain.
@@ -30,15 +30,7 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
     public Vector getSpikeTrain() {
 	return spikeTrain;
     }
-    
-    /**
-     * Set the value of spikeTrain.
-     * @param v  Value to assign to spikeTrain.
-     */
-    public void setSpikeTrain(Vector  v) {
-	this.spikeTrain = v;
-    }
-    
+        
     boolean isInhibitory;
 
     /**
@@ -46,18 +38,66 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
      * @see #Synapse
      */
     double timeConstantM;
-
+    
+    /**
+     * Get the value of timeConstantM.
+     * @return value of timeConstantM.
+     */
+    public double getTimeConstantM() {
+	return timeConstantM;
+    }
+    
+    /**
+     * Set the value of timeConstantM.
+     * @param v  Value to assign to timeConstantM.
+     */
+    public void setTimeConstantM(double  v) {
+	this.timeConstantM = v;
+    }
+    
     /**
      * Synapse constant dynamic properties. The synaptic rise time constant.
      */
-    double  timeConstantS;
-
+    double timeConstantS;
+    
+    /**
+     * Get the value of timeConstantS.
+     * @return value of timeConstantS.
+     */
+    public double getTimeConstantS() {
+	return timeConstantS;
+    }
+    
+    /**
+     * Set the value of timeConstantS.
+     * @param v  Value to assign to timeConstantS.
+     */
+    public void setTimeConstantS(double  v) {
+	this.timeConstantS = v;
+    }
+    
     /**
      * Axonal delay associated with this synapse (simplified). 
      * <code>delay</code> is required for the <code>phasesegregator.Network</code>
      * @see phasesegregator.Network
      */
-    double delay; 
+    double delay;
+    
+    /**
+     * Get the value of delay.
+     * @return value of delay.
+     */
+    public double getDelay() {
+	return delay;
+    }
+    
+    /**
+     * Set the value of delay.
+     * @param v  Value to assign to delay.
+     */
+    public void setDelay(double  v) {
+	this.delay = v;
+    }
 
     /**
      * Incoming weight.
@@ -263,7 +303,6 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
 	setWeight(1.0);
 // 	timeConstantM = 1;
 // 	timeConstantS = destNeuroid.area.network.deltaT;
-	spikeTrain = new Vector();
 	if (destNeuroid != null) // not template synapse
 	    destNeuroid.synapses.add(this);
     }
@@ -284,10 +323,10 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
 	spikeTrain.add(new Double(time));
 	
 	// If the destneuroid isn't being watched, forget spikes received earlier
-	// than 2 timeConstantMs ago. TODO: or maybe this synapse should be watched separately?
+	// than 3 timeConstantMs ago. TODO: or maybe this synapse should be watched separately?
 	if (!destNeuroid.watch) {
 	    for (Iterator i = spikeTrain.iterator(); i.hasNext();) {
-		if (((Double)i.next()).doubleValue() < (time - 2*timeConstantM))
+		if (((Double)i.next()).doubleValue() < (time - 3*timeConstantM))
 		    i.remove();	// Delete expired spikes from start
 		else 
 		    break;
