@@ -1,3 +1,5 @@
+//trace_2002-11-24_17:29:44
+// --------------------
 //trace_2002-11-24_14:54:53
 // --------------------
 // fixed taum calc, and results seem promising. Ready to collect stats.
@@ -40,7 +42,7 @@
 // the epsp's magnitude is larger.
 
 // Two Layer test with three objects segregated by 2 * sigma = 14 msec
-import edu.ull.cgunay.plots.*;
+import edu.ull.cgunay.utils.plots.*;
 import edu.ull.cgunay.utils.*;
 import neuroidnet.ntr.*;
 

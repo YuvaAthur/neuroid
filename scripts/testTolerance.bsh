@@ -12,23 +12,26 @@ source("stats.bsh");
 correctProfile = new Profile();
 spuriousProfile = new Profile();
 
-maxTrials = 2; //10;
-numberOfMedialAreas = 2;
-numberOfObjects = 2; //5;
+maxTrials = 10;
+numberOfMedialAreas = 4;
+numberOfObjects = 5;
 timeConstantS = 7;
 delay = 3;
 
 //segregation = timeConstantS + 2*timeConstantM + delay;
 
-fromTimeConstantM = timeConstantS;
-toTimeConstantM = (numberOfMedialAreas/* + 1*/) * 2 * timeConstantS;
-
 calcTimeConstantM = (numberOfMedialAreas/* + 1*/) * timeConstantS;
+
+fromTimeConstantM = calcTimeConstantM - 2 * timeConstantS;
+toTimeConstantM = 2 * calcTimeConstantM;
+
+dataPoints = 10;
 
 startTime = System.currentTimeMillis();
 
 for (timeConstantM = fromTimeConstantM;
-     timeConstantM < toTimeConstantM; timeConstantM += timeConstantS) {
+     timeConstantM < toTimeConstantM;
+     timeConstantM += (toTimeConstantM - fromTimeConstantM) / dataPoints ) {
 
     meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
     meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;

@@ -12,8 +12,8 @@ source("stats.bsh");
 correctProfile = new Profile();
 spuriousProfile = new Profile();
 
-maxTrials = 2; //10;
-numberOfMedialAreas = 2;
+maxTrials = 10;
+numberOfMedialAreas = 4;
 timeConstantS = 7;
 delay = 3;
 timeConstantM = (numberOfMedialAreas/* + 1*/)*timeConstantS;
@@ -61,6 +61,6 @@ datas.add(data);
 
 datasPlot(datas, idString, "Number of Objects", "Quality",
 	  "Performance with " + numberOfMedialAreas + " Layers over " +
-	  maxTrials + " Trials, \\tau_m = " + timeConstantM);
+	  maxTrials + " Trials,  \\tau_m = " + timeConstantM);
 
 print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime)/60000 + " mins");

@@ -12,9 +12,9 @@ source("stats.bsh");
 correctProfile = new Profile();
 spuriousProfile = new Profile();
 
-maxTrials = 2; //10;
-numberOfMedialAreas = 2;
-numberOfObjects = 2; //5;
+maxTrials = 10;
+numberOfMedialAreas = 4;
+numberOfObjects = 5;
 timeConstantS = 7;
 timeConstantM = (numberOfMedialAreas/* + 1*/)*timeConstantS;
 delay = 3;
