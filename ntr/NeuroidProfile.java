@@ -106,7 +106,7 @@ public class NeuroidProfile implements Serializable {
     }
 
     public Plot getMembranePotentialPlot() {
-	return new MembranePotentialPlot("Membrane potential of  " + neuroid, null, this);
+	return new MembranePotentialPlot("Membrane potential of " + neuroid, null, this);
     }
 
 }// NeuroidProfile
