@@ -76,7 +76,7 @@ public class Neuroid {
     /**
      * Sets initial parameters. Calculates <code>sumOfWeights</code> from
      * period length given by the <code>Area</code>.
-     * @see Mode#sumOfWeights
+     * @see Neuroid.Mode#sumOfWeights
      * @see Area#period
      * @param area an <code>Area</code> value
      * @param id an <code>int</code> value
@@ -224,6 +224,7 @@ public class Neuroid {
 		    }});
 		if (hasFired) {
 		    mode.fitnessCounter--; // Correct behavior
+		    // TODO: if fitnessCounter ==0 go back to AM
 		    updateWeights();
 		    calculatePotential();
 		    mode.suggestedThreshold = potential;

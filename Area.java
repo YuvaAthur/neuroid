@@ -121,6 +121,14 @@ public class Area implements Runnable {
     Thread thread;
 
     /**
+     * Count of concept allocations made (via call to createArbitrarySynapses)
+     * in this <code>Area</code>.
+     * @see #createArbitrarySynapses
+     * @see Peripheral.Concept
+     */
+    int conceptCount = 0;
+
+    /**
      * Creates a new <code>Area</code> instance with <code>numberOfNeuroids</code> of
      * <code>Neuroids</code>.
      * <p>TODO: If a allocate-on-demand approach is used for Neuroids none
@@ -170,16 +178,6 @@ public class Area implements Runnable {
 	// Create a thread to do the step()s
 	thread = new Thread(this);
 	thread.start();
-    }
-
-    /**
-     * Creates a new synapse connected to a random member of the <code>Area</code>.
-     * SRM parameters: timeConstantM = 1, timeConstantS = deltaT, excitory 
-     * @see deltaT
-     * @return a <code>Synapse</code> value
-     */
-    public Synapse createRandomSynapse() {
-	return new Synapse(getRandomNeuroid(), 1, deltaT, false);
     }
 
     /**
@@ -254,7 +252,7 @@ public class Area implements Runnable {
 
     /**
      * Return a <code>Vector</code> of new <code>numberOfSynapses</code> <code>Synapse</code>s.
-     * TODO: be sure to return a distinct set of synapses (no repetitions!)
+     * AxonArbor makes sure to return a set of synapses to distinct neurons (no repetitions!)
      * @param numberOfSynapses an <code>int</code> value
      * @return a <code>Vector</code> value
      */
@@ -275,6 +273,47 @@ public class Area implements Runnable {
 	    
 	} // end of for (int index = 0; index < numberOfSynapses; index++)
 	return axon;
+    }
+
+    /**
+     * Hack to arbitrarily choose different neurons for each allocation of concepts.
+     * A variable <code>conceptCount</code> is used to interleave the allocated neurons. 
+     * Return a <code>Vector</code> of new <code>numberOfSynapses</code> <code>Synapse</code>s.
+     * AxonArbor makes sure to return a set of synapses to distinct neurons (no repetitions!)
+     * @see #conceptCount
+     * @param numberOfSynapses an <code>int</code> value
+     * @return a <code>Vector</code> value
+     */
+    public Vector createArbitrarySynapses(int numberOfSynapses) {
+	Vector axon = new Vector(numberOfSynapses);
+
+	// Calculate possible number of concepts that'll fit into this area.
+	int maxConcepts = numberOfNeuroids / numberOfSynapses;
+
+	for (int index = 0; index < numberOfSynapses; index++) {
+	    axon.add(createSynapse((Neuroid) neuroids.elementAt(conceptCount +
+								index*maxConcepts)));
+	} // end of for (int index = 0; index < numberOfSynapses; index++)
+	conceptCount++;		// Increment counter for interleaving next concept
+	return axon;
+    }
+
+    /**
+     * Creates a new synapse connected to a random member of the <code>Area</code>.
+     * SRM parameters: timeConstantM = 1, timeConstantS = deltaT, excitory 
+     * @see deltaT
+     * @return a <code>Synapse</code> value */
+    public Synapse createRandomSynapse() { return createSynapse(getRandomNeuroid()); }
+
+    /**
+     * Create a synapse with predefined characteristics.
+     * TODO: Make an inner class to specify these characteristics and
+     * put these functions in there.
+     * @param neuroid a <code>Neuroid</code> value
+     * @return a <code>Synapse</code> value
+     */
+    public Synapse createSynapse(Neuroid neuroid) {
+	return new Synapse(neuroid, 1, deltaT, false);
     }
 
     /**
@@ -300,9 +339,9 @@ public class Area implements Runnable {
     }
     
     /**
-     * Reads current time from hardware clock. (Just increments time in non-parallel version!)
-     * TODO: extend this class for the parallel version.
-     *
+     * Just increments the time by <code>deltaT</code>.
+     * Initial idea was to read current time from hardware clock. 
+     * TODO: extend this class for the parallel version. (should we?)
      */
     void updateTime() {
 	// DO IT
@@ -313,7 +352,7 @@ public class Area implements Runnable {
      * Updates the state of the <code>Area</code>.
      * Updates all <code>Neuroid</code>s contained within. 
      * This method returns immediately, the thread does the calculation afterwards.
-     * TODO: Should be called from a thread with certain frequency.
+     * TODO: Should be called from a thread with certain frequency. (should it?)
      * @see Neuroid
      * @see Area#run
      */
