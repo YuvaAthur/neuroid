@@ -209,7 +209,12 @@ public class Neuroid implements Input {
 				   ", repeating...");
 	    } 
 	} // of while
-	potential += refractoriness(area.time - timeLastFired);
+	double refr = refractoriness(area.time - timeLastFired); 
+	potential += refr;
+/*	if (refr < 0) 
+	    System.out.println("Refractoriness = " + Network.numberFormat.format(refr) +
+			       ", at time = " + Network.numberFormat.format(area.time) +
+			       ", with constant = " + refractoryTimeConstant); */
     }
 
     /**
@@ -460,6 +465,7 @@ public class Neuroid implements Input {
     public String toString() {
 	return "Neuroid #" + hashCode() + " in " + area + ", u = " +
 	    Network.numberFormat.format(potential) + ", " + mode +
+	    ", fired = " + Network.numberFormat.format(timeLastFired) + 
 	    (concept != null ? ", " + concept : "");
     }
 
