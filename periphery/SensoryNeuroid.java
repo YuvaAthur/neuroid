@@ -44,7 +44,7 @@ public class SensoryNeuroid extends SRMNeuroid {
 	    throw new RuntimeException("New concept is already full?");
 	} // end of try-catch
 	
-	mode.setState(SRMMode.UM);
+	mode.setState(Mode.UM);
 
 	// Create connections to destArea
 	AxonArbor synapses;
