@@ -25,6 +25,6 @@ public interface AreaInt extends java.rmi.Remote {
     int getNumberOfNeuroids() throws java.rmi.RemoteException;
     int getReplication() throws java.rmi.RemoteException;
     void step() throws java.rmi.RemoteException;
-    void connectToArea(Remote.AreaInt destArea, double timeConstantS, double delay)
+    void connectToArea(Remote.AreaInt destArea, double timeConstantS, double delay, double nuBoost)
 	throws java.rmi.RemoteException;
 }// Remote.AreaInt
