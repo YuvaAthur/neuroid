@@ -13,7 +13,8 @@ import java.util.*;
  */
 
 public interface RemoteAreaInt extends Remote {
-    Vector createRandomSynapses(int numberOfSynapses) throws RemoteException;    
+    Vector createRandomSynapses(int numberOfSynapses) throws RemoteException; 
+    Vector createArbitrarySynapses(int numberOfSynapses) throws RemoteException; 
     int getNumberOfNeuroids() throws RemoteException;
     int getReplication() throws RemoteException;
     void step() throws RemoteException;
