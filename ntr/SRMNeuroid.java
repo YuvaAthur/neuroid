@@ -282,7 +282,7 @@ public class SRMNeuroid extends Neuroid  {
 	 * @see Neuroid#step
 	 */
 	public void step() {
-	    int watchdog = 5;	// Only three state changes allowed at a time for safety
+	    int watchdog = 5;	// Only number of state changes allowed at a time, for safety
 
 	    try {
 		while (watchdog-- > 0) {
@@ -344,8 +344,9 @@ public class SRMNeuroid extends Neuroid  {
 	}
 
 	void fitter() {
-	    fitnessCounter = fitnessCounter + 1; // TODO: should go after suggestThreshold()
 	    suggestThreshold();
+	    fitnessCounter = fitnessCounter + 1; // TODO: should go after suggestThreshold()! causing major bug with no weight change!
+
 	}
 
 	void fitless() {
