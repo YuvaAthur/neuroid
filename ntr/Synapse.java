@@ -1,13 +1,17 @@
+package Base;
+import Base.*;
+import Remote.*;
 import java.io.*;
 import java.lang.*;
 import java.util.*;
 
 /** 
- * Presynaptic connection to a Neuroid.
+ * $Id$ 
+ * <p>Presynaptic connection to a Neuroid.
  * @see Neuroid
  *
  * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
- * @version 1.0
+ * @version $version$
  * @since 1.0
  */
 
@@ -33,9 +37,12 @@ public class Synapse {
     double weight;
 
     /**
-     * Presynaptic neuroid
+     * Presynaptic neuroid.
+     * TODO:	The remote interfaces for this connection is not done yet.
+     *		Presynaptic link can be made to either the neuroid itself or its axon, 
+     *		through which the neuron can be reached.
      */
-    //Neuroid sourceNeuroid;
+    Neuroid srcNeuroid;
 
     /**
      * Postsynaptic neuroid

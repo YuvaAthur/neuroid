@@ -1,3 +1,6 @@
+package Simple;
+import Base.*;
+import Remote.*;
 
 /**
  * SimpleNetwork.java
@@ -9,17 +12,17 @@
  * @version
  */
 
-public class SimpleNetwork extends Network {
+public class Network extends Base.Network {
     MultiConceptPeripheral peripheral;
 
-    public SimpleNetwork (boolean isConcurrent) {
+    public Network (boolean isConcurrent) {
 	super(0.01, isConcurrent);		// sets deltaT
     }
 
     /**
      * 
      */
-    public void build() {
+    protected void build() {
 	//TO DO: Implement this method.
 	int
 	    numberOfNeuroids = 100,
@@ -27,9 +30,9 @@ public class SimpleNetwork extends Network {
 
 	double period = Neuroid.defaultPeriod();
 
-	Area inputArea1 = new Area("I1", numberOfNeuroids, replication, deltaT, period, 0.9);
-	Area inputArea2 = null; //new Area("I2", numberOfNeuroids, replication, deltaT, period, 0.9);
-	Area circuitArea = new Area("C", numberOfNeuroids, replication, deltaT, period, 1.8);
+	Base.Area inputArea1 = new Base.Area("I1", numberOfNeuroids, replication, deltaT, period, 0.9);
+	Base.Area inputArea2 = null; //new Area("I2", numberOfNeuroids, replication, deltaT, period, 0.9);
+	Base.Area circuitArea = new Base.Area("C", numberOfNeuroids, replication, deltaT, period, 1.8);
 	areas.add(inputArea1);
 	//areas.add(inputArea2);
 	areas.add(circuitArea);
@@ -45,7 +48,7 @@ public class SimpleNetwork extends Network {
     /**
      *
      */
-    public void simulation() {
+    protected void simulation() {
 	// Step 
 	double untilTime = 6.0;
 	long startTime = System.currentTimeMillis();
@@ -83,7 +86,7 @@ public class SimpleNetwork extends Network {
 
 
     public static void main (String[] args) {
-	new SimpleNetwork(false); // Single threaded!
+	new Network(false); // Single threaded!
 	System.exit(0);
     } // end of main ()
 

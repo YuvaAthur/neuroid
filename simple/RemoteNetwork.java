@@ -1,4 +1,7 @@
-import java.rmi.*;
+package Simple;
+import Base.*;
+import Remote.*;
+//import java.rmi.*;
 import java.net.*;
 
 /**
@@ -18,12 +21,12 @@ public class SimpleRemoteNetwork extends SimpleNetwork {
     }
 
     public void build() {
-	RemoteAreaInt inputArea1, inputArea2, circuitArea;
+	Remote.AreaInt inputArea1, inputArea2, circuitArea;
 	try {
-	    inputArea1 = (RemoteAreaInt) Naming.lookup("rmi://grad06.cacs/I1");
-	    inputArea2 = null; //(RemoteAreaInt) Naming.lookup("rmi://swamp08.cacs/I2");
-	    circuitArea = (RemoteAreaInt) Naming.lookup("rmi://swamp10.cacs/C");
-	} catch (RemoteException e) {
+	    inputArea1 = (Remote.AreaInt) Naming.lookup("rmi://grad06.cacs/I1");
+	    inputArea2 = null; //(Remote.AreaInt) Naming.lookup("rmi://swamp08.cacs/I2");
+	    circuitArea = (Remote.AreaInt) Naming.lookup("rmi://swamp10.cacs/C");
+	} catch (java.rmi.RemoteException e) {
 	    System.out.println("Error: " + e);
 	    return;
 	}catch (NotBoundException e) {
@@ -41,7 +44,7 @@ public class SimpleRemoteNetwork extends SimpleNetwork {
 	try {
 	    inputArea1.connectToArea(circuitArea);
 	    //inputArea2.connectToArea(circuitArea);
-	} catch (RemoteException e) {
+	} catch (java.rmi.RemoteException e) {
 	    System.out.println("Remote connection to Area failed.");
 	}
 

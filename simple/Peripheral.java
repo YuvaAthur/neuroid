@@ -1,3 +1,6 @@
+package Simple;
+import Base.*;
+import Remote.*;
 
 /**
  * SimplePeripheral.java
@@ -19,8 +22,8 @@ public class SimplePeripheral extends Peripheral {
 	b = new Concept(inputArea1);
     }
 
-    public SimplePeripheral (Network network, RemoteAreaInt inputArea1, RemoteAreaInt inputArea2,
-			     RemoteAreaInt circuitArea) {
+    public SimplePeripheral (Network network, Remote.AreaInt inputArea1, Remote.AreaInt inputArea2,
+			     Remote.AreaInt circuitArea) {
 	super(network);
 	
 	a = new Concept(inputArea1);

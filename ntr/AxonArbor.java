@@ -1,6 +1,9 @@
+package Base;
+import Base.*;
+import Remote.*;
 import java.lang.*;
 import java.util.*;
-import java.rmi.*;
+//import java.rmi.*;
 import Utils.*;
 
 /**
@@ -14,6 +17,12 @@ import Utils.*;
  */
 
 public class AxonArbor extends Vector {
+    /**
+     * Axon's owner neuroid.
+     * @see Neuroid
+     */
+    Neuroid neuroid;
+
     public AxonArbor () {
 	super();
     }

@@ -1,3 +1,6 @@
+package PhaseSegregator;
+import Base.*;
+import Remote.*;
 /**
  * Builds a network to test theoretical phase segregation properties.
  * TODO: Instead of n input areas, put all input concepts in the same area,

@@ -1,20 +1,23 @@
+package Base;
+import Base.*;
+import Remote.*;
 import java.lang.*;
 import java.util.*;
-import java.rmi.*;
+//import java.rmi.*;
 import Utils.*;
 
 /**
- * Peripheral.java
+ * $Id$
  *
- * Controls inputs to the <code>Network</code>.
- * TODO: Subclass to create test networks with specific inputs.
+ * <p>Controls inputs to the <code>Network</code>.
+ * Has subclasses to create test networks with specific inputs.
  *
  * @see Network 
  *
  * Created: Mon Nov 20 02:08:10 2000
  *
  * @author Cengiz Gunay
- * @version 1.0
+ * @version $Revision$$
  */
 
 public class Peripheral  {
@@ -44,28 +47,28 @@ public class Peripheral  {
      * @version 1.0
      * @since 1.0
      */
-    class Concept {
+    public class Concept {
 	/**
 	 * Vector of <code>Synapses</code> connected to <code>Neuroids</code>
 	 * that this <code>Concept</code> should activate.
 	 */
 	Vector synapses;
 
-	Concept(RemoteAreaInt area) {
+	public Concept(Remote.AreaInt area) {
 	    try {
 		synapses = area.createArbitrarySynapses(area.getReplication());
-	    } catch (RemoteException e) {
+	    } catch (java.rmi.RemoteException e) {
 		e.printStackTrace();
 		throw new RuntimeException("Cannot access area.createArbitrarySynapses");
 	    }
 	    // TODO: teach the dest neuroids to memorize this input.
 	}
 
-	Concept(Area area) {
+	public Concept(Base.Area area) {
 	    synapses = area.createArbitrarySynapses(area.getReplication());
 	}
 
-	void fire() {
+	public void fire() {
 	    Iteration.loop(synapses.iterator(), new Utils.Task() {
 		    public void job(Object synapse) {
 			// Induce reception of spike
@@ -73,8 +76,8 @@ public class Peripheral  {
 			    ((Synapse)synapse).receiveSpike(); 
 			else {
 			    try {
-				((RemoteSynapseInt)synapse).receiveSpike();
-			    } catch (RemoteException e) { 
+				((Remote.SynapseInt)synapse).receiveSpike();
+			    } catch (java.rmi.RemoteException e) { 
 				e.printStackTrace();
 				throw new RuntimeException("Cannot call synapse.receiveSpike");
 			    }

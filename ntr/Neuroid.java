@@ -1,6 +1,9 @@
+package Base;
+import Base.*;
+//import Remote.*;
 import java.lang.*;
 import java.util.*;
-import java.rmi.*;
+//import java.rmi.*;
 import Utils.*;
 
 /**
@@ -174,9 +177,9 @@ public class Neuroid {
 /*		    try {
 			potential += ((o instanceof Synapse) ?
 				      ((Synapse)o).getPotential() :
-				      ((RemoteSynapseInt)o).getLocalSynapse().getPotential());
-		    } catch (RemoteException e) {
-			System.out.println("RemoteSynapse cannot be reached.");
+				      ((Remote.SynapseInt)o).getLocalSynapse().getPotential());
+		    } catch (java.rmi.RemoteException e) {
+			System.out.println("Remote.Synapse cannot be reached.");
 		    }*/
 		}});
 	potential += refractoriness(area.time - timeLastFired);

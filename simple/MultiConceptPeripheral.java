@@ -1,5 +1,8 @@
+package Simple;
+import Base.*;
+import Remote.*;
 import java.util.*;
-import java.rmi.*;
+//import java.rmi.*;
 import Utils.*;
 
 /**
@@ -12,12 +15,12 @@ import Utils.*;
  * @version
  */
 
-public class MultiConceptPeripheral extends Peripheral {
+public class MultiConceptPeripheral extends Base.Peripheral {
     Concept a, b;
     Vector noiseConcepts;
     Object inputArea, circuitArea;
 
-    public MultiConceptPeripheral (Network network, Area inputArea, Area circuitArea) {
+    public MultiConceptPeripheral (Network network, Base.Area inputArea, Base.Area circuitArea) {
 	super(network);
 	this.inputArea = inputArea;
 	this.circuitArea = circuitArea;
@@ -25,8 +28,8 @@ public class MultiConceptPeripheral extends Peripheral {
 	allocateConcepts();
     }
 
-    public MultiConceptPeripheral (Network network, RemoteAreaInt inputArea, 
-				   RemoteAreaInt circuitArea) {
+    public MultiConceptPeripheral (Network network, Remote.AreaInt inputArea, 
+				   Remote.AreaInt circuitArea) {
 	super(network);
 	this.inputArea = inputArea;
 	this.circuitArea = circuitArea;
@@ -35,27 +38,27 @@ public class MultiConceptPeripheral extends Peripheral {
     }
 
     void allocateConcepts() {
-	if (inputArea instanceof Area) {
-	    a = new Concept((Area)inputArea);
-	    b = new Concept((Area)inputArea);
+	if (inputArea instanceof Base.Area) {
+	    a = new Concept((Base.Area)inputArea);
+	    b = new Concept((Base.Area)inputArea);
 	} else {
-	    a = new Concept((RemoteAreaInt)inputArea);
-	    b = new Concept((RemoteAreaInt)inputArea);
+	    a = new Concept((Remote.AreaInt)inputArea);
+	    b = new Concept((Remote.AreaInt)inputArea);
 	} // end of else
 
 	int inputReplication, destReplication, destNumberOfNeuroids;
 
-	if (circuitArea instanceof Area) {
-	    inputReplication = ((Area)inputArea).getReplication();
-	    destReplication = ((Area)circuitArea).getReplication();
-	    destNumberOfNeuroids = ((Area)circuitArea).getNumberOfNeuroids();
+	if (circuitArea instanceof Base.Area) {
+	    inputReplication = ((Base.Area)inputArea).getReplication();
+	    destReplication = ((Base.Area)circuitArea).getReplication();
+	    destNumberOfNeuroids = ((Base.Area)circuitArea).getNumberOfNeuroids();
 	} else {
 	    try {
-		inputReplication = ((RemoteAreaInt)inputArea).getReplication();
-		destReplication = ((RemoteAreaInt)circuitArea).getReplication();
-		destNumberOfNeuroids = ((RemoteAreaInt)circuitArea).getNumberOfNeuroids(); 
-	    } catch (RemoteException e) {
-		System.out.println("Cannot call RemoteArea methods.");
+		inputReplication = ((Remote.AreaInt)inputArea).getReplication();
+		destReplication = ((Remote.AreaInt)circuitArea).getReplication();
+		destNumberOfNeuroids = ((Remote.AreaInt)circuitArea).getNumberOfNeuroids(); 
+	    } catch (java.rmi.RemoteException e) {
+		System.out.println("Cannot call Remote.Area methods.");
 		e.printStackTrace();
 		return;
 	    }
@@ -72,10 +75,10 @@ public class MultiConceptPeripheral extends Peripheral {
 
 	noiseConcepts = new Vector();
 	for (int i = 0; i < remainingConcepts; i++) {
-	    if (inputArea instanceof Area) {
-		noiseConcepts.add(new Concept((Area)inputArea));
+	    if (inputArea instanceof Base.Area) {
+		noiseConcepts.add(new Concept((Base.Area)inputArea));
 	    } else {
-		noiseConcepts.add(new Concept((RemoteAreaInt)inputArea));
+		noiseConcepts.add(new Concept((Remote.AreaInt)inputArea));
 	    } // end of else
 	    
 	} // end of for (int i = 0; i < remainingConcepts; i++)

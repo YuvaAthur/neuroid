@@ -13,6 +13,10 @@
 
 
 
+
+
+
+
 (jde-set-project-name "default")
 (jde-set-variables 
  '(jde-gen-to-string-method-template (quote ("'&" "\"public String toString() {\" 'n>" "\"return super.toString();\" 'n>" "\"}\" 'n>")))
@@ -100,7 +104,7 @@ RemoteException {\"" "'n>\"}\"'n 'n" "'> \"public void unsetEntityContext() thro
  '(jde-bug-debug nil)
  '(jde-project-file-name "prj.el")
  '(jde-run-java-vm "java")
- '(jde-compile-option-directory "../javarun")
+ '(jde-compile-option-directory "~/cs555/javarun")
  '(jde-run-applet-doc "")
  '(jde-db-option-properties nil)
  '(jde-gen-cflow-for-i (quote ("(if (jde-parse-comment-or-quoted-p)" "'(l \"fori\")" "'(l > \"for (int \" (p \"variable: \" var) \" = 0; \"" "(s var)" "\" < \"(p \"upper bound: \" ub)\"; \" (s var) \"++) \"" "\"{\" > n> r n" "\"} // end of for (int \" (s var) \" = 0; \"" "(s var) \" < \" (s ub) \"; \" (s var) \"++)\" > n>)" ")")))
@@ -127,7 +131,7 @@ RemoteException {\"" "'n>\"}\"'n 'n" "'> \"public void unsetEntityContext() thro
  '(jde-global-classpath (quote ("/home/swamp2/maida/cxg9789/cs555/javarun")))
  '(jde-bug-vm-includes-jpda-p nil)
  '(jde-javadoc-describe-class-template (quote ("* Describe class " (jde-javadoc-code name) " here.")))
- '(jde-run-application-class "SimpleNetwork")
+ '(jde-run-application-class "Simple.Network")
  '(jde-gen-cflow-else (quote ("(if (jde-parse-comment-or-quoted-p)" "'(l \"else\")" "'(l > \"else \"" "\"{\" > n> r n" "\"} // end of else\" > n>)" ")")))
  '(jde-compile-option-target (quote ("1.2")))
  '(jde-imenu-enable t)
@@ -145,7 +149,7 @@ RemoteException {\"" "'n>\"}\"'n 'n" "'> \"public void unsetEntityContext() thro
  '(jde-db-option-verbose (quote (nil nil nil)))
  '(jde-compile-option-debug (quote ("selected" (t nil nil))))
  '(jde-javadoc-return-tag-template (quote ("* @return " (jde-javadoc-a type) " " (jde-javadoc-code type) " value")))
- '(jde-run-working-directory "../javarun")
+ '(jde-run-working-directory "~/cs555/javarun")
  '(jde-compile-option-bootclasspath nil)
  '(jde-db-read-vm-args nil)
  '(jde-compile-option-extdirs nil)

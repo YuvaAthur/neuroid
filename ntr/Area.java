@@ -1,6 +1,9 @@
+package Base;
+import Base.*;
+import Remote.*;
 import java.lang.*;
 import java.util.*;
-import java.rmi.*;
+//import java.rmi.*;
 import Utils.*;
 
 /**
@@ -150,7 +153,7 @@ public class Area implements Runnable {
 	axons = new Hashtable();
 
 	// Neuroids in Area
-	neuroids = new Vector(); 
+	neuroids = new Vector(numberOfNeuroids+1); // one for the inhib. inter-neuron
 
 	// Add inhibitory inter-neuron: one neuron that takes input from all neuroids and
 	// projects to all. Threshold is fixed to fire above 2*replication inputs
@@ -197,10 +200,10 @@ public class Area implements Runnable {
 	    destNumberOfNeuroids = ((Area)destArea).getNumberOfNeuroids();
 	} else {
 	    try {
-		destReplication = ((RemoteAreaInt)destArea).getReplication();
-		destNumberOfNeuroids = ((RemoteAreaInt)destArea).getNumberOfNeuroids();	     
-	    } catch (RemoteException e) {
-		System.out.println("Cannot call RemoteArea methods.");
+		destReplication = ((Remote.AreaInt)destArea).getReplication();
+		destNumberOfNeuroids = ((Remote.AreaInt)destArea).getNumberOfNeuroids();	     
+	    } catch (java.rmi.RemoteException e) {
+		System.out.println("Cannot call Remote.Area methods.");
 		return;
 	    }
 	} // end of else	
@@ -214,7 +217,7 @@ public class Area implements Runnable {
 	System.out.println("Conn prob from " + this + " to " + destArea + " is " +
 			   connProb + "(" + numberOfConnections + " Neuroids)");
 
-	// TODO: change to make use of Iteration.loop()
+	// Loop for every neuroid in this area
 	Object[] p = { destArea, new Integer(numberOfConnections)};
 	Iteration.loop(neuroids.iterator(), new Utils.TaskWithParam() { 
 		public void job(Object o, Object[] p) {
@@ -226,7 +229,7 @@ public class Area implements Runnable {
 			Vector synapses = 
 			    (_destArea instanceof Area) ?
 			    ((Area)_destArea).createRandomSynapses(_numberOfConnections):
-			    ((RemoteAreaInt)_destArea).createRandomSynapses(_numberOfConnections); 
+			    ((Remote.AreaInt)_destArea).createRandomSynapses(_numberOfConnections); 
 
 			// Add to existing Vector in hash if connections already exist 
 			Vector existingSynapses = (Vector) axons.get(fromNeuroid);
@@ -235,8 +238,8 @@ public class Area implements Runnable {
 			else 
 			    existingSynapses.addAll(synapses); // Add to existing
 			
-		    } catch (RemoteException e) {
-			System.out.println("Cannot call RemoteArea methods.");
+		    } catch (java.rmi.RemoteException e) {
+			System.out.println("Cannot call Remote.Area methods.");
 		    }
 
 		    //System.out.println("Create " + synapses.size() + " synapses leaving " +
@@ -245,7 +248,7 @@ public class Area implements Runnable {
 		      Iteration.loop(synapses.iterator(), new Utils.Task() { 
 		      public void job(Object o) {
 		      System.out.println("New " + ((o instanceof Synapse) ?
-		      (""+(Synapse)o) : (""+(RemoteSynapseInt)o)));
+		      (""+(Synapse)o) : (""+(Remote.SynapseInt)o)));
 		      }});*/
 		}}, p);
     }
@@ -395,9 +398,9 @@ public class Area implements Runnable {
 			((Synapse)o).receiveSpike();
 		    else {
 			try {
-			((RemoteSynapseInt)o).receiveSpike();
-			} catch (RemoteException e) {
-			    System.out.println("Cannot call RemoteSynapse");
+			((Remote.SynapseInt)o).receiveSpike();
+			} catch (java.rmi.RemoteException e) {
+			    System.out.println("Cannot call Remote.Synapse");
 			}
 		    } // end of else
 		    //System.out.println("***synapse");

@@ -1,15 +1,19 @@
+package Base;
+import Base.*;
+import Remote.*;
 import java.util.*;
-import java.rmi.*;
+//import java.rmi.*;
 import Utils.*;
 
 /**
- * Container for all <code>Area</code>s that hold <code>Neuroid</code>s.
+ * $Id$
+ * <p>Container for all <code>Area</code>s that hold <code>Neuroid</code>s.
  * Classes extending this one should describe the network architecture and topology. 
  *
  * @see Area
  * @see Neuroid
  * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
- * @version 1.0
+ * @version $Revision$
  * @since 1.0
  */
 abstract public class Network {
@@ -17,18 +21,18 @@ abstract public class Network {
      * All <code>Area</code>s contained in <code>Network</code>.
      * @see Area
      */
-    Vector areas = new Vector();
+    protected Vector areas = new Vector();
 
     /**
      * Peripheral control device
      */
-    Peripheral peripheral;
+    protected Peripheral peripheral;
 
     /**
      * Increment of time for algorithms.
      * TODO: Put it elsewhere; too far to reach!
      */
-    double deltaT;
+    protected double deltaT;
     
     /**
      * Get the value of peripheral.
@@ -106,13 +110,13 @@ abstract public class Network {
      * Describes the architecture of the network.
      * Should be defined in subclasses.
      */
-    abstract void build();
+    protected abstract void build();
 
     /**
      * Runs the simulation on the network.
      * Should be defined in subclasses.
      */
-    abstract void simulation();
+    protected abstract void simulation();
 
     /**
      * Sets deltaT and then calls <code>build()</code> and <code>simulation()</code>
@@ -130,8 +134,8 @@ abstract public class Network {
 			((Area)o).step();
 		    else {
 			try {
-			    ((RemoteAreaInt)o).step(); // Should be done in parallel!!!
-			} catch (RemoteException e) { 
+			    ((Remote.AreaInt)o).step(); // Should be done in parallel!!!
+			} catch (java.rmi.RemoteException e) { 
 			    e.printStackTrace();
 			    throw new RuntimeException("Cannot call remote Area.step()");
 			}

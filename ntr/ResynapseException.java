@@ -1,3 +1,6 @@
+package Base;
+import Base.*;
+import Remote.*;
 
 /**
  * ResynapseException.java

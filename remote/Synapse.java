@@ -1,8 +1,11 @@
-import java.rmi.*;
+package Remote;
+import Base.*;
+import Remote.*;
+//import java.rmi.*;
 import java.rmi.server.*;
 
 /**
- * RemoteSynapse.java
+ * Remote.Synapse.java
  *
  *
  * Created: Fri Dec  1 02:34:03 2000
@@ -11,8 +14,8 @@ import java.rmi.server.*;
  * @version
  */
 
-public class RemoteSynapse extends Synapse
-    implements RemoteSynapseInt {
+public class Synapse extends Base.Synapse
+    implements Remote.SynapseInt {
     Synapse localSynapse;
     
     /**
@@ -27,15 +30,15 @@ public class RemoteSynapse extends Synapse
        */
     public void setLocalSynapse(Synapse  v) {this.localSynapse = v;}
     
-    public RemoteSynapse (Neuroid destNeuroid, double timeConstantM,
+    public Synapse (Neuroid destNeuroid, double timeConstantM,
 			  double timeConstantS, boolean isInhibitory)
-	throws RemoteException {
+	throws java.rmi.java.rmi.RemoteException {
 	super(destNeuroid, timeConstantM, timeConstantS, isInhibitory);
 	UnicastRemoteObject.exportObject(this);
     }
 
-/*    public void receiveSpike() throws RemoteException {
+/*    public void receiveSpike() throws java.rmi.java.rmi.RemoteException {
 	localSynapse.receiveSpike();
     }*/
 
-}// RemoteSynapse
+}// Remote.Synapse

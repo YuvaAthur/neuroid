@@ -1,16 +1,19 @@
-import java.rmi.*;
+package Remote;
+import Base.*;
+import Remote.*;
+//import java.rmi.*;
 /**
- * RemoteAreaController.java
- * Create a RemoteArea and register it to the Registry.
- * @see RemoteArea
+ * Remote.AreaController.java
+ * Create a Remote.Area and register it to the Registry.
+ * @see Remote.Area
  * Created: Fri Dec  1 02:56:09 2000
  *
  * @author Cengiz Gunay
  * @version
  */
 
-public class RemoteAreaController  {
-    public RemoteAreaController () {
+public class AreaController  {
+    public AreaController () {
 	
     }
 
@@ -23,7 +26,7 @@ public class RemoteAreaController  {
      */
     public static void main (String[] args) {
 	if (args.length < 2) {
-	    System.out.println("Usage: RemoteAreaController name threshold");
+	    System.out.println("Usage: Remote.AreaController name threshold");
 	    return;
 	}
 	String name = args[0];
@@ -37,8 +40,8 @@ public class RemoteAreaController  {
 	
 	System.setSecurityManager(new RMISecurityManager());
 	try {
-	    RemoteArea area =
-		new RemoteArea(name, numberOfNeuroids, replication, deltaT, period, threshold);
+	    Remote.Area area =
+		new Remote.Area(name, numberOfNeuroids, replication, deltaT, period, threshold);
 	    Naming.bind(name, area);
 	    System.out.println("Bound to rmiregistry");
 	    
@@ -49,4 +52,4 @@ public class RemoteAreaController  {
 	
     } // end of main ()
     
-}// RemoteAreaController
+}// Remote.AreaController
