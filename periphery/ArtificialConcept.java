@@ -22,6 +22,7 @@ public class ArtificialConcept extends Neuroid
 
     /**
      * Name of the concept
+     * @see #ArtificialConcept(Network,HashSet)
      */
     String name;
     
@@ -54,6 +55,7 @@ public class ArtificialConcept extends Neuroid
 
     /**
      * Create a <code>concept</code> from a conjunction of <code>concept</code>s.
+     * Name it by the concatanation of names of causing concepts. 
      * <p>TODO: Raise exception if conceptSet already exists as a key in conceptArea.
      * @param network a <code>Network</code> value
      * @param conceptSet a <code>Vector</code> value
@@ -62,7 +64,7 @@ public class ArtificialConcept extends Neuroid
 	super(network.conceptArea);
 	this.conceptSet = conceptSet;
 
-	//name = conceptSet.toString(); // TODO: ???
+	// Create a name for the concept by concatanating causing concept names
 	Utils.TaskWithReturn toStringTask =
 	    new Utils.TaskWithReturn() {
 		String name = "[ ";
@@ -95,6 +97,7 @@ public class ArtificialConcept extends Neuroid
 	    ((ConceptArea)area).put(conceptSet, this); 
 	else // Add redundant entry in hashtable if conceptSet is empty
 	    ((ConceptArea)area).put(this, this); 
+	watch = true;		// Always true for ArtificialConcept
     }
 
     /**
@@ -145,37 +148,6 @@ public class ArtificialConcept extends Neuroid
     }
 
     //public static int id = 0; OBSOLETE
-
-    /**
-     * Dump synaptic activity to output (matlab format).
-     * TODO: in gnuplot format?
-     */
-    public String dumpData() {
-
-	String retval = "";
-	
-	// TODO: make this following class common with the one in Network.toString()
-	Utils.TaskWithReturn toStringTask =
-	    new Utils.TaskWithReturn() {
-		    String retval = new String();
-		    
-		    // spike lists from different synapses separated by space
-		    public void job(Object o) {
-			retval += ((Synapse)o).dumpData() + " "; 
-		    }
-		    
-		    public Object getValue() {
-			return retval;
-		    }
-		};
-	
-	Iteration.loop(synapses.iterator(), toStringTask);
-	
-	retval += (String)toStringTask.getValue();
-
-	//id++;
-	return retval;	
-    }
 
     /**
      * Describe concept in more detail, including static properties.
