@@ -1,0 +1,38 @@
+//import neuroidnet.ntr.plots.*;
+
+reloadClasses();
+network = new neuroidnet.phasesegregator.Network(false);
+network.run();
+save(network, "net.data");
+
+until = 15;
+
+// do a exploratory run
+network.advanceTime(until);
+
+//area = network.getArea("sensory-1");
+//print(area.neuroids.elementAt(0));
+
+w2 = 81;
+n2 = network.getNeuroid("M2", w2);
+print (n2.getStatus());
+
+w1 = 85; 
+n = network.getNeuroid("M1", w1);
+print (n.getStatus());
+
+// Then restart, i.e. load the net and put watch'es
+network = load("net.data");
+n = network.getNeuroid("M1", w1);
+n2 = network.getNeuroid("M2", w2); 
+
+network.setWatch(n);
+network.setWatch(n2);
+
+network.advanceTime(until);
+save(network, "net.withprofile.data");
+
+grapher = new neuroidnet.ntr.plots.GNUPlot();
+plot = n.getNeuroidProfile().neuroidFirePlot(grapher);
+grapher.display(plot);
+
