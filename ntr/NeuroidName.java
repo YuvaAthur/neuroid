@@ -12,7 +12,7 @@ package neuroidnet.ntr;
  * @version $Revision$ for this file.
  */
 
-public class NeuroidName  {
+public class NeuroidName implements Comparable {
 
     final String areaName;
     
@@ -38,5 +38,24 @@ public class NeuroidName  {
 	this.areaName = areaName;
 	this.neuroidId = neuroidId;
     }
+
+    public String toString() {
+	return "Neuroid #" + neuroidId + " (in " + areaName + ")";
+    }
+
+    // implementation of java.lang.Comparable interface
+
+    /**
+     *
+     * @param param1 <description>
+     * @return <description>
+     */
+    public int compareTo(Object _that) {
+	NeuroidName that = (NeuroidName) _that;
+	int p = areaName.compareTo(that.areaName);
+	// TODO: implement this java.lang.Comparable method
+	return (p!=0)?p:(new Integer(neuroidId).compareTo(new Integer(that.neuroidId)));
+    }
+
     
 }// NeuroidName
