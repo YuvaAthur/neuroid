@@ -77,7 +77,8 @@ public class ConceptArea extends Area
 	String retval =
 	    "%% Matlab script created by the Neuroidal network\n\n" +
 	    "lastTime = " + time + ";\n" + 
-	    "numberOfConcepts = " + neuroids.size() + ";\n\n";
+	    "numberOfConcepts = " + neuroids.size() + ";" +
+	    "figure;\n\n";
 	
 	// TODO: make this following class common with the one in Network.toString()
 	Utils.TaskWithReturn toStringTask =
