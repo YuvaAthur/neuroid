@@ -18,7 +18,8 @@ import java.io.*;
  * @since 1.0
  */
 
-public class Area implements Runnable, AreaInt, Serializable, Expressive {
+public class Area
+    implements Runnable, AreaInt, Serializable, Expressive, Simulation {
 
     /**
      * Name of the <code>Area</code> for identification purposes.
@@ -160,10 +161,19 @@ public class Area implements Runnable, AreaInt, Serializable, Expressive {
     
     /**
      * Lock variable showing the thread is busy doing the calculations.
+     * @see #stepRequested
      * @see Area#run
      * @see Area#step
      */
-    volatile Boolean isCalculating = new Boolean(false);
+    transient volatile Object isCalculating = new Object();
+
+    /**
+     * Lock variable showing the thread is waiting for a step request.
+     * @see #stepRequested
+     * @see Area#run
+     * @see Area#step
+     */
+    transient volatile Object isWaiting = new Object();
 
     /**
      * Flag showing incoming requets to step().
@@ -573,6 +583,11 @@ public class Area implements Runnable, AreaInt, Serializable, Expressive {
     }
 
     /**
+     * Does nothing. TODO: should do something.
+     */
+    public void init() {}
+
+    /**
      * Updates the state of the <code>Area</code>.
      * Updates all <code>Neuroid</code>s contained within. 
      * This method returns immediately, the thread does the calculation afterwards.
@@ -580,26 +595,31 @@ public class Area implements Runnable, AreaInt, Serializable, Expressive {
      * @see Neuroid
      * @see Area#run
      */
-    public void step() {
-/*	updateTime();
-	Iteration.loop(neuroids.iterator(), new Task() {
-		public void job(Object o) {
-		    ((Neuroid)o).step();
-		}
-	    });*/
-
+    public synchronized void step() {
 	//System.out.println("In step of " + this);
+	try {
+	    synchronized (isCalculating) { // Wait if thread still doing the calculation
+		if (stepRequested) 
+		    isCalculating.wait(); 
+	    }
 
-	// wait until released
-	while (stepRequested) Thread.yield();
-	//synchronized (isCalculating) { // Wait if thread still doing the calculation
-	if (stepRequested) 
-	    throw new RuntimeException("Mutual exclusion failed!");
-	
-	stepRequested = true;	// Notify waiting thread of request
+	    synchronized (isWaiting) {
+		stepRequested = true;	// Notify waiting thread of request
+		isWaiting.notify();
+	    }
+	} catch (InterruptedException e) {
+	    throw new Error("unexpected in " + this.getStatus());
+	} // end of try-catch
+
+	//throw new RuntimeException("Mutual exclusion failed in " + this.getStatus());
+    }
+
+    /**
+     * Terminates the thread dedicated to this area.
+     * @see #thread
+     */
+    public void stop() {
 	thread.interrupt();
-	//}
-
     }
 
     /**
@@ -649,43 +669,41 @@ public class Area implements Runnable, AreaInt, Serializable, Expressive {
 
     // implementation of java.lang.Runnable interface
     /**
-     * Check if step()ing requested, and serve the rquest
+     * Check if step()ing requested, and serve the request.
      * @see Area#step
      */
-    public synchronized void run() {
-	while (true) {		// Wasting CPU time!!!
+    public void run() {
+	try {
+	    while (true) {	// Wasting (not too much) CPU time!!!
+		
+		synchronized (isWaiting) {
+		    if (!stepRequested) 
+			isWaiting.wait();	// Wait to be awakened
+		}
 
-	    try {
-		wait();	// Wait to be awakened
-	    } catch (InterruptedException e) {
-		//throw new RuntimeException("interrupt!");
-		updateTime();
-		while (true) {
-		    try {
-			UninterruptedIteration.loop(neuroids.iterator(), new Task() {
-				public void job(Object o) {
-				    ((Neuroid)o).step();
-				}
-			    });
-			break;		// out of while
-		    } catch (ConcurrentModificationException ez) {
-			// do nothing, i.e. restart
-			System.out.println("Concurrent modification in Area.step(), repeating...");
-		    }	     
-		} // end of while (true)
-		stepRequested = false; // Completed
-	    }
-	    
-/*	    if (stepRequested) {
 		synchronized (isCalculating) {
-
-		    //System.out.println("request acknowledged");
-
+		    updateTime();
+		    while (true) {
+			try {
+			    UninterruptedIteration.loop(neuroids.iterator(), new Task() {
+				    public void job(Object o) {
+					((Neuroid)o).step();
+				    }
+				});
+			    break;	// out of while
+			} catch (ConcurrentModificationException ez) {
+			    // do nothing, i.e. restart
+			    System.out.println("Concurrent modification in Area.step(), " +
+					       "repeating...");
+			}	     
+		    } // end of while (true)
 		    stepRequested = false; // Completed
-		} // end of synchronized
-	    } else Thread.yield();*/
-	    
-	} // end of while (true)
+		    isCalculating.notify();
+		}
+	    } // end of while (true)
+	} catch (InterruptedException e) {
+	    System.out.println("Received interrupt, exiting thread for " + this.getStatus());
+	}
     }
 
     /**
@@ -700,6 +718,8 @@ public class Area implements Runnable, AreaInt, Serializable, Expressive {
     private void readObject(java.io.ObjectInputStream in)
 	throws IOException, ClassNotFoundException {
 	in.defaultReadObject();	// Real method that does reading
+	isWaiting = new Object();
+	isCalculating = new Object();
 	thread = new Thread(this); // Set the transient variable
 	thread.start();
     }

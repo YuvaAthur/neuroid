@@ -27,7 +27,8 @@ import java.lang.*;
  * @version $Revision$
  * @since 1.0
  */
-abstract public class Network implements DebuggerInterface, Serializable, Expressive {
+abstract public class Network
+    implements DebuggerInterface, Serializable, Expressive, Simulation {
     /**
      * All <code>Area</code>s contained in <code>Network</code>.
      * @see Area
@@ -234,6 +235,11 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
     }
 
     /**
+     * Does nothing. TODO: should do something.
+     */
+    public void init() {}
+
+    /**
      * Updates the state of the <code>Network</code>.
      * Updates all <code>Area</code>s contained within. 
      * TODO: Should be called from a thread with certain frequency.
@@ -245,6 +251,14 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
 	simulateAreas.step();
 /*	else 
 	    UninterruptedIteration.loop(areas, stepArea);*/
+    }
+
+    /**
+     * Delegates the termination request to areas.
+     *
+     */
+    public void stop() {
+	simulateAreas.stop();
     }
 
     /**
@@ -387,32 +401,27 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
 		    public void step() {
 			UninterruptedIteration.loop(areas, stepArea);
 		    } 
-		};
 
+		    public void stop() {
+			new UninterruptedIteration() {
+			    public void job(Object o) {
+				((Simulation) o).stop();
+			    }
+			}.loop(areas);
+		    }
+		};
+	
 	build();		// creates areas and connections
 	simulateAreas.init();	// create & start threads for concurrent version
     }
 
     /**
-     * To be called after everthing else is done. Prints out the network status on standard output
-     * and calls conceptArea.dumpData() to create a MatLab script for viewing spike activity.
-     * @see Network#toString
-     * @see conceptArea#dumpData
+     * To be called after everthing else is done. Terminates all
+     * threads, theoretically should terminate.
      */
     public void finale () {
-	System.out.println("Network status: \n" + this.getProperties());
-
-	// Create Matlab script about concept spike activity
-	/*String scriptname = "spikes.m";
-	try {
-	    PrintWriter matlabScript = new PrintWriter(new FileWriter(scriptname)); 
-	    matlabScript.print(conceptArea.dumpData());
-	    matlabScript.close();
-	} catch (IOException e) {
-	    System.out.println("Error writing matlab script " + scriptname + ": " + e);
-	}*/
-
-	System.exit(0);
+	    //System.out.println("Network status: \n" + this.getProperties());
+	    simulateAreas.stop();
     }
 
     /**
