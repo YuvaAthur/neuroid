@@ -41,6 +41,19 @@ public class Synapse {
      * Postsynaptic neuroid
      */
     Neuroid destNeuroid;
+    
+    /**
+       * Get the value of destNeuroid.
+       * @return value of destNeuroid.
+       */
+    public Neuroid getDestNeuroid() {return destNeuroid;}
+    
+    /**
+       * Set the value of destNeuroid.
+       * @param v  Value to assign to destNeuroid.
+       */
+    public void setDestNeuroid(Neuroid  v) {this.destNeuroid = v;}
+    
 
     // TODO: Make subclasses where excitory/inhib or phase/period behavior can be specified
     /**
@@ -70,7 +83,7 @@ public class Synapse {
      * @see Neuroid#fire
      */
     public void receiveSpike() {
-	//System.out.println("Received spike at " + this);
+	System.out.println("Received spike at " + this);
 	
 	spikeTrain.add(new Double(destNeuroid.area.time));
 
