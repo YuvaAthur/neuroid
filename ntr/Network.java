@@ -124,13 +124,13 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
 	areas.add(area);
     }
 
-    Vector watchList = new Vector();
+    Set watchList = new HashSet();
     
     /**
      * Get the value of watchList.
      * @return value of watchList.
      */
-    public Vector getWatchList() {
+    public Set getWatchList() {
 	return watchList;
     }
     
@@ -138,7 +138,7 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
      * Set the value of watchList.
      * @param v  Value to assign to watchList.
      */
-    public void setWatchList(Vector  v) {
+    public void setWatchList(Set  v) {
 	this.watchList = v;
     }
 
@@ -196,6 +196,10 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
 	return getNeuroid(getArea(areaName), neuroidId);
     }
 
+    public Neuroid getNeuroid(NeuroidName neuroidName) throws NameNotFoundException {
+	return getNeuroid(neuroidName.getAreaName(), neuroidName.getNeuroidId());
+    }
+
     /**
      * Sets the watch flag of the neuroid and includes in the list of watched entities.
      *
@@ -204,6 +208,29 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
     public void addWatch(Neuroid neuroid) {
 	neuroid.setWatch(true);
 	watchList.add(neuroid);
+    }
+
+
+    /**
+     * <code>addWatch</code>s all neuroids with names given in argument.
+     *
+     * @param neuroidNames a <code>Set</code> value
+     * @see #addWatch(Neuroid)
+     */
+    public void addWatchAll(Set neuroidNames) throws NameNotFoundException {
+	try {
+	    new Iteration() {
+		public void job(Object o) throws TaskException {
+		    try {
+			addWatch(getNeuroid((NeuroidName)o));		     
+		    } catch (NameNotFoundException e) {
+			throw new BreakOutOfIterationException(o);
+		    } // end of try-catch
+		}
+	    }.loop(neuroidNames);
+	} catch (BreakOutOfIterationException e) {
+	    throw new NameNotFoundException("" + e.getValue());
+	} // end of try-catch
     }
 
     /**
@@ -349,9 +376,11 @@ abstract public class Network implements DebuggerInterface, Serializable, Expres
 	    simulateAreas = new ParallelTask(areas, stepArea);
 	else 		// Sequential version, single thread
 	    simulateAreas = new Simulation() {
+		    public void init() { }
+
 		    public void step() {
 			UninterruptedIteration.loop(areas, stepArea);
-		    }
+		    } 
 		};
 
 	build();		// creates areas and connections
