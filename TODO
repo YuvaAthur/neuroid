@@ -1,4 +1,11 @@
-- id? naming neuroids? decide by area vector position? decide at time of `attach'ing to area?
+- change naming of sensoryneuroid to 'percept'
+- add count of neuroids in a concept to its string value!
+- implement tzeng's network: allocate all assemblies in input area and create all UMs then prune connections and count 'em!
++ print network info in Netowrk.toString at end of program
+- implement dumpdata in conceptArea
+- move Concept related files to periphery/
++
+ id? naming neuroids? decide by area vector position? decide at time of `attach'ing to area?
 - Test new synapse scanning constructs for validity.
 - Enable seleciton of dynamic behavior of groups of neurons (delay + membrane characteristic).
 - use AxonArbor for dist communication improvement.
