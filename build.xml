@@ -10,7 +10,7 @@
 <javac srcdir="${src-dir}"
        destdir="${build-dir}"
        includes="neuroidnet/**,neuroidnet/remote/AreaInt.java"
-       excludes="neuroidnet/router/**,neuroidnet/simple/**,neuroidnet/remote/**,neuroidnet/Guinea.java,neuroidnet/ntr/MembranePotentialPlot.java"/>
+       excludes="neuroidnet/router/**,neuroidnet/simple/**,neuroidnet/remote/**,neuroidnet/Guinea.java"/> <!-- neuroidnet/ntr/MembranePotentialPlot.java -->
 </target>
 
 <target name="dist" depends="build">

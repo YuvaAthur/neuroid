@@ -1,6 +1,8 @@
 
 package neuroidnet.ntr;
 
+import java.util.Set;
+
 // $Id$
 /**
  * DebuggerInterface.java
@@ -18,4 +20,5 @@ public interface DebuggerInterface  {
     Neuroid getNeuroid(Area area, int neuroidId);
     Neuroid getNeuroid(String areaName, int neuroidId) throws NameNotFoundException;
     void addWatch(Neuroid neuroid);
+    void addWatchAll(Set neuroidNames) throws NameNotFoundException;
 }// DebuggerInterface

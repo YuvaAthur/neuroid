@@ -20,7 +20,7 @@ wplot(n,s) { global.n = n; global.s = s; global.source("wplot.bsh"); }
 synActs(n) { global.n = n; global.source("synActs.bsh"); }
 gnuplot() { global.grapher = new GNUPlot(); }
 matlab() { nsh.grapher = new MatLab(); }
-display(plot) { return grapher.display(plot, null); }
+display(plot) { return nsh.grapher.display(plot, null); }
 obsyn() { global.source("obsyn.bsh"); }
 getNeuroid(s,i) { return network.getNeuroid(s,i); }
 getNeuroid(n) { return network.getNeuroid(n); }
@@ -42,6 +42,7 @@ source("testBoost.bsh");
 source("testTolerance.bsh");
 source("testSegregation.bsh");
 source("testThreshold.bsh");
+source("testSingle.bsh");
 
 // Initialize the tests
 testCapacity();
@@ -49,6 +50,7 @@ testBoost();
 testTolerance();
 testSegregation();
 testThreshold();
+testSingle();
 
-print("\nAvailable methods: " + this.methods);
+//print("\nAvailable methods: " + this.methods);
 source("/dev/null"); // To bring the source command into namespace

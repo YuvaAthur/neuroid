@@ -1,0 +1,84 @@
+// $Id$
+/**
+ * For running a single simulation, saving its state and observing its internals. 
+ */
+
+testSingle() {
+    void run() {
+	init();
+
+	startTime = System.currentTimeMillis();
+
+	runOnce(super);
+
+	print("Elapsed experiment time: " +
+	      ((double)System.currentTimeMillis() - startTime)/60000 +
+	      " mins");
+
+	//super.network = nsh.network; // Save this one, too [already there]
+
+	save(super, idString + ".data");
+    }
+
+    // Called by combinedProfilePlot
+    void createPlot(java.util.List datas) {
+
+	data = new Grapher.VerticalBar(nsh.grapher, "Predicted capacity",
+				       calcObjects, new Range(0, 1));
+	datas.add(data);
+
+	datasPlot(datas, idString, "Number of Objects", "Quality",
+		  "Performance with " + numberOfMedialAreas + " Layers over " +
+		  maxTrials + " Trials,  \\tau_m = " + timeConstantM);
+
+    }
+
+    void batch() {
+	startTime = System.currentTimeMillis();
+
+	for (int i = 0; i < 3; i++) {
+	    super.numberOfMedialAreas = 2 + i;
+	    super.maxTrials = 10;
+	    run();
+	}
+
+	print("Total experiment time: " +
+	      (System.currentTimeMillis() - startTime)/60000 + " mins");
+    }
+
+    void init() {
+	/*super.correctProfile = new Profile();
+	super.spuriousProfile = new Profile();
+	super.correctRatioProfile = new Profile();*/
+
+	super.gamma = (numberOfMedialAreas - 1) * timeConstantS;
+	super.timeConstantM = getTimeConstantM(super);
+	super.threshold = 1.5 * getMaxEPSP(super);
+	super.segregation = getSegregation(super);
+
+	super.idString =
+	    "single-" + numberOfObjects + "objects-"
+	    + segregation + "phi-" + timeConstantM + "taum-" 
+	    + numberOfMedialAreas + "layers";
+
+    }
+
+    // Save me, save you
+    nsh.single = this;
+
+    setAccessibility(true);
+
+    //maxTrials = 2; //10
+    numberOfMedialAreas = 4;
+    timeConstantS = 7;
+    delay = 3;
+    numberOfObjects = 1;
+
+    // Watched neuroids for collecting rigorous plot data
+    watchedSet = new java.util.TreeSet();
+    //watchedSet.add(new NeuroidName("I1",0));
+
+
+    saveNetwork = true;
+
+}

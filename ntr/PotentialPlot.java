@@ -25,6 +25,9 @@ public class PotentialPlot extends SimplePlot  {
     public PotentialPlot (String title, Range range, SynapseProfile synapseProfile) {
 	super(title, range);
 
+	setYLabel("Potential");
+	setXLabel("Time");
+
 	this.synapseProfile = synapseProfile;
 
 	try {

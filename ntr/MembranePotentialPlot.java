@@ -44,7 +44,11 @@ public class MembranePotentialPlot extends SimplePlot {
     NeuroidProfile neuroidProfile;
 
     public MembranePotentialPlot (String title, Range range, NeuroidProfile neuroidProfile) {
-	super(title, range);
+	super(null, range);
+
+	setTitle(title);
+	setYLabel("Potential");
+	setXLabel("Time");
 
 	this.neuroidProfile = neuroidProfile;
 
@@ -84,14 +88,14 @@ public class MembranePotentialPlot extends SimplePlot {
     public String preamble() {
 	String[] params = { "t" }, refParams = { "t", "timeConstantR" };
 	return 
-	    ((Plot)plots.firstElement()).preamble(grapher) + // for epsp() func_def
+	    ((SimplePlot)plots.firstElement()).preamble(grapher) + // for epsp() func_def
 	    def_func("refrac", refParams,
 		     mul(geq(refParams[0], "0"),
 			 neg(exp(neg(div("t", refParams[1])))))) +
 	    def_func("body" + ++bodySuffix, params,
 		     add(new StringTask("0") { // add synapse activity including weights
 			     public void job(Object o) {
-				 Plot plot = ((Plot)o);
+				 SimplePlot plot = ((SimplePlot)o);
 				 
 				 plot.setGrapher(grapher);
 				 retval = add(retval, plot.body());

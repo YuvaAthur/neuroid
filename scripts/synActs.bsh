@@ -7,10 +7,27 @@ Task t = new Task() {
 	    ns = s.getSrcNeuroid();
 	    if (ns.getTimeLastFired() >= 0) {
 		//wplot(n,s.getId());
-		c.add(s.getProfile().getWeightedPotentialPlot());
+		p = s.getProfile().getWeightedPotentialPlot();
+		p.prepare(nsh.grapher);
+		c.add(p.axis);
 	    }
 	}};
 UninterruptedIteration.loop(n.getSynapses(), t);
 //spike(n);
-c.add(n.getProfile().getMembranePotentialPlot());
-h = grapher.multiPlot("Synapse Activities of " + n + " with " + n.getConcept(), c, null);
+p = n.getProfile().getMembranePotentialPlot();
+p.prepare(nsh.grapher);
+c.add(p.axis);
+print(c);
+// Title: "Synapse Activities of " + n + " with " + n.getConcept()
+
+p = new MultiDataPlot(c);
+
+if (nsh.plot == void)
+    nsh.plot = object();
+
+nsh.plot.h = display(p);
+
+//s = nsh.grapher.createMultiAxes(c).getString();
+
+//print(s);
+//nsh.grapher.out.println(s);

@@ -68,12 +68,14 @@ public class Network extends neuroidnet.ntr.Network {
      */
     public void build() {
 
+	double gamma = (numberOfMedialAreas - 1) * timeConstantS;
+
 	// Set params if they are not defined explicitly
 	if (new Double(timeConstantM).isNaN()) 
-	    timeConstantM = (numberOfMedialAreas + 1)*timeConstantS;	     
+	    timeConstantM =  gamma + timeConstantS;	     
 
 	if (new Double(segregation).isNaN()) 
-	    segregation = timeConstantS + 2*timeConstantM + delay;
+	    segregation = gamma + 2*timeConstantM;
 
 	if (new Double(threshold).isNaN()) 
 	    // lowered because of long timeConstantS (TODO: may need

@@ -17,7 +17,10 @@ import edu.ull.cgunay.plots.*;
 
 public class WeightedPotentialPlot extends PotentialPlot  {
     public WeightedPotentialPlot (String title, Range range, SynapseProfile synapseProfile) {
-	super(title, range, synapseProfile);
+	super(null, range, synapseProfile);
+
+	setTitle(title);
+	setYLabel("Potential");
 
 	if (this.range == null) 
 	    // get range from the profile
