@@ -21,42 +21,53 @@ public class  Network extends Base.Network {
     }
 
     /**
-     * n input areas and m medial areas. See scheme depicted in EX[6]-0].
+     * n input areas and m medial areas. See scheme depicted page EX[6]-0] in notes .
      */
     public void build() {
 	//TO DO: Implement this method.
 	int
 	    numberOfNeuroids = 100,
-	    replication = 5;
+	    replication = 10;
 
-	double period = Neuroid.defaultPeriod();
+	double
+	    period = Neuroid.defaultPeriod(),
+	    delay = 3,
+	    timeConstantS = 7,
+	    timeConstantM = 10,
+	    threshold;
 	int numberOfMedialAreas = 3,
 	    numberOfItemsPerArea = 3,
 	    numberOfItems = numberOfItemsPerArea * numberOfMedialAreas;
 
 	/*Area inputArea = new Area("I", numberOfItems*replication, replication,
-				  deltaT, period, 0.9);
-	areas.add(inputArea);*/
+	  deltaT, period, 0.9);
+	  areas.add(inputArea);*/
 
 	Area[] inputAreas = new Area[numberOfMedialAreas];
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
-	     inputAreas[medialArea] =
-		 new Area(this, "I"+(medialArea+1), numberOfNeuroids, replication, period, 0.9);
-	     areas.add(inputAreas[medialArea]);
+	    threshold = 0.9;
+	    inputAreas[medialArea] =
+		new Area(this, "I"+(medialArea+1), numberOfNeuroids,
+			 replication, period, threshold, timeConstantM);
+	    areas.add(inputAreas[medialArea]);
 	} // end of for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++)
 
 	Area[] medialAreas = new Area[numberOfMedialAreas];
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
-	     medialAreas[medialArea] =
-		 new Area(this, "M"+(medialArea+1), numberOfNeuroids, replication, period, 2*0.9);
-	     areas.add(medialAreas[medialArea]);
+	    threshold = 2 * 0.9;
+	    medialAreas[medialArea] =
+		new Area(this, "M"+(medialArea+1), numberOfNeuroids,
+			 replication, period, threshold, timeConstantM);
+	    areas.add(medialAreas[medialArea]);
+	    
+	    // Direct connections from input areas
+	    inputAreas[medialArea].connectToArea(medialAreas[medialArea], timeConstantS,
+						 (medialArea + 1) * delay); 
 
-	     // Direct connections from input areas
-	     inputAreas[medialArea].connectToArea(medialAreas[medialArea]); 
-
-	     // Relay connections between medial areas
-	     if (medialArea > 0) 
-		 medialAreas[medialArea - 1].connectToArea(medialAreas[medialArea]); 
+	    // Relay connections between medial areas
+	    if (medialArea > 0) 
+		medialAreas[medialArea - 1].connectToArea(medialAreas[medialArea], timeConstantS,
+							  delay); 
 	} // end of for
 
 	peripheral =
@@ -64,15 +75,15 @@ public class  Network extends Base.Network {
     }
 
     /**
+     * Simulation plan for phase segregation:
+     * fire one from each sensoryarea simultaneously
+     * delay for some time
+     * fire one other from each sensoryarea simultaneously
+     * check for illusory conjunctions 
+     *	(dump list of Concepts and firing times, to matlab file)
      * 
      */
     public void simulation() {
-	// Simulation plan for phase segregation:
-	// fire one from each sensoryarea simultaneously
-	// delay for some time
-	// fire one other from each sensoryarea simultaneously
-	// check for illusory conjunctions 
-	//	(dump list of Concepts and firing times, to matlab file)
 
 	// Step 
 	double untilTime = 1.0;
@@ -83,26 +94,6 @@ public class  Network extends Base.Network {
 	    // Fire both inputs initially
 	    if (i == 0)
 		peripheral.testOneInput();
-
-	    /*if (i > 5 && i < 305) { 
-		peripheral.fireRandomNoise();
-	    }*/ // end of if
-
-	    // Fire noise after global inhibition is in effect, 
-	    // therefore no concepts will actually fire!
-	    /*if (i == 5) { 
-		peripheral.fireNoise1();
-	    } // end of if (i == 5*deltaT)
-
-	    if (i == 10) { 
-		peripheral.fireNoise2();
-	    } // end of if (i == 5*deltaT)
-	    
-	    */
-	    // Fire only one later
-	    /*double alarm = i*deltaT - 5.0;
-	    if (alarm > 0 && alarm < deltaT)
-		peripheral.testOneInput();*/
 
 	    step();		// step deltaT
 	}
