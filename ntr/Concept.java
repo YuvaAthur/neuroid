@@ -18,7 +18,7 @@ public interface Concept {
      *
      * @param neuroid a <code>Neuroid</code> value
      */
-    void attach(Neuroid neuroid);
+    void attach(Neuroid neuroid) throws ConceptSaturatedException;
 
     /**
      * Detaches the presynaptic neuroid from <code>concept</code>.
