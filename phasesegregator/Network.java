@@ -26,7 +26,7 @@ public class  Network extends Base.Network {
     public void build() {
 	//TO DO: Implement this method.
 	int
-	    numberOfNeuroids = 300,
+	    numberOfNeuroids = 100,
 	    replication = 10;
 
 	double
@@ -60,7 +60,7 @@ public class  Network extends Base.Network {
 	    threshold = 2 * 0.6; // lowered because of long timeConstantS
 	    medialAreas[medialArea] =
 		new Area(this, "M"+(medialArea+1), numberOfNeuroids,
-			 replication,	// OBS: Boosted replication due to failure to recruit
+			 replication,	
 			 period, threshold, timeConstantM, refractoryTimeConstant);
 	    areas.add(medialAreas[medialArea]);
 	    
@@ -85,8 +85,10 @@ public class  Network extends Base.Network {
      * fire one other from each sensoryarea simultaneously
      * check for illusory conjunctions 
      *	(dump list of Concepts and firing times, to matlab file)
-     * 
+     * @deprecated See <code>advanceTime</code>
+     * @see Base.Network#advanceTime
      */
+/*
     public void simulation() {
 
 	// Step 
@@ -103,9 +105,17 @@ public class  Network extends Base.Network {
 	}
 	System.out.println("Elapsed time: " + (System.currentTimeMillis() - startTime) + " milliseconds.");
     }
-
+*/
+    /**
+     * Create the network and run for 30 msecs. (Single threaded.)
+     *
+     * @param args a <code>String[]</code> value
+     */
     public static void main (String[] args) {
-	new PhaseSegregator.Network(false); // Single threaded!
+	Base.Network network = new PhaseSegregator.Network(false); // Single threaded!
+	network.run();
+	network.advanceTime(30.00); // Run net for 30 msecs
+	network.finale();
 	System.exit(0);
     } // end of main ()
 
