@@ -2,6 +2,7 @@ package Base;
 import Base.*;
 import Remote.*;
 import java.util.*;
+import java.io.*;
 import java.text.*;
 //import java.rmi.*;
 import Utils.*;
@@ -225,6 +226,16 @@ abstract public class Network {
 	} // end of if-else (isConcurrent)
 
 	System.out.println("Network status: \n" + this);
+
+	// Create Matlab script about concept spike activity
+	String scriptname = "spikes.m";
+	try {
+	    PrintWriter matlabScript = new PrintWriter(new FileWriter(scriptname)); 
+	    matlabScript.print(conceptArea.dumpData());
+	    matlabScript.close();
+	} catch (IOException e) {
+	    System.out.println("Error writing matlab script " + scriptname + ": " + e);
+	}
 
 	System.exit(0);
     }
