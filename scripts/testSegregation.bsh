@@ -80,8 +80,11 @@ testSegregation() {
 	super.correctProfile = new Profile();
 	super.spuriousProfile = new Profile();
 
-	super.timeConstantM = (numberOfMedialAreas)*timeConstantS;
-	super.calcSegregation = timeConstantS + 2*(timeConstantM - timeConstantS);
+	super.gamma = (numberOfMedialAreas - 1) * timeConstantS;
+	super.timeConstantM = getTimeConstantM(super);
+	super.threshold = 2 * getMaxEPSP(super);
+
+	super.calcSegregation = getSegregation(super);
 
 	super.fromSegregation = timeConstantS;
 	super.toSegregation = 2*(timeConstantS + 2*timeConstantM + delay);
