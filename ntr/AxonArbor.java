@@ -21,16 +21,49 @@ public class AxonArbor extends Vector {
      * Axon's owner neuroid.
      * @see Neuroid
      */
-    Neuroid neuroid;
+    Neuroid srcNeuroid;
 
-    public AxonArbor () {
+    /**
+     * Describe variable <code>destNeuroid</code> here.
+     */
+    Area destArea;
+ 
+    /**
+     * Template to create all synapses of this AxonArbor.
+     */
+    Synapse destSynapseTemplate;
+
+    public AxonArbor (Synapse destSynapseTemplate, Neuroid srcNeuroid, Area destArea) {
 	super();
+
+	init(destSynapseTemplate, srcNeuroid, destArea);
     }
 
-    public AxonArbor (int initialCapacity) {
+    /**
+     * Specifies initial capacity for the Vector holding the synapses.
+     * @see Vector
+     * @param destSynapseTemplate a <code>Synapse</code> value
+     * @param initialCapacity an <code>int</code> value
+     */
+    public AxonArbor (Synapse destSynapseTemplate, Neuroid srcNeuroid, Area destArea,
+		      int initialCapacity) {
 	super(initialCapacity);
+
+	init(destSynapseTemplate, srcNeuroid, destArea);
     }
-    
+
+    /**
+     * Common to constructors.
+     * Cannot be overridden or override another.
+     * 
+     * @param destSynapseTemplate a <code>Synapse</code> value
+     */
+    private void init(Synapse destSynapseTemplate, Neuroid srcNeuroid, Area destArea) {
+	this.destSynapseTemplate = destSynapseTemplate;
+	this.srcNeuroid = srcNeuroid;
+	this.destArea = destArea;
+    }
+
     /**
      * Adds a synapse to list of synapses
      * only if it doesn't already exist.
@@ -60,5 +93,52 @@ public class AxonArbor extends Vector {
 	    // otherwise accept new synapse
 	    add(synapse);
     }
+
+    /**
+     * Creates new <code>numberOfSynapses</code> <code>Synapse</code>s.
+     * AxonArbor makes sure to return a set of synapses to distinct neurons (no repetitions!)
+     * TODO: maybe put these methods into <code>AxonArbor</code>.
+     * @param numberOfSynapses an <code>int</code> value
+     * @return a <code>Vector</code> value
+     */
+    public void createRandomSynapses(int numberOfSynapses) {
+	for (int index = 0; index < numberOfSynapses; index++) {
+	    int retries = 10, // Retries for coincides with previously allocated synapses
+		retry = retries; 
+
+	    while (retry-- > 0) {
+		try {
+		    addSynapse(createRandomSynapse(srcNeuroid));
+		    break;	// Success
+		} catch (ResynapseException e) {
+		    // nothing
+		    System.out.println("CLASH! Searching for a new neuron to synapse!");
+		}
+		 
+	    } // end of while (retry-- > 0)
+	    if (retry <= 0) 
+		throw new Error("ERROR: Could not find neuron to synapse in " + retries +
+				"tries."); 
+	    
+	} // end of for (int index = 0; index < numberOfSynapses; index++)
+    }
+
+    /**
+     * Creates a new synapse connected to a random member of the <code>Area</code>.
+     * @see deltaT
+     * @return a <code>Synapse</code> value */
+    public Synapse createRandomSynapse() {
+	return createSynapse(destArea.getRandomNeuroid());
+    }
+
+    /**
+     * Create a synapse with predefined characteristics.
+     * @param neuroid a <code>Neuroid</code> value
+     * @return a <code>Synapse</code> value
+     */
+    public Synapse createSynapse(Neuroid destNeuroid) {
+	return new Synapse(srcNeuroid, destNeuroid, destSynapseTemplate);
+    }
+
     
 }// AxonArbor
