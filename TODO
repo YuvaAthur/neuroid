@@ -1,10 +1,10 @@
 - periphery
-	+ make a single sensory area 
 	- put concept-area into peripheral object? does it need its step() called?
-	- move Concept related files to periphery
-		- move ConceptArea to periphery package
-		- ArtificialConcept?
-		- ConceptSaturatedException
+	+ make a single sensory area 
+	+ move Concept related files to periphery
+		+ move ConceptArea to periphery package
+		+ ArtificialConcept?
+		+ ConceptSaturatedException
 - throw FoundException in Utils.Task to optimize iterations for search 
 - extend the Vectors that holds neuroids, etc. so that they show up in organizational descriptions
 	- correct way would've been to have templatized types of vectors
@@ -26,9 +26,10 @@
 	+ allow re-runs (by saving network state in binary with serialization
 		(make everything serializable))
 -errors:
-	- spurious concepts, due to infinite weights
-	+ sumOfCurrentWeights overflow?
+	- spurious concepts, due to infinite weights after ConceptSaturatedException
+		- need better debugging env to tackle these problems
 	- burst firing, due to primitive refractory effect? no, infinite weights
+	+ sumOfCurrentWeights overflow?
 - area name as a concept? or area representing neuroids?
 + limit recruitment by throwing an exception in Concept.attach
 - put step inside Neuroid.Mode?
