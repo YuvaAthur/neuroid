@@ -1,5 +1,7 @@
 package Base;
 
+import java.util.*;
+
 /**
  * Concept.java
  *
@@ -37,4 +39,11 @@ public interface Concept {
      *
      */
     void dumpData();
+
+    /**
+     * Returns the conceptSet that constitutes this concept
+     *
+     * @return a <code>Set</code> value
+     */
+    Set getConceptSet();
 }// Concept
