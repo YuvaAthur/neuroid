@@ -1,50 +1,5 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(jde-set-project-name "default")
-(jde-set-variables 
+(jde-project-file-version "1.0")
+(jde-set-variables
  '(jde-gen-to-string-method-template (quote ("'&" "\"public String toString() {\" 'n>" "\"return super.toString();\" 'n>" "\"}\" 'n>")))
  '(jde-bug-jre-home "")
  '(jde-bug-debugger-host-address "ailab02.cacs.usl.edu")
@@ -65,8 +20,6 @@
  '(jde-db-debugger (quote ("Other" "jdb" . "Executable")))
  '(jde-db-marker-regexp "^Breakpoint hit: .*(\\([^$]*\\).*:\\([0-9]*\\))")
  '(jde-compile-option-deprecation nil)
- '(jde-javadoc-see-tag-template (quote ("* @see " ref)))
- '(jde-javadoc-since-tag-template (quote ("* @since 1.0")))
  '(jde-javadoc-version-tag-template (quote ("* @version 1.0")))
  '(jde-imenu-include-classdef t)
  '(jde-javadoc-describe-method-template (quote ("* Describe " (jde-javadoc-code name) " method here.")))
@@ -134,7 +87,6 @@ RemoteException {\"" "'n>\"}\"'n 'n" "'> \"public void unsetEntityContext() thro
  '(jde-run-applet-doc "")
  '(jde-db-option-properties nil)
  '(jde-gen-cflow-for-i (quote ("(if (jde-parse-comment-or-quoted-p)" "'(l \"fori\")" "'(l > \"for (int \" (p \"variable: \" var) \" = 0; \"" "(s var)" "\" < \"(p \"upper bound: \" ub)\"; \" (s var) \"++) \"" "\"{\" > n> r n" "\"} // end of for (int \" (s var) \" = 0; \"" "(s var) \" < \" (s ub) \"; \" (s var) \"++)\" > n>)" ")")))
- '(jde-wiz-insert-excluded-packages-regexp "bsh.*")
  '(jde-read-compile-args nil)
  '(jde-db-read-app-args nil)
  '(jde-compile-option-vm-args (quote ("-mx48m")))
@@ -165,7 +117,6 @@ RemoteException {\"" "'n>\"}\"'n 'n" "'> \"public void unsetEntityContext() thro
  '(jde-db-option-vm-args nil)
  '(jde-gen-window-listener-template (quote ("'& (P \"Window name: \")" "\".addWindowListener(new WindowAdapter() {\" 'n>" "\"public void windowActivated(WindowEvent e) {}\" 'n>" "\"public void windowClosed(WindowEvent e) {}\" 'n>" "\"public void windowClosing(WindowEvent e) {System.exit(0);}\" 'n>" "\"public void windowDeactivated(WindowEvent e) {}\" 'n>" "\"public void windowDeiconified(WindowEvent e) {}\" 'n>" "\"public void windowIconified(WindowEvent e) {}\" 'n>" "\"public void windowOpened(WindowEvent e) {}});\" 'n>")))
  '(jde-run-option-java-profile (quote (nil . "./java.prof")))
- '(jde-entering-java-buffer-hooks (quote (jde-reload-project-file)))
  '(jde-db-option-java-profile (quote (nil . "./java.prof")))
  '(jde-bug-server-socket (quote (t . "2112")))
  '(jde-javadoc-author-tag-template (quote ("* @author <a href=\"mailto:" user-mail-address "\">" user-full-name "</a>")))
