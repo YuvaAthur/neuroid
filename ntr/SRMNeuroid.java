@@ -377,7 +377,7 @@ public class SRMNeuroid extends Neuroid  {
 	    makeConcept(); // Throws the exception
 	    state = UM; // Memorized!
 	    // Set threshold lower than anticipated (TODO: 2/3 and put it to when Th is calc'ed)
-	    threshold = 0.9 * suggestedThreshold; 
+	    threshold = 0.97 * suggestedThreshold; 
 	    System.out.println("Into UM mode!; " + this);
 	    setChanged();
 	}
@@ -437,13 +437,13 @@ public class SRMNeuroid extends Neuroid  {
 		}
 		// TODO: needs saturation mechanism
 		void potentiatedSynapse(Synapse s) {
-		    s.setWeight( weight * correctTimesRequired /
-				 fitnessCounter);
+		    double factor = correctTimesRequired / fitnessCounter;
+		    s.setWeight( weight * factor * factor);
 		}
 		// TODO: needs saturation mechanism
 		void silentSynapse(Synapse s) {
-		    s.setWeight( weight * fitnessCounter /
-				 correctTimesRequired);
+		    double factor = fitnessCounter / correctTimesRequired;
+		    s.setWeight( weight * factor * factor);
 		}
 		public Object getValue() { return null; } // N/A
 	    }.iterate();
