@@ -19,7 +19,6 @@ import neuroidnet.periphery.*;
  * @author Cengiz Gunay
  * @version $Revision$ for this file
  */
-
 public class Network extends neuroidnet.ntr.Network {
     Peripheral peripheral; //note that it's a phasesegregator.Peripheral
 
@@ -41,6 +40,9 @@ public class Network extends neuroidnet.ntr.Network {
 	segregation = Double.NaN,
 	threshold = Double.NaN,
 	nuBoost = 6.0;	// nu parameter to increase probability of connection
+
+    /** Type of neuroid to be employed in all areas of the network. */
+    Class neuroidType = PeakerNeuroid.class;
 
 
     public Network (boolean isConcurrent, double timeConstantM, double segregation) { // 
@@ -81,7 +83,6 @@ public class Network extends neuroidnet.ntr.Network {
 	System.out.println("Segregation parameter=" + segregation);
 	System.out.println("timeConstantM parameter=" + timeConstantM);
 	
-	Class neuroidType = PeakerNeuroid.class;
 	
 
 	/*Area inputArea = new Area("I", numberOfItems*replication, replication,

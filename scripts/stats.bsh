@@ -117,6 +117,36 @@ double getMaxEPSP(testObject) {
 		    (testObject.timeConstantS - testObject.timeConstantM));
 }
 
+void runTrials(testObject, double param) {
+    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
+    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
+    meanRc = 0; minRc = Double.MAX_VALUE; maxRc = Double.MIN_VALUE;
+
+    for (numberOfTrials = 0; numberOfTrials < testObject.maxTrials; numberOfTrials++) {
+	runOnce(testObject);
+	meanQc += qc;
+	meanQs += qs;
+	meanRc += rc;
+	minQc = Math.min(minQc, qc);
+	minQs = Math.min(minQs, qs);
+	minRc = Math.min(minRc, rc);
+	maxQc = Math.max(maxQc, qc);
+	maxQs = Math.max(maxQs, qs);
+	maxRc = Math.max(maxRc, rc);
+    }
+    meanQc /= testObject.maxTrials;
+    meanQs /= testObject.maxTrials;
+    meanRc /= testObject.maxTrials;
+
+    testObject.correctProfile.put(new Double(param),
+				  new ErrorValue(meanQc, minQc, maxQc));
+    testObject.spuriousProfile.put(new Double(param),
+				   new ErrorValue(meanQs, minQs, maxQs));
+    testObject.correctRatioProfile.put(new Double(param),
+				       new ErrorValue(meanRc, minRc, maxRc));
+
+}
+
 void initProfile(list) {
     task = new Task() {
 	    void job(Object variable) {

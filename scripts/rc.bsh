@@ -41,12 +41,14 @@ source("testCapacity.bsh");
 source("testBoost.bsh");
 source("testTolerance.bsh");
 source("testSegregation.bsh");
+source("testThreshold.bsh");
 
 // Initialize the tests
 testCapacity();
 testBoost();
 testTolerance();
 testSegregation();
+testThreshold();
 
 print("\nAvailable methods: " + this.methods);
 source("/dev/null"); // To bring the source command into namespace

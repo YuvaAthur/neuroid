@@ -1,7 +1,10 @@
 // $Id$
 /**
- * For running the network a number of times (say 100) to get
- * statistically significant performance results.
+ * Test for checking what is the best tolerance measure to be
+ * employed. Only one object needs to be present for tests, so that we
+ * don't have problems with segregation.  For running the network a
+ * number of times (say 10) to get statistically significant
+ * performance results.
  */
 
 testTolerance() {
@@ -98,7 +101,7 @@ testTolerance() {
     // Properties
     maxTrials = 2; //10;
     numberOfMedialAreas = 2;
-    numberOfObjects = 5;
+    numberOfObjects = 1;  // so that we can check tolerance independent of segregation.
     timeConstantS = 7;
     delay = 3;
     dataPoints = 10;

@@ -1,21 +1,20 @@
 // $Id$
 /**
- * Tests network performance by changing the nuBoost parameter for
- * increasing the connection density. The network is run a number of
- * times (say 100) to get statistically significant performance
- * results.
+ * Tests network performance by changing the threshold parameter
+ * between the given theoretical limits. The network is run a number
+ * of times (say 10) to get statistically significant results.
  */
 
-testBoost() {
+testThreshold() {
     void run() {
 	init();
 
 	startTime = System.currentTimeMillis();
 
-	for (super.nuBoost = fromBoost; super.nuBoost < toBoost;
-	     super.nuBoost += 2 ) {
+	for (count = 0; count < dataPoints; count++) {
+	    super.threshold = maxEPSP + ((double)count) * maxEPSP / dataPoints; 
 
-	    runTrials(super, super.nuBoost);
+	    runTrials(super, super.threshold);
 	} // end of for (nuBoost = 1; nuBoost < 5; nuBoost++)
 
 	print("Elapsed experiment time: " +
@@ -30,14 +29,14 @@ testBoost() {
     // Called by combinedProfilePlot
     void createPlot(java.util.List datas) {
 
-	data = new Grapher.VerticalBar(nsh.grapher, "Empirical factor",
-				       calcBoost, new Range(0, 1));
+	data = new Grapher.VerticalBar(nsh.grapher, "Empirical threshold",
+				       calcThreshold, new Range(0, 1));
 	datas.add(data);
 
-	datasPlot(datas, idString, "Amplification Factor \\nu", "Quality",
+	datasPlot(datas, idString, "Threshold T", "Quality",
 		  "Performance with " + numberOfMedialAreas + " Layers, " +
-		  numberOfObjects + " Objects over " +
-		  maxTrials + " Trials" );
+		  numberOfObjects + " Object(s) over " +
+		  maxTrials + " Trials, \\epsilon_{max} = " + maxEPSP);
 
     }
 
@@ -67,19 +66,23 @@ testBoost() {
 
 	super.gamma = (numberOfMedialAreas - 1) * timeConstantS;
 	super.timeConstantM = getTimeConstantM(super);
-	super.threshold = 1.5 * getMaxEPSP(super); // This calculation is tainted, may cause wrong results (This should be adaptively adjusted)
 	super.segregation = getSegregation(super);
 
+	super.maxEPSP = getMaxEPSP(super);
+	super.fromThreshold = maxEPSP;
+	super.toThreshold = 2 * maxEPSP;
+	super.calcThreshold = 1.5 * super.maxEPSP;
+
 	super.idString =
-	    "boost-" + fromBoost + "to" + toBoost + "-"
+	    "threshold-" + fromThreshold + "to" + toThreshold + "-"
 	    + maxTrials + "trials-" + numberOfObjects + "objects-" +
-	    segregation + "phi-" + timeConstantM + "taum-" 
-	    + numberOfMedialAreas + "layers";
+	    //segregation + "phi-" + timeConstantM + "taum-" 
+	    + numberOfMedialAreas + "layers-" + maxEPSP + "epsilon";
 
     }
 
     // Save me, save you
-    nsh.boost = this;
+    nsh.threshold = this;
 
     setAccessibility(true);
 
@@ -89,11 +92,8 @@ testBoost() {
     timeConstantS = 7;
     delay = 3;
 
-    fromBoost = 1;
-    toBoost = 10;
     dataPoints = 7;
 
-    calcBoost = 6;
 
 
 }

@@ -14,7 +14,8 @@ package neuroidnet.ntr;
  * The intention here is to make the peaks in the membrane potential of the
  * continuous model correspond to the sample times of the discrete model.
  *
- * <p>State: experimental/under construction
+ * <p>State: works
+ * <p>Todo: There is no threshold check which makes it susceptible to criticism.
  * <p>Created: Tue May 14 23:39:07 2002
  * <p>Modified: $Date$
  *
@@ -33,7 +34,7 @@ public class PeakerNeuroid extends SRMNeuroid  {
 
     /**
      * TODO: Initialize mode? Does the polymorphism work from super
-     * class to use Mode defined here?
+     * class to use Mode defined here? [No]
      */
     public PeakerNeuroid (Area area) {
 	super(area);
@@ -75,6 +76,11 @@ public class PeakerNeuroid extends SRMNeuroid  {
 
     protected class Mode extends SRMNeuroid.Mode {
 
+	
+	/**
+	 * The state for the continuous-time state machine. The name
+	 * is chosen to be distinct from dicrete-time state machine.
+	 */
 	State _state;
 
 	final State quiescent = new State("Q") {
