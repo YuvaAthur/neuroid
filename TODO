@@ -7,7 +7,7 @@
 		+ ConceptSaturatedException
 - throw FoundException in Utils.Task to optimize iterations for search 
 - extend the Vectors that holds neuroids, etc. so that they show up in organizational descriptions
-	- correct way would've been to have templatized types of vectors
+	- correct way would've been to use templatized types of vectors which doesn't exist in Java
 - graphs
 	- put title on matlab graph
 	- modify to produce gnuplot graphs optionally. 
@@ -31,17 +31,19 @@
 	- burst firing, due to primitive refractory effect? no, infinite weights
 	+ sumOfCurrentWeights overflow?
 - area name as a concept? or area representing neuroids?
-+ limit recruitment by throwing an exception in Concept.attach
 - put step inside Neuroid.Mode?
+- really use SRM or forward-euler is sufficient?
 - fix ConcurrentModificationException by waiting for all threads to finish at the end.
-+ make neuroidal web page with links to reports of related projects
-+ make Area implement Remote.AreaInt, etc.
-+ TreeSet or HashSet?
 - change naming of sensoryneuroid to 'percept'
 - implement tzeng's network: allocate all assemblies in input area and create all UMs then prune connections and count 'em!
 - use AxonArbor for dist communication improvement (event-list protocol).
-? do something about too many updates to the algorithm
+	- Make a remote interface for it.
 - solve problem with constant current
+? do something about too many updates to the algorithm 
++ limit recruitment by throwing an exception in Concept.attach
++ make neuroidal web page with links to reports of related projects
++ make Area implement Remote.AreaInt, etc.
++ TreeSet or HashSet?
 + enable selection of inhibitory connections and other parameters
 + set global inhibitory connections
 + implement dumpdata in conceptArea
