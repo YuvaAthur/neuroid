@@ -168,18 +168,20 @@ public class Synapse {
      * Returns true if Synapse received a spike a short time back.
      *
      * @return <code>true</code> if potential before multiplication with weight is
-     * above an arbitrary value (0.7)
+     * above an arbitrary value (0.5)
      */
     boolean isPotentiated() {
-	return ( getPotential()/weight > 0.7);
+	return ( getPotential()/weight > 0.5);
     }
 
     /**
      * Method inherited from java.lang.Object to display text about <code>Synapse</code>.
-     *
+     * TODO: getthe potential from a variable instead of calling getPotential
      * @return a <code>String</code> value
      */
     public String toString() {
-	return "Synapse: w=" + (isInhibitory?"-":"") + weight + " connected to " + destNeuroid;
+	return "Synapse: p=" + Network.numberFormat.format(getPotential()) +
+	    ", w=" + (isInhibitory?"-":"") + Network.numberFormat.format(weight) +
+	    " connected to " + destNeuroid;
     }
 }
