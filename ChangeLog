@@ -1,0 +1,25 @@
+2002-03-05  Cengiz Gunay  <cengiz@ull.edu>
+
+	* PhaseSegregator/Peripheral.java (Repository): Uses the new Peripheral.
+
+	* PhaseSegregator/Network.java (Repository): Uses the new Network.
+
+	* Base/Neuroid.java (Repository): Serializable. Added controls and printouts for finding
+	the bug.
+
+	* Base/Peripheral.java (Repository): Serializable. Changed structure.
+
+	* Base/Network.java (Repository): Serializable. New functions and interface. Changed
+	the way Network is instantiated and interacts with Peripheral.
+
+	* Base/DebuggerInterface.java (Repository): New for operations from BeanShell.
+
+2001-09-22  Cengiz Gunay  <cengiz@ull.edu>
+
+	* PhaseSegregator/Network.java (Repository): Now can control nuBoost parameter for
+	increased probability of connection between areas. Any concept saturated will
+	raise an exception. Not tested.
+
+	* TODO (Repository): added near future changes to make.
+	
+
