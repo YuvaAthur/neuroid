@@ -1,3 +1,13 @@
+2002-03-24  Cengiz Gunay  <cengiz@ull.edu>
+
+	* neuroidnet (Repository): New base package "neuroidnet". Subpackages are also updated.
+	
+	* ntr (Repository): Changed package name to "neuroidnet.ntr"
+	Changed AxonArbor to attach itself to its srcNeuroid. Various funcs
+	in Area no longer returns AxonArbor.
+	Area.axons is now a Vector of AxonArbors. Still needs to be correctly
+	treated by Area.fire()
+
 2002-03-05  Cengiz Gunay  <cengiz@ull.edu>
 
 	* PhaseSegregator/Peripheral.java (Repository): Uses the new Peripheral.
