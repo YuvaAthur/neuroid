@@ -398,7 +398,7 @@ public class Area implements Runnable, Remote.AreaInt, Serializable {
 	    throw new RuntimeException("Neuroid " + srcNeuroid + " not found in Area.");
 	
 	// Add to existing Vector in hash if connections already exist 
-	Vector existingSynapses = (Vector) axons.get(srcNeuroid);
+	AxonArbor existingSynapses = (AxonArbor) axons.get(srcNeuroid);
 	if (existingSynapses == null)
 	    axons.put(srcNeuroid, synapses); // Create new
 	else 
@@ -448,8 +448,9 @@ public class Area implements Runnable, Remote.AreaInt, Serializable {
      * A variable <code>conceptCount</code> is used to interleave the allocated neurons. 
      * Return a <code>Vector</code> of new <code>numberOfSynapses</code> <code>Synapse</code>s.
      * <code>AxonArbor</code> makes sure to return a set of synapses to distinct neurons
-     * (no repetitions!)
+     * (no repetitions!) Used from SensoryNeuroid.
      * @see #conceptCount
+     * @see periphery.SensoryNeuroid#SensoryNeuroid
      * @param numberOfSynapses an <code>int</code> value
      * @return a <code>Vector</code> value
      */
