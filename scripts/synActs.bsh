@@ -1,0 +1,13 @@
+//matlab();
+c = new LinkedList();
+wplot(n,0);
+c.add(plot);
+wplot(n,2);
+c.add(plot);
+wplot(n,3);
+c.add(plot);
+wplot(n,6);
+c.add(plot);
+wplot(n,11);
+c.add(plot);
+h = grapher.multiPlot(null, c, null);

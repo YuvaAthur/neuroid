@@ -8,6 +8,7 @@ watcheds() { super.source("watcheds.bsh"); }
 prof() { super.network = load("net.withprofile.data"); watcheds(); }
 spike(n) { super.n = n; super.source("spike.bsh"); }
 wplot(n,s) { super.n = n; super.s = s; super.source("wplot.bsh"); }
+synActs(n) { super.n = n; super.source("synActs.bsh"); }
 gnuplot() { super.grapher = new GNUPlot(); }
 matlab() { super.grapher = new MatLab(); }
 display(plot) { return grapher.display(plot, null); }

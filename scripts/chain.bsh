@@ -1,0 +1,9 @@
+//matlab();
+c = new LinkedList();
+spike(n1);
+c.add(plot);
+spike(n2);
+c.add(plot);
+spike(n3);
+c.add(plot);
+h = grapher.multiPlot(null, c, null);

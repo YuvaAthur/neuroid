@@ -8,10 +8,11 @@ until = 150;
 
 watchedSet = new java.util.TreeSet();
 //watchedSet.add(new NeuroidName("I1",0));
-watchedSet.add(new NeuroidName("M1",34));
-watchedSet.add(new NeuroidName("M1",8));
-watchedSet.add(new NeuroidName("M2",40));
-watchedSet.add(new NeuroidName("M2",10));
-watchedSet.add(new NeuroidName("M3",77));
-watchedSet.add(new NeuroidName("M3",10));
+//watchedSet.add(new NeuroidName("M1",10));
+//watchedSet.add(new NeuroidName("M1",40));
+//watchedSet.add(new NeuroidName("M2",93));
+//watchedSet.add(new NeuroidName("M2",19));
+watchedSet.add(new NeuroidName("M3",4));
+watchedSet.add(new NeuroidName("M3",79));
+//watchedSet.add(new NeuroidName("M3",29));
 //watchedSet.add(new NeuroidName("M3",5));
