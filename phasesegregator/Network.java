@@ -35,7 +35,9 @@ public class  Network extends Base.Network {
 	    timeConstantS = 7,
 	    timeConstantM = 10,
 	    refractoryTimeConstant = 10,
-	    threshold;
+	    threshold,
+	    nuBoost = 6.0;	// nu parameter to increase probability of connection
+	
 	int numberOfMedialAreas = 3,
 	    numberOfItemsPerArea = 3,
 	    numberOfItems = numberOfItemsPerArea * numberOfMedialAreas;
@@ -64,12 +66,12 @@ public class  Network extends Base.Network {
 	    
 	    // Direct connections from input areas
 	    inputAreas[medialArea].connectToArea(medialAreas[medialArea], timeConstantS,
-						 (medialArea + 1) * delay); 
+						 (medialArea + 1) * delay, nuBoost); 
 
 	    // Relay connections between medial areas
 	    if (medialArea > 0) 
 		medialAreas[medialArea - 1].connectToArea(medialAreas[medialArea], timeConstantS,
-							  delay); 
+							  delay, nuBoost); 
 	} // end of for
 
 	peripheral =
