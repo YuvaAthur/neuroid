@@ -36,7 +36,7 @@ save(network, "net.withprofile.data");
 network = load("net.withprofile.data");
 
 grapher = new neuroidnet.ntr.plots.GNUPlot();
-plot = n.getNeuroidProfile().spikesEmittedPlot();
+plot = n.getProfile().spikesEmittedPlot();
 print(grapher.display(plot));
 
 proc =  Runtime.getRuntime().exec("matlab");
