@@ -48,17 +48,9 @@ public class ConceptArea extends Area
     public String getStatus() {
 	String retval = super.getStatus() + "\n";
 	
-	// TODO: make this following class common with the one in Network.toString()
-	TaskWithReturn neuroidsToStringTask =
-	    new TaskWithReturn() {
-		String retval = new String();
-		
+	TaskWithReturn neuroidsToStringTask = new StringTask() {
 		public void job(Object o) {
-		    retval += "" + ((ArtificialConcept)o).getStatus() + "\n";
-		}
-
-		public Object getValue() {
-		    return retval;
+		    this.retval += "" + ((ArtificialConcept)o).getStatus() + "\n";
 		}
 	    };
 	
@@ -81,29 +73,22 @@ public class ConceptArea extends Area
 	    "numberOfConcepts = " + neuroids.size() + ";" +
 	    "figure;\n\n";
 	
-	// TODO: make this following class common with the one in Network.toString()
-	TaskWithReturn toStringTask =
-	    new TaskWithReturn() {
-		    String retval = new String();
-		    int id = 0;
+	TaskWithReturn toStringTask = new StringTask() {
+		int id = 0;
 		
-		    public void job(Object o) {
-			String conceptId = "concept" + id;
-			retval +=
-			    "%% " + o + "\n" + // Remark
-			    conceptId + "name = '" + o + "';\n" +
-			    conceptId + " = [" + ((ArtificialConcept)o).dumpData() + "];\n" +
-			    "subplot(numberOfConcepts, 1, " + (id + 1) + ");\n" +
-			    "stem(" + conceptId + ", ones(size(" + conceptId + ", 2)), 'filled');\n" +
-			    "axis([0 lastTime 0 1]);\n" +
-			    "text(0, 0.5, '" + o + "');\n\n";
-			id++;
-		    }
-
-		    public Object getValue() {
-			return retval;
-		    }
-		};
+		public void job(Object o) {
+		    String conceptId = "concept" + id;
+		    this.retval +=
+			"%% " + o + "\n" + // Remark
+			conceptId + "name = '" + o + "';\n" +
+			conceptId + " = [" + ((ArtificialConcept)o).dumpData() + "];\n" +
+			"subplot(numberOfConcepts, 1, " + (id + 1) + ");\n" +
+			"stem(" + conceptId + ", ones(size(" + conceptId + ", 2)), 'filled');\n" +
+			"axis([0 lastTime 0 1]);\n" +
+			"text(0, 0.5, '" + o + "');\n\n";
+		    id++;
+		}
+	    };
 	
 	Iteration.loop(neuroids.iterator(), toStringTask);
 	

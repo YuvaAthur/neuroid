@@ -66,22 +66,15 @@ public class ArtificialConcept extends Neuroid
 	this.conceptSet = conceptSet;
 
 	// Create a name for the concept by concatanating causing concept names
-	TaskWithReturn toStringTask =
-	    new TaskWithReturn() {
-		String name = "[ ";
-		    
-		// spike lists from different synapses separated by space
+	TaskWithReturn toStringTask = new StringTask("[ ") {
+		// concept names separated by comma
 		public void job(Object o) {
-		    name += ((ArtificialConcept)o).getName() + ", "; 
-		}
-		    
-		public Object getValue() {
-		    return name + " ]";
+		    retval += ((ArtificialConcept)o).getName() + ", "; 
 		}
 	    };
 	
 	Iteration.loop(conceptSet.iterator(), toStringTask);
-	name = (String) toStringTask.getValue();
+	name = (String) toStringTask.getValue()  + " ]";
 
 	init2();
     }
@@ -166,16 +159,9 @@ public class ArtificialConcept extends Neuroid
 	String retval = this + " {\n";
 	
 	// TODO: make this following class common with the one in Network.toString()
-	TaskWithReturn toStringTask =
-	    new TaskWithReturn() {
-		String retval = new String();
-		
+	TaskWithReturn toStringTask = new StringTask() {
 		public void job(Object o) {
-		    retval += "\t" + ((Synapse)o).getSrcNeuroid() + "\n";
-		}
-
-		public Object getValue() {
-		    return retval;
+		    this.retval += "\t" + ((Synapse)o).getSrcNeuroid() + "\n";
 		}
 	    };
 	
