@@ -62,7 +62,23 @@ public class ArtificialConcept extends Neuroid
 	super(network.conceptArea);
 	this.conceptSet = conceptSet;
 
-	name = conceptSet.toString(); // TODO: ???
+	//name = conceptSet.toString(); // TODO: ???
+	Utils.TaskWithReturn toStringTask =
+	    new Utils.TaskWithReturn() {
+		String name = "[ ";
+		    
+		// spike lists from different synapses separated by space
+		public void job(Object o) {
+		    name += ((ArtificialConcept)o).getName() + ", "; 
+		}
+		    
+		public Object getValue() {
+		    return name + " ]";
+		}
+	    };
+	
+	Iteration.loop(conceptSet.iterator(), toStringTask);
+	name = (String) toStringTask.getValue();
 
 	init2();
     }
@@ -83,11 +99,20 @@ public class ArtificialConcept extends Neuroid
 
     /**
      * Attaches the neuroid to the concept population.
+     * Aborts and throws an exception if population already contains Area.replication
+     * number of Neuroids.
      * TODO: How about bidirectional connections?
      * @see Concept#attach
      * @param neuroid a <code>Neuroid</code> value
      */
-    public void attach(Neuroid neuroid) {
+    public void attach(Neuroid neuroid) throws ConceptSaturatedException {
+	    if (synapses.size() >= neuroid.getArea().getReplication()) {
+		System.out.println("Replication limit reached for concept " + this);
+		throw new
+		    ConceptSaturatedException("Replication limit reached for concept " +
+					      this);
+	    }
+	    
 	Synapse synapse = new Synapse(neuroid, this, excitatorySynapse); // adds to synapses
 	Vector synapses = new Vector(1); 
 	synapses.add(synapse);	// Local variable
@@ -215,6 +240,10 @@ public class ArtificialConcept extends Neuroid
 
     public Set getConceptSet() {
 	return conceptSet;
+    }
+
+    public String getName() {
+	return name;
     }
 
 }// ArtificialConcept
