@@ -14,9 +14,9 @@ import periphery.*;
  */
 
 public class  Network extends Base.Network {
-    PhaseSegregator.Peripheral peripheral;
+    PhaseSegregator.Peripheral peripheral; //
 
-    public Network (boolean isConcurrent) {
+    public Network (boolean isConcurrent) { // 
 	super(0.01, isConcurrent);		// sets deltaT
     }
 
