@@ -8,10 +8,10 @@ nsh = object();
 print(	"NeuroidNetShell by Cengiz Gunay running on BeanShell\n"); 
 
 start() { global.source("start.bsh"); }
-stats() { global.source("stats.bsh"); }
-testCapacity() { global.source("testCapacity.bsh"); }
-testTolerance() { global.source("testTolerance.bsh"); }
-testSegregation() { global.source("testSegregation.bsh"); }
+//stats() { global.source("stats.bsh"); }
+//testCapacity() { global.source("testCapacity.bsh"); }
+//testTolerance() { global.source("testTolerance.bsh"); }
+//testSegregation() { global.source("testSegregation.bsh"); }
 post() { global.source("postExplore.bsh"); }
 watcheds() { global.source("watcheds.bsh"); }
 prof() { global.network = load("net.withprofile.data"); watcheds(); }
@@ -33,6 +33,18 @@ printProfile(p) {
 }};
   UninterruptedIteration.loop(p.collection(null), t);
 }
+
+// some more functions
+source("preamble.bsh");
+source("stats.bsh");
+source("testCapacity.bsh");
+source("testTolerance.bsh");
+source("testSegregation.bsh");
+
+// Initialize the tests
+testCapacity();
+testTolerance();
+testSegregation();
 
 print("\nAvailable methods: " + this.methods);
 source("/dev/null"); // To bring the source command into namespace

@@ -5,40 +5,9 @@
  */
 
 
-// put some init vars here, and make separate simplified initializers
+// TODO: put some init vars here, and make separate simplified initializers
 // calling this one.
 testCapacity() {
-
-    // Save me, save you
-    nsh.capacity = this;
-
-    setAccessibility(true);
-
-    source("preamble.bsh");
-
-    // Extending the capabilities, i.e. subclassing
-    source("stats.bsh");
-
-    correctProfile = new Profile();
-    spuriousProfile = new Profile();
-
-    maxTrials = 2;
-    numberOfMedialAreas = 2;
-    timeConstantS = 7;
-    delay = 3;
-    timeConstantM = (numberOfMedialAreas)*timeConstantS;
-    segregation = timeConstantS + 2*timeConstantM + delay;
-
-    fromObjects = 1;
-    toObjects = 20;
-
-    calcObjects = 10;
-
-    idString =
-	"capacity-" + fromObjects + "to" + toObjects + "-"
-	+ maxTrials + "trials-" + segregation + "phi-" + timeConstantM + "taum-" 
-	+ numberOfMedialAreas + "layers";
-
     void run() {
 
 	startTime = System.currentTimeMillis();
@@ -69,7 +38,6 @@ testCapacity() {
 	      ((double)System.currentTimeMillis() - startTime)/60000 +
 	      " mins");
 
-	saveProfiles();
 	save(super, idString + ".data");
     }
 
@@ -91,7 +59,33 @@ testCapacity() {
     // Runs everything
     void runAll() {
 	run();
-	combinedProfilePlot();
+	combinedProfilePlot(super);
     }
+
+
+    // Save me, save you
+    nsh.capacity = this;
+
+    setAccessibility(true);
+
+    correctProfile = new Profile();
+    spuriousProfile = new Profile();
+
+    maxTrials = 2; //10
+    numberOfMedialAreas = 2;
+    timeConstantS = 7;
+    delay = 3;
+    timeConstantM = (numberOfMedialAreas)*timeConstantS;
+    segregation = timeConstantS + 2*timeConstantM + delay;
+
+    fromObjects = 1;
+    toObjects = 20;
+
+    calcObjects = 10;
+
+    idString =
+	"capacity-" + fromObjects + "to" + toObjects + "-"
+	+ maxTrials + "trials-" + segregation + "phi-" + timeConstantM + "taum-" 
+	+ numberOfMedialAreas + "layers";
 
 }

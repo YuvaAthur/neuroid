@@ -1,5 +1,9 @@
 //trace_2003-03-10_23:03:18
 // --------------------
+// Working on testCapacity to be an object. Simulation results are
+// saved as a serialized version of this object. All other files
+// should be in this kind of format instead of all those
+// global.source() statements. Still not working, though.
 //trace_2003-03-09_16:07:52
 // --------------------
 //trace_2002-11-24_17:29:44

@@ -4,69 +4,77 @@
  * statistically significant performance results.
  */
 
-setAccessibility(true);
+testSegregation() {
+    void run() {
+	startTime = System.currentTimeMillis();
 
-source("preamble.bsh");
-source("stats.bsh");
+	for (segregation = fromSegregation;
+	     segregation < toSegregation;
+	     segregation += timeConstantM) {
 
-correctProfile = new Profile();
-spuriousProfile = new Profile();
+	    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
+	    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
 
-maxTrials = 10;
-numberOfMedialAreas = 4;
-numberOfObjects = 5;
-timeConstantS = 7;
-timeConstantM = (numberOfMedialAreas/* + 1*/)*timeConstantS;
-delay = 3;
+	    for (numberOfTrials = 0; numberOfTrials < maxTrials; numberOfTrials++) {
+		runOnce(numberOfObjects, numberOfMedialAreas, Double.NaN, segregation);
+		meanQc += qc;
+		meanQs += qs;
+		minQc = Math.min(minQc, qc);
+		minQs = Math.min(minQs, qs);
+		maxQc = Math.max(maxQc, qc);
+		maxQs = Math.max(maxQs, qs);
+	    }
+	    meanQc /= maxTrials;
+	    meanQs /= maxTrials;
 
-fromSegregation = timeConstantS;
-toSegregation = 2*(timeConstantS + 2*timeConstantM + delay);
-
-calcSegregation = timeConstantS + 2*timeConstantM + delay;
-
-startTime = System.currentTimeMillis();
-
-for (segregation = fromSegregation;
-     segregation < toSegregation;
-     segregation += timeConstantM) {
-
-    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
-    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
-
-    for (numberOfTrials = 0; numberOfTrials < maxTrials; numberOfTrials++) {
-	runOnce(numberOfObjects, numberOfMedialAreas, Double.NaN, segregation);
-	meanQc += qc;
-	meanQs += qs;
-	minQc = Math.min(minQc, qc);
-	minQs = Math.min(minQs, qs);
-	maxQc = Math.max(maxQc, qc);
-	maxQs = Math.max(maxQs, qs);
-    }
-    meanQc /= maxTrials;
-    meanQs /= maxTrials;
-
-    correctProfile.put(new Double(segregation), new ErrorValue(meanQc, minQc, maxQc));
-    spuriousProfile.put(new Double(segregation), new ErrorValue(meanQs, minQs, maxQs));
+	    correctProfile.put(new Double(segregation), new ErrorValue(meanQc, minQc, maxQc));
+	    spuriousProfile.put(new Double(segregation), new ErrorValue(meanQs, minQs, maxQs));
 
      
-} // end of for 
+	} // end of for 
 
-idString =
-    "segregation-" + fromSegregation + "to" + toSegregation + "-"
-    + maxTrials + "trials-" + timeConstantM + "taum-"
-    + numberOfObjects + "objects-" + numberOfMedialAreas + "layers";
+	print("Elapsed experiment time: " +
+	      ((double)System.currentTimeMillis() - startTime)/60000 + " mins");
 
+	save(super, idString + ".data");
+    }
 
-datas = new Vector(combinedProfilePlot(correctProfile, spuriousProfile, idString));
+    // Called by combinedProfilePlot
+    void createPlot(java.util.List datas) {
 
-data = new Grapher.VerticalBar(nsh.grapher, "Calculated \\Phi",
-			       calcSegregation, new Range(0, 1));
-datas.add(data);
+	data = new Grapher.VerticalBar(nsh.grapher, "Calculated \\Phi",
+				       calcSegregation, new Range(0, 1));
+	datas.add(data);
 
-datasPlot(datas, idString, "Segregation \\Phi", "Quality",
-	  "Performance with " + numberOfMedialAreas + " Layers over " +
-	  maxTrials + " Trials, " + numberOfObjects + " Objects, and  \\tau_m = " +
-	  timeConstantM);
+	datasPlot(datas, idString, "Segregation \\Phi", "Quality",
+		  "Performance with " + numberOfMedialAreas + " Layers over " +
+		  maxTrials + " Trials, " + numberOfObjects + " Objects, and  \\tau_m = " +
+		  timeConstantM);
+    }
 
+    // Save me, save you
+    nsh.segregation = this;
 
-print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime)/60000 + " mins");
+    setAccessibility(true);
+
+    correctProfile = new Profile();
+    spuriousProfile = new Profile();
+
+    maxTrials = 2; //10;
+    numberOfMedialAreas = 2;
+    numberOfObjects = 5;
+    timeConstantS = 7;
+    timeConstantM = (numberOfMedialAreas/* + 1*/)*timeConstantS;
+    delay = 3;
+
+    fromSegregation = timeConstantS;
+    toSegregation = 2*(timeConstantS + 2*timeConstantM + delay);
+
+    calcSegregation = timeConstantS + 2*timeConstantM + delay;
+
+    idString =
+	"segregation-" + fromSegregation + "to" + toSegregation + "-"
+	+ maxTrials + "trials-" + timeConstantM + "taum-"
+	+ numberOfObjects + "objects-" + numberOfMedialAreas + "layers";
+
+}
