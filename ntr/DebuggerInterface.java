@@ -17,5 +17,5 @@ public interface DebuggerInterface  {
     Area getArea(String name) throws NameNotFoundException; 
     Neuroid getNeuroid(Area area, int neuroidId);
     Neuroid getNeuroid(String areaName, int neuroidId) throws NameNotFoundException;
-    void setWatch(Neuroid neuroid);
+    void addWatch(Neuroid neuroid);
 }// DebuggerInterface

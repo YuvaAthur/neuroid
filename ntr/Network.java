@@ -208,7 +208,7 @@ abstract public class Network implements DebuggerInterface, Serializable {
      *
      * @param neuroid a <code>Neuroid</code> value
      */
-    public void setWatch(Neuroid neuroid) {
+    public void addWatch(Neuroid neuroid) {
 	neuroid.setWatch(true);
 	watchList.add(neuroid);
     }
@@ -415,7 +415,7 @@ abstract public class Network implements DebuggerInterface, Serializable {
      * @see conceptArea#dumpData
      */
     public void finale () {
-	System.out.println("Network status: \n" + this /*.getStatus()*/);
+	System.out.println("Network status: \n" + this.getStatus());
 
 	// Create Matlab script about concept spike activity
 	String scriptname = "spikes.m";

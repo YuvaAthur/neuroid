@@ -596,7 +596,7 @@ public class Neuroid implements Input, Serializable {
 	if (conceptSet.size() == 0) {
 	     System.out.println("EMPTY CONCEPT!: \n" + this.getStatus());
 	     debug = true;	// Set debugging flag for this neuroid
-	     area.network.setWatch(this);
+	     area.network.addWatch(this);
 	} 
 
 	try {
@@ -633,8 +633,7 @@ public class Neuroid implements Input, Serializable {
 	setMode(new Mode(Mode.AM, area.getActivationThreshold()));
 
 	// Iterate over synapses and set weights to 1
-	Iteration.loop(synapses.iterator(),
-		       new Task() {
+	Iteration.loop(synapses.iterator(), new Task() {
 		public void job(Object o) {
 		    ((Synapse) o).setWeight(1);
 		}});
