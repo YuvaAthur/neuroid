@@ -4,7 +4,8 @@ import neuroidnet.periphery.*;
 import java.util.*;
 
 /**
- * Concept.java
+ * Interface for read-out devices for the network. Represents a group
+ * (assembly) of Neuroids.
  *
  *
  * Created: Mon Mar 19 22:42:50 2001

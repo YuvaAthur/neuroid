@@ -26,14 +26,16 @@ public interface Expressive  {
      * the static properties.
      *
      * @return a <code>String</code> value
+     * @see #toString
      */
     String getStatus();
 
     /**
-     * In addition to <code>getProperties()</code> contents,
+     * In addition to <code>getStatus()</code> contents,
      * give all static properties also.
      *
      * @return a <code>String</code> value
+     * @see #getStatus
      */
     String getProperties();
 }// Expressive
