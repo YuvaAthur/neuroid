@@ -1,4 +1,5 @@
-SHELL=/usr/bin/bash
+SHELL=bash
+WD:=$(shell pwd)
 
 # by default
 nothing:
@@ -7,5 +8,5 @@ diff:
 	for i in *.bsh; do echo $$i; diff $$i $(HOME)/neuroidnet/scripts/$$i; done
 
 commit:
-	cp -f *.bsh $(HOME)/neuroidnet/scripts/
+	cd ../..; cp -f $(WD)/*.bsh scripts/
 	cp -f Makefile ../Makefile.trace

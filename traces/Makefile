@@ -2,19 +2,22 @@
 
 SHELL=bash
 DATETIME=$(shell date +%Y-%m-%d_%T)
-TRACEDIR=trace_$(DATETIME)
+TRACEDIR:=trace_$(DATETIME)
 JAVARUN=$(HOME)/classes
 
 hello:
-	echo $(TRACEDIR)
+	echo $(TRACEDIR); \
+	ls ../..; \
+	help
 
 new-trace: jars
 	echo $(DATETIME); \
 	mkdir $(TRACEDIR); \
 	cd $(TRACEDIR); \
 	cp $(JAVARUN)/neuroidnet.jar  $(JAVARUN)/javautils.jar .; \
-	cp ../../scripts/*.bsh .; \
-	cp ../Makefile.trace Makefile; \
+	cp ../Makefile.trace Makefile; 
+	cd ..; cp scripts/*.bsh traces/$(TRACEDIR)/.; 
+	cd $(TRACEDIR); \
 	echo -e "0a\n//$(TRACEDIR)\n// --------------------\n.\nw\nq" | ed preamble.bsh; 
 	rm -f trace; \
 	ln -s $(TRACEDIR) trace
