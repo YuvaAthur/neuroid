@@ -67,23 +67,23 @@ public class NeuroidProfile implements Serializable {
 	this.neuroid = v;
     }
 
-    Vector spikesEmitted = new Vector();
+    //Vector spikesEmitted = new Vector();
     
     /**
      * Get the value of spikesEmitted.
      * @return value of spikesEmitted.
      */
     public Vector getSpikesEmitted() {
-	return spikesEmitted;
+	return neuroid.getSpikeTrain();
     }
     
     /**
      * Set the value of spikesEmitted.
      * @param v  Value to assign to spikesEmitted.
      */
-    public void setSpikesEmitted(Vector  v) {
+    /*public void setSpikesEmitted(Vector  v) {
 	this.spikesEmitted = v;
-    }
+    }*/
 
     public NeuroidProfile (Neuroid neuroid) {
 	this.neuroid = neuroid;
@@ -102,7 +102,11 @@ public class NeuroidProfile implements Serializable {
     }
 
     public SpikePlot getSpikesEmittedPlot() {
-	return new SpikePlot("Spikes emitted from " + neuroid, null, spikesEmitted);
+	return new SpikePlot("Spikes emitted from " + neuroid, null, getSpikesEmitted());
+    }
+
+    public Plot getMembranePotentialPlot() {
+	return new MembranePotentialPlot("Membrane potential of  " + neuroid, null, this);
     }
 
 }// NeuroidProfile
