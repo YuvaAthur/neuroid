@@ -1,0 +1,1 @@
+javadoc -d doc/ -author -package -use -windowtitle "Neuroidal Network in Java" *.java

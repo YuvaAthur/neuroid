@@ -1,0 +1,11 @@
+? do something about too many updates to the algorithm
+- parallelize (RMI)
+- solve problem with constant current
+- enable selection of inhibitory connections and other parameters
+- set global inhibitory connections
++ add deltaT to Area and use if in algo.s et al.
++ Visualize somehow
++ Give inputs
++ determine constants and run test
++ Complete period calculation in Neuroid.updateWeights()
++ add refractory period and reset potential!

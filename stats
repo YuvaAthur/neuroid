@@ -1,0 +1,26 @@
+100 neuroids in 3 areas RMI one computer 6000 steps, dt=0.001, 2 sync inputs, then 1 input, 77732
+
+100 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 6575
+100 neuroids in 3 areas noRMI one computer 600 steps, dt=0.01, 2 sync inputs, then 1 input, 4362
+
+1000 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 33847, 33147, 34847, 32961
+1000 neuroids in 3 areas noRMI one computer 600 steps, dt=0.01, 2 sync inputs, then 1 input, 65641, 85500, 81386, 85524, 84617
+
+900 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 28516
+
+500 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 14166, 13844, 22960, 13470, 12401
+500 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, (again) 47755, 46036, 
+500 neuroids in 3 areas noRMI one computer 600 steps, dt=0.01, 2 sync inputs, then 1 input, 34920, 48153, 37894, 11634(?), 24601, 27646, 31191, 24485, 27286, 11611
+
+750 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 72138, 67792, 69025, 70161, 69473, 46420(mT), 39666
+750 neuroids in 3 areas noRMI one computer 600 steps, dt=0.01, 2 sync inputs, then 1 input, 79323, 80027, 77219, 77350, 76501, 92729(mT), 75481(sT)
+
+1000 neuroids in 3 areas noRMI, w/ threads one computer 600 steps, dt=0.01, 2 sync inputs, then 1 input, 99323
+1000 neuroids in 3 areas RMI, w/ threads 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 97983
+
+5000 neuroids in 3 areas RMI, w/ threads 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 4206564
+
+1000 neuroids in 3 areas RMI one computer 6000 steps, dt=0.001, 2 sync inputs, then 1 input, 502312
+1000 neuroids in 3 areas RMI 3 computers 6000 steps, dt=0.001, 2 sync inputs, then 1 input, 476356
+
+TODO: Use only two areas and create a lot of redundant synapses on input areas to create computations.
