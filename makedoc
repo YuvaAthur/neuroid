@@ -1,5 +1,5 @@
 javadoc -sourcepath ~ \
-	-d ~/public_html/neuroidal_doc/ \
+	-d ~/public_html/Neuroidal/javadoc/ \
 	-private -version -author -use \
 	-windowtitle "Neuroidal Network in Java" \
 	-overview overview.html \

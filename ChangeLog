@@ -1,3 +1,8 @@
+2002-11-24  Cengiz Gunay  <cengiz@ull.edu>
+
+	* scripts/preamble.bsh (Repository): Polished the statistic
+	collection scripts. Ready to collect statistics.
+
 2002-11-17  Cengiz Gunay  <cengiz@ull.edu>
 
 	* scripts/stats.bsh (Repository): Fixed bug with not releasing
