@@ -1,15 +1,23 @@
-package Base;
-import Base.*;
-import Remote.*;
+package neuroidnet.ntr;
+
+import neuroidnet.Remote.*;
+import neuroidnet.Utils.*;
+
 import java.lang.*;
 import java.util.*;
 //import java.rmi.*;
-import Utils.*;
 
 // $Id$
 /**
- * Contains all synapses of a <code>Neuroid</code> that end up in a particular <code>Area</code>.
- * 
+ * Contains all outgoing synapses of a <code>Neuroid</code>
+ * that end up in a particular <code>Area</code> with a similar
+ * <code>Synapse</code> template. The main reason for this is for 
+ * efficient communications in distributed environments.
+ * <p>TODO:
+ * <ul>
+ * <li>May need to provide a fire() method in here.
+ * <li>Extend HAshtable instead keying with Area?
+ * </ul>
  * <p>Created: Thu Mar  8 16:43:37 2001
  *
  * @author Cengiz Gunay
@@ -32,7 +40,32 @@ public class AxonArbor extends Vector {
      * Template to create all synapses of this AxonArbor.
      */
     Synapse destSynapseTemplate;
+    
+    /**
+     * Get the value of destSynapseTemplate.
+     * @return value of destSynapseTemplate.
+     */
+    public Synapse getDestSynapseTemplate() {
+	return destSynapseTemplate;
+    }
+    
+    /**
+     * Set the value of destSynapseTemplate.
+     * @param v  Value to assign to destSynapseTemplate.
+     */
+    public void setDestSynapseTemplate(Synapse  v) {
+	this.destSynapseTemplate = v;
+    }
 
+    /**
+     * Constructor. Calls <code>init()</code>.
+     * @param destSynapseTemplate Template to use when creating a synapse.
+     * @param srcNeuroid from which Neuroid the AxonArbor is emanating.
+     * @param destArea to which it is projecting.
+     * @see #init
+     * @see #addNeuroid
+     * @see #addRandomSynapse
+     */
     public AxonArbor (Synapse destSynapseTemplate, Neuroid srcNeuroid, Area destArea) {
 	super();
 
@@ -40,10 +73,15 @@ public class AxonArbor extends Vector {
     }
 
     /**
-     * Specifies initial capacity for the Vector holding the synapses.
+     * Specifies initial capacity for the <code>Vector</code> holding the synapses.
+     * Calls <code>init()</code>.
      * @see Vector
      * @param destSynapseTemplate a <code>Synapse</code> value
      * @param initialCapacity an <code>int</code> value
+     * @param destArea to which it is projecting.
+     * @see #init
+     * @see #addNeuroid
+     * @see #addRandomSynapse
      */
     public AxonArbor (Synapse destSynapseTemplate, Neuroid srcNeuroid, Area destArea,
 		      int initialCapacity) {
@@ -53,15 +91,20 @@ public class AxonArbor extends Vector {
     }
 
     /**
-     * Common to constructors.
-     * Cannot be overridden or override another.
+     * Called from all constructors. Cannot be overridden or override another.
+     * Attaches the <code>AxonArbor</code> to the <code>srcNeuroid</code>.
      * 
      * @param destSynapseTemplate a <code>Synapse</code> value
+     * @param srcNeuroid a <code>Neuroid</code> value
+     * @param destArea an <code>Area</code> value
      */
-    private void init(Synapse destSynapseTemplate, Neuroid srcNeuroid, Area destArea) {
+    private final void init(Synapse destSynapseTemplate, Neuroid srcNeuroid, Area destArea) {
 	this.destSynapseTemplate = destSynapseTemplate;
 	this.srcNeuroid = srcNeuroid;
 	this.destArea = destArea;
+
+	// Add this to the outgoing hash of the Area of srcNeuroid
+	srcNeuroid.getArea().addAxon(srcNeuroid, this); 
     }
 
     /**
@@ -75,7 +118,7 @@ public class AxonArbor extends Vector {
 
 	// Check all existing synapses for the same postsynaptic neuron
 	Object[] p = { synapse, new Boolean(false) };
-	Iteration.loop(iterator(), new Utils.TaskWithParam() { 
+	Iteration.loop(iterator(), new TaskWithParam() { 
 		public void job(Object o, Object[] p) {
 		    Synapse existingSynapse = (Synapse) o;
 		    Synapse newSynapse = (Synapse) p[0];
@@ -96,20 +139,43 @@ public class AxonArbor extends Vector {
 
     /**
      * Creates a new synapse connected to a random member of the <code>Area</code>.
-     * @see Area#deltaT
-     * @return a <code>Synapse</code> value */
-    public Synapse createRandomSynapse() {
-	return createSynapse(destArea.getRandomNeuroid());
+     * @see Area#getRandomNeuroid
+     */
+    public void addRandomSynapse() throws ResynapseException {
+	addNeuroid(destArea.getRandomNeuroid());
     }
+
+    /*
+     * Add a synapse with predefined characteristics.
+     * <p> TODO: throw a more meaningful exception
+     * @see #addNeuroid
+     * @param destNeuroid a <code>Neuroid</code> value
+     * @exception ResynapseException (from <code>addNeuroid</code>)
+     * @exception RuntimeException if <code>destNeuroid</code> is not part of
+     * <code>destArea</code>.
+     * @deprecated Replaced by addNeuroid     
+    public void createSynapse(Neuroid destNeuroid) throws ResynapseException {
+    }
+    */
 
     /**
-     * Create a synapse with predefined characteristics.
-     * @param neuroid a <code>Neuroid</code> value
-     * @return a <code>Synapse</code> value
+     * Adds a postsynaptic neuroid to the <code>AxonArbor</code>. Uses the 
+     * template synapse of this object to create a <code>Synapse</code>
+     * with predefined characteristics.
+     * @see #addSynapse
+     * @see #addNeuroid
+     * @see #destSynapseTemplate
+     * @param destNeuroid the <code>Neuroid</code> to add
+     * @exception ResynapseException (from <code>addSynapse</code>)
+     * @exception RuntimeException if <code>destNeuroid</code> is not part of
+     * <code>destArea</code>.
      */
-    public Synapse createSynapse(Neuroid destNeuroid) {
-	return new Synapse(srcNeuroid, destNeuroid, destSynapseTemplate);
+    public void addNeuroid(Neuroid destNeuroid) throws ResynapseException, RuntimeException {
+	if (!destArea.neuroids.contains(destNeuroid))
+	    throw new RuntimeException("Error: In AxonArbor, destNeuroid is not" +
+				       "contained in destArea.");
+	addSynapse(new Synapse(srcNeuroid, destNeuroid, destSynapseTemplate));
+	//	createSynapse(destNeuroid);
     }
-
     
 }// AxonArbor
