@@ -32,12 +32,12 @@ public class Synapse extends Base.Synapse
     
     public Synapse (Neuroid destNeuroid, double timeConstantM,
 			  double timeConstantS, boolean isInhibitory)
-	throws java.rmi.java.rmi.RemoteException {
+	throws java.rmi.RemoteException {
 	super(destNeuroid, timeConstantM, timeConstantS, isInhibitory);
 	UnicastRemoteObject.exportObject(this);
     }
 
-/*    public void receiveSpike() throws java.rmi.java.rmi.RemoteException {
+/*    public void receiveSpike() throws java.rmi.RemoteException {
 	localSynapse.receiveSpike();
     }*/
 

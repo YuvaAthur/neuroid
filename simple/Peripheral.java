@@ -12,17 +12,17 @@ import Remote.*;
  * @version
  */
 
-public class SimplePeripheral extends Peripheral {
+public class Peripheral extends Base.Peripheral {
     Concept a, b;
 
-    public SimplePeripheral (Network network, Area inputArea1, Area inputArea2, Area circuitArea) {
+    public Peripheral (Network network, Area inputArea1, Area inputArea2, Area circuitArea) {
 	super(network);
 	
 	a = new Concept(inputArea1);
 	b = new Concept(inputArea1);
     }
 
-    public SimplePeripheral (Network network, Remote.AreaInt inputArea1, Remote.AreaInt inputArea2,
+    public Peripheral (Network network, Remote.AreaInt inputArea1, Remote.AreaInt inputArea2,
 			     Remote.AreaInt circuitArea) {
 	super(network);
 	

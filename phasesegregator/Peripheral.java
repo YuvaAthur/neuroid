@@ -15,13 +15,13 @@ import Utils.*;
  * @version
  */
 
-public class PhaseSegregatorPeripheral extends Peripheral {
+public class Peripheral extends Base.Peripheral {
     Concept[] concepts;
     Area[] inputAreas;
     int numberOfItems;
 
-    public PhaseSegregatorPeripheral (Network network, Area[] inputAreas,
-				      int numberOfItemsPerArea) {
+    public Peripheral (Network network, Area[] inputAreas,
+		       int numberOfItemsPerArea) {
 	super(network);
 	this.inputAreas = inputAreas;
 	this.numberOfItems = numberOfItems;

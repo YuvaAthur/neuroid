@@ -4,14 +4,13 @@ import Remote.*;
 import java.io.*;
 import java.lang.*;
 import java.util.*;
-
+// $Id$ 
 /** 
- * $Id$ 
  * <p>Presynaptic connection to a Neuroid.
  * @see Neuroid
  *
  * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
- * @version $version$
+ * @version $Revision$
  * @since 1.0
  */
 

@@ -6,14 +6,14 @@ import java.util.*;
 //import java.rmi.*;
 import Utils.*;
 
+// $Id$
 /**
- * AxonArbor.java
- *
- *
- * Created: Thu Mar  8 16:43:37 2001
+ * Contains all synapses of a <code>Neuroid</code> that end up in a particular <code>Area</code>.
+ * 
+ * <p>Created: Thu Mar  8 16:43:37 2001
  *
  * @author Cengiz Gunay
- * @version
+ * @version $Revision$
  */
 
 public class AxonArbor extends Vector {

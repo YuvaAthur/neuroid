@@ -14,9 +14,9 @@ import java.net.*;
  * @version
  */
 
-public class SimpleRemoteNetwork extends SimpleNetwork {
+public class RemoteNetwork extends Network {
 
-    public SimpleRemoteNetwork (boolean isConcurrent) {
+    public RemoteNetwork (boolean isConcurrent) {
 	super(isConcurrent);
     }
 

@@ -4,9 +4,8 @@ import Remote.*;
 import java.util.*;
 //import java.rmi.*;
 import Utils.*;
-
+// * $Id$
 /**
- * $Id$
  * <p>Container for all <code>Area</code>s that hold <code>Neuroid</code>s.
  * Classes extending this one should describe the network architecture and topology. 
  *

@@ -12,10 +12,10 @@ import Remote.*;
  * @version $version$
  */
 
-public class  PhaseSegregatorNetwork extends Network {
+public class  Network extends Base.Network {
     PhaseSegregatorPeripheral peripheral;
 
-    public PhaseSegregatorNetwork (boolean isConcurrent) {
+    public Network (boolean isConcurrent) {
 	super(0.01, isConcurrent);		// sets deltaT
     }
 

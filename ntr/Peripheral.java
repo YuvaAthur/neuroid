@@ -5,9 +5,8 @@ import java.lang.*;
 import java.util.*;
 //import java.rmi.*;
 import Utils.*;
-
+// $Id$
 /**
- * $Id$
  *
  * <p>Controls inputs to the <code>Network</code>.
  * Has subclasses to create test networks with specific inputs.
