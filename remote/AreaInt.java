@@ -16,8 +16,10 @@ import java.util.*;
  */
 
 public interface AreaInt extends java.rmi.Remote {
-    Vector createRandomSynapses(int numberOfSynapses) throws java.rmi.RemoteException; 
-    Vector createArbitrarySynapses(int numberOfSynapses) throws java.rmi.RemoteException; 
+    Vector createRandomSynapses(Neuroid fromNeuroid, int numberOfSynapses)
+	throws java.rmi.RemoteException; 
+    Vector createArbitrarySynapses(Neuroid fromNeuroid, int numberOfSynapses)
+	throws java.rmi.RemoteException; 
     int getNumberOfNeuroids() throws java.rmi.RemoteException;
     int getReplication() throws java.rmi.RemoteException;
     void step() throws java.rmi.RemoteException;
