@@ -1,5 +1,6 @@
 package Base;
 import Base.*;
+import Utils.*;
 import Remote.*;
 import java.io.*;
 import java.lang.*;
@@ -14,7 +15,7 @@ import java.util.*;
  * @since 1.0
  */
 
-public class Synapse {
+public class Synapse implements DumpsData {
     /**
      * List of times when spikes are received
      */
@@ -26,10 +27,9 @@ public class Synapse {
      * Delay is currently not used due to the existence of natural delay between areas. (?)
      * TODO: <code>delay</code> is required for the <code>PhaseSegregator.Network</code>
      */
-    double
-	timeConstantM,
-	timeConstantS,
-	delay; /** delay is not implemented in the parallel version */
+    double timeConstantM;
+    double  timeConstantS;
+    double delay; /** delay is not implemented in the parallel version */
 
     /**
      * Incoming weight.
@@ -72,12 +72,14 @@ public class Synapse {
      * @param timeConstantS a <code>double</code> value
      */
     public Synapse(Neuroid srcNeuroid, Neuroid destNeuroid, double timeConstantM,
-		   double timeConstantS, boolean isInhibitory) {
+		   double timeConstantS, boolean isInhibitory, double delay) {
 	this.srcNeuroid = srcNeuroid;
 	this.destNeuroid = destNeuroid;
 	this.timeConstantM = timeConstantM;
 	this.timeConstantS = timeConstantS;
 	this.isInhibitory = isInhibitory;
+	// Axonal + synaptic delay (not including integration time! See Neuroid#step)
+	this.delay = delay; 
 
 	init();
     }
@@ -95,12 +97,13 @@ public class Synapse {
 	this.timeConstantM = templateSynapse.timeConstantM;
 	this.timeConstantS = templateSynapse.timeConstantS;
 	this.isInhibitory = templateSynapse.isInhibitory;
+	this.delay = templateSynapse.delay;
 
 	init();
     }
 
     /**
-     * Initialization code called from various contructors.
+     * Initialization code called from various constructors.
      * Init weights and adds <code>Synapse</code> to <code>destNeuroid.synapses</code>
      */
     final private void init() {
@@ -122,6 +125,7 @@ public class Synapse {
 	
 	spikeTrain.add(new Double(destNeuroid.area.time));
 	
+	/*
 	for (Iterator i = spikeTrain.iterator(); i.hasNext();) {
 	    if (((Double)i.next()).doubleValue() < (destNeuroid.area.time - timeConstantM))
 		i.remove();	// Delete expired spikes from start
@@ -129,6 +133,7 @@ public class Synapse {
 		break;
 	    
 	} // end of for (Iterator i = spikeTrain.iterator(); i.hasNext();)
+	*/
     }
     
     /**
@@ -183,5 +188,35 @@ public class Synapse {
 	return "Synapse: p=" + Network.numberFormat.format(getPotential()) +
 	    ", w=" + (isInhibitory?"-":"") + Network.numberFormat.format(weight) +
 	    " connected to " + destNeuroid;
+    }
+
+    /**
+     * Dump synaptic activity of concepts contained to output (matlab file?).
+     * <p>TO DO: do it! put this in an interface
+     *
+     */
+    public String dumpData() {
+	String retval = "";
+	
+	// TODO: make this following class common with the one in Network.toString()
+	Utils.TaskWithReturn toStringTask =
+	    new Utils.TaskWithReturn() {
+		String retval = new String();
+		
+		public void job(Object o) {
+		    retval += ((Double)o) + " "; // spike times separated by space
+		}
+
+		public Object getValue() {
+		    return retval;
+		}
+	    };
+	
+	Iteration.loop(spikeTrain.iterator(), toStringTask);
+	
+	retval += (String)toStringTask.getValue();
+
+	return retval;
+	
     }
 }
