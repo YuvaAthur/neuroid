@@ -126,9 +126,8 @@ public class Network extends neuroidnet.ntr.Network {
 
 	    network.advanceTime(15.00); // Run net 
 
+	    Plot plot = n.getProfile().spikesEmittedPlot();
 	    Grapher grapher = new GNUPlot();
-	    Plot plot = n.getNeuroidProfile().neuroidFirePlot(grapher);
-
 	    System.out.println("Grapher response: " + grapher.display(plot));
 
 	    network.finale();
