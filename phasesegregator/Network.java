@@ -42,6 +42,8 @@ public class Network extends neuroidnet.ntr.Network {
 	    threshold,
 	    nuBoost = 6.0;	// nu parameter to increase probability of connection
 
+	System.out.println("Segregation parameter=" + segregation);
+	
 	Class neuroidType = PeakerNeuroid.class;
 	
 	int numberOfMedialAreas = 3,

@@ -137,9 +137,13 @@ public class Peripheral extends neuroidnet.ntr.Peripheral {
 	eventIterator = events.keySet().iterator();
 
 	Double fromStart;
-	do {
-	    fromStart = (Double) eventIterator.next();
-	} while (!nextTime.equals(fromStart)); // end of while (nextTime.equals())
+	try {
+	    do {
+		fromStart = (Double) eventIterator.next();
+	    } while (!nextTime.equals(fromStart)); // end of while (nextTime.equals())
+	} catch (NoSuchElementException e) {
+	    // fine
+	} // end of try-catch
 	
     }
 
