@@ -1,3 +1,4 @@
+- add an id to Synapse according to place in Neuroid.synapses Vector
 - remove debug switch from neuroid
 - move Mode to its own class and make each state a new class. make this algorithm stand in its own package, i.e. UMT
 - move neuroinet independent stuff in plots.* to utils.plots.*

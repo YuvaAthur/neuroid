@@ -1,3 +1,11 @@
+2002-04-15  Cengiz Gunay  <cengiz@ull.edu>
+
+	* ntr/plots (Repository): Grapher independent plotting system. Second revision.
+	Still needs improvement by adding new graphs. Currently supports spike and
+	profile plots.
+
+	* scripts (Repository): Contains BeanShell scripts that aid simulation of the network.
+
 2002-04-11  Cengiz Gunay  <cengiz@ull.edu>
 
 	* utils/StringTask.java (Repository): New Task to make easier iteration tasks
