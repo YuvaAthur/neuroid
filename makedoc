@@ -1,6 +1,8 @@
-javadoc -d ~/public_html/neuroidal_doc/ \
+javadoc -sourcepath ~ \
+	-d ~/public_html/neuroidal_doc/ \
 	-private -version -author -use \
 	-windowtitle "Neuroidal Network in Java" \
 	-overview overview.html \
 	-link "http://java.sun.com/j2se/1.3/docs/api" \
-	Utils Base Remote PhaseSegregator Simple periphery *.java 
+	neuroidnet.ntr neuroidnet.periphery neuroidnet.PhaseSegregator \
+	neuroidnet.Remote neuroidnet.Utils  
