@@ -1,6 +1,6 @@
 import java.lang.*;
 import java.util.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.*;
 
 /**
  * Guinea.java
