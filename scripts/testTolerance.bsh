@@ -60,7 +60,7 @@ testTolerance() {
 	datasPlot(datas, idString, 
 		  "Membrane Time Constant \\tau_m", "Quality",
 		  "Performance with " + numberOfMedialAreas + " Layers over " +
-		  maxTrials + " Trials, " + numberOfObjects + " Objects");
+		  maxTrials + " Trials, " + numberOfObjects + " Object(s)");
     }
 
     void batch() {

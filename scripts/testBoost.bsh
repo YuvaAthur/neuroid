@@ -34,9 +34,9 @@ testBoost() {
 				       calcBoost, new Range(0, 1));
 	datas.add(data);
 
-	datasPlot(datas, idString, "Amplification Factor \\nu", "Quality",
+	datasPlot(datas, idString, "Amplification Factor \\mu", "Quality",
 		  "Performance with " + numberOfMedialAreas + " Layers, " +
-		  numberOfObjects + " Objects over " +
+		  numberOfObjects + " Object(s) over " +
 		  maxTrials + " Trials" );
 
     }

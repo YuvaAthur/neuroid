@@ -58,7 +58,7 @@ testSegregation() {
 
 	datasPlot(datas, idString, "Segregation \\Phi", "Quality",
 		  "Performance with " + numberOfMedialAreas + " Layers over " +
-		  maxTrials + " Trials, " + numberOfObjects + " Objects, and  \\tau_m = " +
+		  maxTrials + " Trials, " + numberOfObjects + " Object(s), and  \\tau_m = " +
 		  timeConstantM);
     }
 
