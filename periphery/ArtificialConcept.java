@@ -18,7 +18,7 @@ import java.util.*;
  */
 
 public class ArtificialConcept extends Neuroid
-    implements Concept, Comparable {
+    implements Concept, Comparable, DumpsData {
 
     /**
      * Name of the concept
@@ -117,12 +117,37 @@ public class ArtificialConcept extends Neuroid
 	synapses.remove(removed); // Remove Synapse associated with neuroid
     }
 
+    //public static int id = 0; OBSOLETE
 
     /**
      * Dump synaptic activity to output (matlab file?). TO DO: do it!
      *
      */
-    public void dumpData() {
+    public String dumpData() {
+
+	String retval = "";
+	
+	// TODO: make this following class common with the one in Network.toString()
+	Utils.TaskWithReturn toStringTask =
+	    new Utils.TaskWithReturn() {
+		    String retval = new String();
+		    
+		    // spike lists from different synapses separated by space
+		    public void job(Object o) {
+			retval += ((Synapse)o).dumpData() + " "; 
+		    }
+		    
+		    public Object getValue() {
+			return retval;
+		    }
+		};
+	
+	Iteration.loop(synapses.iterator(), toStringTask);
+	
+	retval += (String)toStringTask.getValue();
+
+	//id++;
+	return retval;	
     }
 
     /**
