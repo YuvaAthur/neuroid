@@ -54,7 +54,7 @@ public class  Network extends Base.Network {
 
 	Area[] medialAreas = new Area[numberOfMedialAreas];
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
-	    threshold = 2 * 0.9;
+	    threshold = 2 * 0.35; // lowered because of long timeConstantS
 	    medialAreas[medialArea] =
 		new Area(this, "M"+(medialArea+1), numberOfNeuroids,
 			 replication, period, threshold, timeConstantM);
@@ -86,7 +86,7 @@ public class  Network extends Base.Network {
     public void simulation() {
 
 	// Step 
-	double untilTime = 1.0;
+	double untilTime = 20.0;
 	long startTime = System.currentTimeMillis();
 	for (int i = 0; i < untilTime/deltaT; i++) {
 	    //System.out.println("STEP " + i);

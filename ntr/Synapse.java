@@ -122,7 +122,8 @@ public class Synapse implements DumpsData {
      * @see Neuroid#fire
      */
     public void receiveSpike() {
-	System.out.println("Received spike at " + this);
+	/*System.out.println("Received spike at " + this.getStatus() +
+			   " connected to " + destNeuroid);*/
 	
 	spikeTrain.add(new Double(destNeuroid.area.time));
 	
@@ -163,10 +164,20 @@ public class Synapse implements DumpsData {
      */
     double getPotential() {
 	double potential = 0;
-	for (Iterator i = spikeTrain.iterator(); i.hasNext(); ) {
-	    double spikeTime = ((Double) i.next()).doubleValue();
-	    potential += (isInhibitory?-1:1) * kernel(destNeuroid.area.time - spikeTime);
-	} // end of for (iterator i = spikeTrain.iterator(); i.hasNext(); )
+	while (true) {
+	    try {
+		potential = 0;
+		for (Iterator i = spikeTrain.iterator(); i.hasNext(); ) {
+		    double spikeTime = ((Double) i.next()).doubleValue();
+		    potential += (isInhibitory?-1:1) * kernel(destNeuroid.area.time - spikeTime);
+		} // end of for (iterator i = spikeTrain.iterator(); i.hasNext(); )
+		break;		// out of while
+	    } catch (ConcurrentModificationException e) {
+		// do nothing, i.e. restart
+		System.out.println("Concurrent modification in Synapse.getPotential(), repeating...");
+	    }	     
+	} // end of while (true)
+	
 	return weight * potential;
     }
 
@@ -177,7 +188,7 @@ public class Synapse implements DumpsData {
      * above an arbitrary value (0.5)
      */
     boolean isPotentiated() {
-	return ( getPotential()/weight > 0.5);
+	return ( getPotential()/weight > 0.1);
     }
 
     /**
@@ -187,14 +198,24 @@ public class Synapse implements DumpsData {
      */
     public String toString() {
 	return "Synapse: p=" + Network.numberFormat.format(getPotential()) +
-	    ", w=" + (isInhibitory?"-":"") + Network.numberFormat.format(weight) +
-	    " connected to " + destNeuroid;
+	    ", w=" + (isInhibitory?"-":"") + Network.numberFormat.format(weight);
+    }
+
+    /**
+     * Describe in higher detail.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getStatus() {
+	return this +
+	    ", delay=" + Network.numberFormat.format(delay) + 
+	    ", tau_m=" + timeConstantM +
+	    ", tau_s=" + timeConstantS;
     }
 
     /**
      * Dump synaptic activity of concepts contained to output (matlab file?).
-     * <p>TO DO: do it! put this in an interface
-     *
+     * <p>TO DO: 
      */
     public String dumpData() {
 	String retval = "";
@@ -202,16 +223,21 @@ public class Synapse implements DumpsData {
 	// TODO: make this following class common with the one in Network.toString()
 	Utils.TaskWithReturn toStringTask =
 	    new Utils.TaskWithReturn() {
-		String retval = new String();
+		    String retval = new String();
+		    int number = 0;
+		    
 		
-		public void job(Object o) {
-		    retval += ((Double)o) + " "; // spike times separated by space
-		}
+		    public void job(Object o) {
+			number++;
+			retval += ((Double)o) + " "; // spike times separated by space
+			if ((number % 5) == 0) // limit 5 elements per row for text file 
+			    retval += "...\n";
+		    }
 
-		public Object getValue() {
-		    return retval;
-		}
-	    };
+		    public Object getValue() {
+			return retval;
+		    }
+		};
 	
 	Iteration.loop(spikeTrain.iterator(), toStringTask);
 	
