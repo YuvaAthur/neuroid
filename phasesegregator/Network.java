@@ -21,7 +21,7 @@ public class Network extends neuroidnet.ntr.Network {
     Peripheral peripheral; //note that it's a phasesegregator.Peripheral
 
     public Network (boolean isConcurrent) { // 
-	super(0.01, isConcurrent);		// sets deltaT
+	super(0.1, isConcurrent);		// sets deltaT
     }
 
     /**
@@ -33,13 +33,15 @@ public class Network extends neuroidnet.ntr.Network {
 	    replication = 10;
 
 	double
-	    period = Neuroid.defaultPeriod(),
+	    period = SRMNeuroid.defaultPeriod(),
 	    delay = 3,
 	    timeConstantS = 7,
-	    timeConstantM = 10,
+	    timeConstantM = 21,	// 3*timeConstantS
 	    refractoryTimeConstant = 10,
 	    threshold,
 	    nuBoost = 6.0;	// nu parameter to increase probability of connection
+
+	Class neuroidType = PeakerNeuroid.class;
 	
 	int numberOfMedialAreas = 3,
 	    numberOfItemsPerArea = 3,
@@ -54,7 +56,8 @@ public class Network extends neuroidnet.ntr.Network {
 	    threshold = 0.9;
 	    inputAreas[medialArea] =
 		new Area(this, "I"+(medialArea+1), numberOfNeuroids, replication,
-			 period, threshold, timeConstantM, refractoryTimeConstant);
+			 period, threshold, timeConstantM, refractoryTimeConstant,
+			 neuroidType);
 	    areas.add(inputAreas[medialArea]);
 	} // end of for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++)
 
@@ -63,8 +66,8 @@ public class Network extends neuroidnet.ntr.Network {
 	    threshold = 2 * 0.6; // lowered because of long timeConstantS
 	    medialAreas[medialArea] =
 		new Area(this, "M"+(medialArea+1), numberOfNeuroids,
-			 replication,	
-			 period, threshold, timeConstantM, refractoryTimeConstant);
+			 replication, period, threshold, timeConstantM, refractoryTimeConstant,
+			 neuroidType);
 	    areas.add(medialAreas[medialArea]);
 	    
 	    // Direct connections from input areas
