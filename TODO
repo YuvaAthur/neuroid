@@ -1,3 +1,7 @@
+- remove debug switch from neuroid
+- move Mode to its own class and make each state a new class. make this algorithm stand in its own package, i.e. UMT
+- move neuroinet independent stuff in plots.* to utils.plots.*
+	- document and put them on home page for open use (also iterators)
 - periphery
 	- put concept-area into peripheral object? does it need its step() called?
 	+ make a single sensory area 
@@ -16,7 +20,7 @@
  	- allow watch switches on all objects (corresponding to watching)
 		- every entity should record its activity in a separate file
 		(or just serialize them?)
-			- neuroid saves its fire time, mode: threshold, c, d
+			- neuroid saves its fire time, mode: threshold, sugT, confidence
 			- synapse saves its weight, and spike receive time
 		+ neuroid, (synapse records info by checking destneuroid)
 	+ make a shell read-eval-print loop that drives Base.Network (using BeanShell instead)
@@ -43,6 +47,8 @@
 + limit recruitment by throwing an exception in Concept.attach
 + make neuroidal web page with links to reports of related projects
 + make Area implement Remote.AreaInt, etc.
+	- make AxonArbor remote
+	- Synapse implement SynapseInt
 + TreeSet or HashSet?
 + enable selection of inhibitory connections and other parameters
 + set global inhibitory connections

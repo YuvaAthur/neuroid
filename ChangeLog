@@ -1,3 +1,11 @@
+2002-04-11  Cengiz Gunay  <cengiz@ull.edu>
+
+	* utils/StringTask.java (Repository): New Task to make easier iteration tasks
+	that need to accumulate a string value that will eventually be returned.
+
+	* ntr (Repository): Added a new way to record changes and provide offline 
+	visualization of this information. See new package neuroidnet.ntr.plots.
+
 2002-03-24  Cengiz Gunay  <cengiz@ull.edu>
 
 	* neuroidnet (Repository): New base package "neuroidnet". Subpackages are also updated.

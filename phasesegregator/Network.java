@@ -116,7 +116,7 @@ public class Network extends neuroidnet.ntr.Network {
     public static void main (String[] args) {
 	neuroidnet.ntr.Network network = new Network(false); // Single threaded!
 	network.run();
-	network.advanceTime(30.00); // Run net for 30 msecs
+	network.advanceTime(5.00); // Run net for 30 msecs
 	network.finale();
 	System.exit(0);
     } // end of main ()
