@@ -32,12 +32,28 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
      * List of incoming synapses.
      */
     protected Dendrite synapses = new Dendrite();
-
+    
+    /**
+     * Get the value of synapses.
+     * @return value of synapses.
+     */
+    public Dendrite getSynapses() {
+	return synapses;
+    }
+    
     /**
      * Last firing time of this Neuroid.
      */
     double timeLastFired; // TODO: make time a class?
-
+    
+    /**
+     * Get the value of timeLastFired.
+     * @return value of timeLastFired.
+     */
+    public double getTimeLastFired() {
+	return timeLastFired;
+    }
+    
     /**
      * Parent Area.
      */
@@ -60,7 +76,15 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
      * @see Concept
      */
     protected Concept concept = null;
-
+    
+    /**
+     * Get the value of concept.
+     * @return value of concept.
+     */
+    public Concept getConcept() {
+	return concept;
+    }
+    
     /**
      * Sequence of <code>Neuroid</code> in the array held in <code>Area</code>.
      * Good for representation.
@@ -560,6 +584,15 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
 	public double doubleValue() {
 	    throw new RuntimeException("Not applicable to this object");
 	} 
+
+	/**
+	 * Returns a reference to the enclosing <code>Neuroid</code>.
+	 *
+	 * @return a <code>Neuroid</code> value
+	 */
+	public Neuroid getNeuroid() {
+	    return Neuroid.this;
+	}
 
 	abstract class State implements Simulation {
 

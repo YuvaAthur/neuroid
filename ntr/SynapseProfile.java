@@ -71,7 +71,9 @@ public class SynapseProfile  implements Serializable {
     }
 
     public Plot getWeightedPotentialPlot() {
-	return new WeightedPotentialPlot("Weighted potential of " + synapse, null, this);
+	Neuroid src = synapse.getSrcNeuroid();
+	return new WeightedPotentialPlot("Weighted potential of " + synapse + " from " +
+					 src + " " + src.getConcept(), null, this);
     }
 
     public Plot getWeightPlot() {

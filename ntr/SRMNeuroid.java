@@ -346,7 +346,6 @@ public class SRMNeuroid extends Neuroid  {
 	void fitter() {
 	    suggestThreshold();
 	    fitnessCounter = fitnessCounter + 1; // TODO: should go after suggestThreshold()! causing major bug with no weight change!
-
 	}
 
 	void fitless() {

@@ -24,8 +24,16 @@ import java.util.*;
  */
 
 public class ModeProfile extends Profile  {
+
+    /**
+     * Neuroid enclosing the mode object profiled.
+     *
+     */
+    Neuroid neuroid;
+
     public ModeProfile (Profilable entity, Object time) {
 	super(entity, time);
+	neuroid = ((Neuroid.Mode)entity).getNeuroid();
     }
 
     abstract class ProfileTask implements TaskWithReturn {
@@ -71,19 +79,20 @@ public class ModeProfile extends Profile  {
     }
 
     public Plot getStatePlot() {
-	return new ProfilePlot("State", null, getStateProfile());
+	return new ProfilePlot("State of " + neuroid + " " + neuroid.getConcept(), null,
+			       getStateProfile());
     }
 
     public Plot getThresholdPlot() {
-	return new ProfilePlot("Threshold", null, getThresholdProfile());
+	return new ProfilePlot("Threshold of " + neuroid + " " + neuroid.getConcept(), null, getThresholdProfile());
     }
 
     public Plot getFitnessPlot() {
-	return new ProfilePlot("Fitness", null, getFitnessProfile());
+	return new ProfilePlot("Fitness of " + neuroid + " " + neuroid.getConcept(), null, getFitnessProfile());
     }    
 
     public Plot getSuggestedThresholdPlot() {
-	return new ProfilePlot("SuggestedThreshold", null, getSuggestedThresholdProfile());
+	return new ProfilePlot("SuggestedThreshold of " + neuroid + " " + neuroid.getConcept(), null, getSuggestedThresholdProfile());
     }
 
 }// ModeProfile

@@ -1,4 +1,6 @@
 - general:
+	- make backup directories for observations. Include PS files of plots, class files 
+		for bot neuroidnet and plots, and saved binary object files. 
 	+ make an interface that step()s [utils.Simulation]
 - naming:
 	+ create a NeuroidName class that holds name, id for neuroids?

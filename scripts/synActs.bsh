@@ -1,13 +1,16 @@
 //matlab();
 c = new LinkedList();
-wplot(n,0);
-c.add(plot);
-wplot(n,2);
-c.add(plot);
-wplot(n,3);
-c.add(plot);
-wplot(n,6);
-c.add(plot);
-wplot(n,11);
-c.add(plot);
-h = grapher.multiPlot(null, c, null);
+
+Task t = new Task() {
+	void job(Object o) {
+	    s = (Synapse)o;
+	    ns = s.getSrcNeuroid();
+	    if (ns.getTimeLastFired() >= 0) {
+		//wplot(n,s.getId());
+		c.add(s.getProfile().getWeightedPotentialPlot());
+	    }
+	}};
+UninterruptedIteration.loop(n.getSynapses(), t);
+//spike(n);
+c.add(n.getProfile().getMembranePotentialPlot());
+h = grapher.multiPlot("Synapse Activities of " + n + " with " + n.getConcept(), c, null);
