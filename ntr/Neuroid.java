@@ -4,6 +4,7 @@ import Base.*;
 import java.lang.*;
 import java.util.*;
 import java.text.*;
+import java.io.*;
 //import java.rmi.*;
 import Utils.*;
 
@@ -21,7 +22,8 @@ import Utils.*;
  * @version $Revision$ for this file
  * @since 1.0
  */
-public class Neuroid implements Input {
+public class Neuroid implements Input, Serializable {
+    
     /**
      * Membrane potential.
      */
@@ -30,7 +32,7 @@ public class Neuroid implements Input {
     /**
      * List of incoming synapses.
      */
-    Vector synapses = new Vector();
+    Dendrite synapses = new Dendrite();
 
     /**
      * Last firing time of this Neuroid.
@@ -57,6 +59,19 @@ public class Neuroid implements Input {
      * Parent Area.
      */
     protected Area area;
+    
+    /**
+       * Get the value of area.
+       * @return value of area.
+       */
+    public Area getArea() {return area;}
+    
+    /**
+       * Set the value of area.
+       * @param v  Value to assign to area.
+       */
+    public void setArea(Area  v) {this.area = v;}
+    
 
     /**
      * Associated concept if neuroid has memorized anything.
@@ -65,10 +80,15 @@ public class Neuroid implements Input {
     protected Concept concept = null;
 
     /**
-     * OBSOLETE? Good for representation.
+     * Sequence of <code>Neuroid</code> in <code>Area</code>. Good for representation.
+     * Used to override Object.hashCode() and don't pass around this id, but 
+     * hascode is dynamic and changes at everyruntime, leaving us with a volatile identifier.
+     * Oh, well. Set in <code>Area.addNeuroid()</code>
+     * @see Area#neuroids
+     * @see Area#addNeuroid
      */
-/*    public int id; // TODO: Override Object.hashCode() and don't pass around this id?!
-  */  
+    public int id; 
+  
     /**
      * Represents the state and dynamic parameters of the neuroid.
      */
@@ -79,10 +99,46 @@ public class Neuroid implements Input {
      */
     boolean hasFired;
 
+
     /**
      * Internal.
      */
     double sumOfCurrentWeights;
+
+    /**
+     * If set, outputs debugging info about this neuroid.
+     */
+    boolean debug = false;
+
+
+    /**
+     * If set, the neuroid saves informatoin about its state changes.
+     */
+    boolean watch = false;
+    
+    /**
+     * Get the value of watch.
+     * @return value of watch.
+     */
+    public boolean isWatch() {
+	return watch;
+    }
+    
+    /**
+     * Set the value of watch.
+     * @param v  Value to assign to watch.
+     */
+    public void setWatch(boolean  v) {
+	this.watch = v;
+    }
+    
+
+    /**
+     * List of times that the neuroid fired.
+     * Redundant with the <code>spikeTrain</code> defined in <code>Synapse</code>.
+     * @see Synapse#spikeTrain
+     */
+    Vector spikeTrain; // TODO: make time a class?
 
     /**
      * Dummy constructor.
@@ -97,12 +153,12 @@ public class Neuroid implements Input {
     }
 
     /**
-     * Sets initial parameters. Calculates <code>sumOfWeights</code> from
-     * period length given by the <code>Area</code>.
-     * @see Neuroid.Mode#sumOfWeights
-     * @see Area#period
+     * Sets initial parameters. 
+     * (Not used: Calculates <code>sumOfWeights</code> from
+     * period length given by the <code>Area</code>.)
+      @see Neuroid.Mode#sumOfWeights
+      @see Area#period
      * @param area an <code>Area</code> value
-     * @param id an <code>int</code> value
      * @param refractoryTimeConstant
      */
     public Neuroid(Area area, double initialThreshold, double refractoryTimeConstant) {
@@ -116,10 +172,10 @@ public class Neuroid implements Input {
 	externalCurrent = 2;
 	timeLastFired = - 1000;	// Initially fired a long time ago
 
-	// Find sumOfWeights from given period value of the Area
-	mode.sumOfWeights =
-	    -externalCurrent * ( externalCurrent - mode.threshold ) *
-	    Math.exp( -area.period );
+	// Find sumOfWeights from given period value of the Area (DISCONTINUED)
+	mode.sumOfWeights = 0;
+/*	    -externalCurrent * ( externalCurrent - mode.threshold ) *
+	    Math.exp( -area.period );*/
 
 	init();
     }
@@ -209,6 +265,7 @@ public class Neuroid implements Input {
 				   ", repeating...");
 	    } 
 	} // of while
+	// TODO: refractoriness can be calculated by looking at previous firing times in spikeTrain
 	double refr = refractoriness(area.time - timeLastFired); 
 	potential += refr;
 /*	if (refr < 0) 
@@ -219,12 +276,16 @@ public class Neuroid implements Input {
 
     /**
      * Fires the neuroid. Neuroid contact container Area to propagate the spike along its axon.
+     * Saves firing time to <code>spikeTrain</code> if being watched.
      * @see Area#fireNeuroid
+     * @see #watch
      */
     public void fire() {
 	System.out.println("Fire " + this);
 	timeLastFired = area.time;
 	area.fireNeuroid(this);
+	if (watch) 
+	    spikeTrain.add(new Double(timeLastFired));	     
     }
 
     /**
@@ -263,7 +324,12 @@ public class Neuroid implements Input {
 		    }});
 		if (hasFired) {
 		    mode.fitnessCounter--; // Correct behavior
-		    // TODO: if fitnessCounter ==0 go back to AM
+		    // NO: If fitnessCounter<=1 go back to AM (no other change in mode)
+		    if (mode.fitnessCounter <= 1) {
+			mode.fitnessCounter = 1;
+			//mode.setState(Mode.AM);
+			//break;
+		    } // end of if (mode.fitnessCounter <= 0)
 		    updateWeights();
 		    calculatePotential();
 		    mode.suggestedThreshold = potential;
@@ -275,11 +341,19 @@ public class Neuroid implements Input {
 		    calculatePotential();
 		    mode.suggestedThreshold = potential;
 		} else { // i.e. if (mode.fitnessCounter >= correctTimesRequired - 1)
-		    mode.setState(Mode.UM); // Memorized!
-		    // Set threshold lower than anticipated
-		    mode.threshold = 0.9 * mode.suggestedThreshold; 
-		    makeConcept();
-		    System.out.println("Into UM mode!; " + this);
+		    try {
+			makeConcept(); // Throws the exception
+			mode.setState(Mode.UM); // Memorized!
+			// Set threshold lower than anticipated
+			mode.threshold = 0.9 * mode.suggestedThreshold; 
+			System.out.println("Into UM mode!; " + this);
+		    } catch (ConceptSaturatedException e) {
+			// Reset neuroid back to AM mode
+			reset();
+			// Following is not a very good idea...
+			timeLastFired = area.time; // Enable refractory effect by fake firing... 
+		    } 
+
 		} // end of else of if (mode.fitnessCounter < correctTimesRequired - 1)
 		
 	    } // end of else of if (potential < mode.suggestedThreshold)
@@ -330,8 +404,8 @@ public class Neuroid implements Input {
 	 *
 	 * @param o an <code>Object</code> value
 	 * @see Synapse
-	 * @see potentiatedSynapse
-	 * @see silentSynapse
+	 * @see #potentiatedSynapse
+	 * @see #silentSynapse
 	 */
 	public void job(Object o) {
 	    Synapse s = (Synapse) o;
@@ -363,13 +437,18 @@ public class Neuroid implements Input {
      * @see Neuroid#sumOfWeights
      */
     void updateWeights() {
+	if (debug) 
+	     System.out.println("updateWeights: " + this + "{");
+	
 	sumOfCurrentWeights = 0; // currently not used
 
 	// Loop over synapses and update weights according to Winnow learning rule
 	new SynapseActivityTask() {
 		public void job(Object o) {
-		    super.job(o);	// main job
 		    Synapse s = (Synapse) o;
+		    if (debug)
+			System.out.println("\t" + s + " from " + s.srcNeuroid);
+		    super.job(o);	// main job
 		    toplevel.sumOfCurrentWeights += s.weight;
 		}
 		void potentiatedSynapse(Synapse s) {
@@ -398,6 +477,9 @@ public class Neuroid implements Input {
 		    sumOfCurrentWeights += s.weight;
 		}});
 */
+	if (debug) 
+	    System.out.println("}");
+
 	if (sumOfCurrentWeights == 0) 
 	    return;
 /*	TODO: fix externalCurrent calculation first then enable the following:
@@ -413,11 +495,14 @@ public class Neuroid implements Input {
      * Trace back synapses that made this neuroid go to UM mode to find concept set.
      * Then look for associated concept in conceptArea,
      * otherwise create new Concept using this concept set.
+     * In case concept is saturated, then the neuroid is reset() 
      * <p>TODO: destroy old <code>concept</code> if it exists.
      * @see ConceptArea
      * @see Concept
+     * @see ConceptSaturatedException
+     * @see #reset()
      */
-    void makeConcept() {
+    void makeConcept() throws ConceptSaturatedException {
 
 	// Loop over synapses and save their concepts in conceptSet
 	SynapseActivityTask synapseIterator = new SynapseActivityTask() {
@@ -446,6 +531,12 @@ public class Neuroid implements Input {
 	// Collect the result of the iteration over the synapses.
 	HashSet conceptSet = (HashSet) synapseIterator.getValue();
 
+	if (conceptSet.size() == 0) {
+	     System.out.println("EMPTY CONCEPT!: \n" + this.getStatus());
+	     debug = true;	// Set debugging flag for this neuroid
+	     area.network.setWatch(this);
+	} 
+
 	try {
 	    concept = (Concept) area.network.conceptArea.get(conceptSet);
 	    concept.equals(concept); // redundant operation to raise exception
@@ -454,16 +545,13 @@ public class Neuroid implements Input {
 	} 
 
 	// An exception should be received in case the replication factor is exceeded.
+	// refractory period is enabled without exhibiting spiking to suppress re-activation.
 	// TODO2: Later make global inhibitory connections limit this number.
 	// 	  One might randomly distribute the timeConstantS with deviation param
 	//	  and the global inhibitory neuroid will suppress late concepts even
 	// 	  from going into UM
-	try {
-	    concept.attach(this);
-	} catch (ConceptSaturatedException e) {
-	    // Back to AM mode? Reset weights ?
-	    reset();
-	} 
+
+	concept.attach(this);
     }
 
     /**
@@ -473,16 +561,21 @@ public class Neuroid implements Input {
      * @see #makeConcept
      */
     public void reset() {
-	mode.setState(Mode.AM);	// Available memory state
-	mode.setThreshold(area.getActivationThreshold()); // AM -> AM1 threshold
+	//debug = true;		// Enable debugging for neuroids that're reset
+
+	if (debug) 
+	     System.out.println("Resetting " + this);
+	
+	// Available memory state
+	// AM -> AM1 threshold
+	mode = new Mode(Mode.AM, area.getActivationThreshold());
 
 	// Iterate over synapses and set weights to 1
 	Iteration.loop(synapses.iterator(),
-		       new Utils.Task {
+		       new Utils.Task() {
 		public void job(Object o) {
 		    ((Synapse) o).setWeight(1);
-		});
-	    }
+		}});
     }
 
     /**
@@ -492,10 +585,64 @@ public class Neuroid implements Input {
      * @return a <code>String</code> value
      */
     public String toString() {
-	return "Neuroid #" + hashCode() + " in " + area + ", u = " +
+	return "Neuroid #" + id /*hashCode()*/ + " in " + area + ", u = " +
 	    Network.numberFormat.format(potential) + ", " + mode +
 	    ", fired = " + Network.numberFormat.format(timeLastFired) + 
 	    (concept != null ? ", " + concept : "");
+    }
+
+    /**
+     * Describe in higher detail. List all contained synapses.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getStatus() {
+
+	Utils.TaskWithReturn synapseIterator = new Utils.TaskWithReturn() {
+		String retval = " {\n";
+
+		public void job(Object o) {
+		    retval += "\t" + o + " from " + ((Synapse)o).srcNeuroid + "\n";
+		}
+
+		public Object getValue() { return retval; }
+	    };
+ 
+	Iteration.loop(synapses.iterator(), synapseIterator);
+
+	return this + (String)synapseIterator.getValue() + "\n}";
+    }
+
+    /**
+     * Dump synaptic activity to output (matlab format). Called by:
+     * TODO: optionally in gnuplot format?
+     * @see ConceptArea#dumpData
+     */
+    public String dumpData() {
+
+	String retval = "";
+	
+	// TODO: make this following class common with the one in Network.toString()
+	Utils.TaskWithReturn toStringTask =
+	    new Utils.TaskWithReturn() {
+		    String retval = new String();
+		    
+		    // spike lists from different synapses separated by space
+		    public void job(Object o) {
+			retval += ((Synapse)o).dumpData() + " "; 
+		    }
+		    
+		    public Object getValue() {
+			return retval;
+		    }
+		};
+	
+	Iteration.loop(synapses.iterator(), toStringTask);
+	
+	retval += (String)toStringTask.getValue();
+
+	//id++;
+	return retval;	
     }
 
     /**
@@ -517,11 +664,13 @@ public class Neuroid implements Input {
      * @version 1.0
      * @since 1.0
      */
-    protected class Mode {
+    protected class Mode implements Serializable {
+	// The following lists should be consistent with each other.
 	public final static int
 	    AM = 0, 
 	    UM = AM + 1,
 	    AM1 = UM + 1;
+	//public final static String stateList[] = { "AM", "UM", "AM1"};
 
 	int fitnessCounter = 1;
 	double suggestedThreshold;
@@ -573,8 +722,11 @@ public class Neuroid implements Input {
 	double sumOfWeights; 
 	
 	public String toString() {
-	    return "state = " + state + ", T = " + Network.numberFormat.format(threshold) +
-		", sumOW = " + Network.numberFormat.format(sumOfCurrentWeights);
+	    return "state = " + /*stateList[*/ state /*]*/ +
+		", T = " + Network.numberFormat.format(threshold) +
+		", fit = " + fitnessCounter +
+		", sugT = " + Network.numberFormat.format(suggestedThreshold) /*+
+		", sumOW = " + Network.numberFormat.format(sumOfCurrentWeights)*/;
 	}
     }
 }
