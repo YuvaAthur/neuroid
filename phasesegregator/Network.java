@@ -1,19 +1,20 @@
 package PhaseSegregator;
 import Base.*;
-import Remote.*;
+import periphery.*;
+//import Remote.*;
 /**
  * Builds a network to test theoretical phase segregation properties.
- * TODO: Instead of n input areas, put all input concepts in the same area,
+ * <p>TODO: Instead of n input areas, put all input concepts in the same area,
  * similar to that of V1-V3, V5 example.
  *
  * Created: Thu Nov 23 03:09:39 2000
  *
  * @author Cengiz Gunay
- * @version $version$
+ * @version $Revision$ for this file
  */
 
 public class  Network extends Base.Network {
-    PhaseSegregatorPeripheral peripheral;
+    PhaseSegregator.Peripheral peripheral;
 
     public Network (boolean isConcurrent) {
 	super(0.01, isConcurrent);		// sets deltaT
@@ -40,15 +41,14 @@ public class  Network extends Base.Network {
 	Area[] inputAreas = new Area[numberOfMedialAreas];
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
 	     inputAreas[medialArea] =
-		 new Area("I"+(medialArea+1), numberOfNeuroids, replication, deltaT, period, 0.9);
+		 new Area(this, "I"+(medialArea+1), numberOfNeuroids, replication, period, 0.9);
 	     areas.add(inputAreas[medialArea]);
 	} // end of for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++)
 
 	Area[] medialAreas = new Area[numberOfMedialAreas];
-	Area previous = inputArea;
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
 	     medialAreas[medialArea] =
-		 new Area("M"+(medialArea+1), numberOfNeuroids, replication, deltaT, period, 2*0.9);
+		 new Area(this, "M"+(medialArea+1), numberOfNeuroids, replication, period, 2*0.9);
 	     areas.add(medialAreas[medialArea]);
 
 	     // Direct connections from input areas
@@ -60,13 +60,20 @@ public class  Network extends Base.Network {
 	} // end of for
 
 	peripheral =
-	    new PhaseSegregatorPeripheral(this, inputAreas, numberOfItemsPerArea);
+	    new PhaseSegregator.Peripheral(this, inputAreas, numberOfItemsPerArea);
     }
 
     /**
-     *
+     * 
      */
     public void simulation() {
+	// Simulation plan for phase segregation:
+	// fire one from each sensoryarea simultaneously
+	// delay for some time
+	// fire one other from each sensoryarea simultaneously
+	// check for illusory conjunctions 
+	//	(dump list of Concepts and firing times, to matlab file)
+
 	// Step 
 	double untilTime = 6.0;
 	long startTime = System.currentTimeMillis();
@@ -77,9 +84,9 @@ public class  Network extends Base.Network {
 	    if (i == 0)
 		peripheral.fireInputs();
 
-	    if (i > 5 && i < 305) { 
+	    /*if (i > 5 && i < 305) { 
 		peripheral.fireRandomNoise();
-	    } // end of if
+	    }*/ // end of if
 
 	    // Fire noise after global inhibition is in effect, 
 	    // therefore no concepts will actually fire!
@@ -93,9 +100,9 @@ public class  Network extends Base.Network {
 	    
 	    */
 	    // Fire only one later
-	    double alarm = i*deltaT - 5.0;
+	    /*double alarm = i*deltaT - 5.0;
 	    if (alarm > 0 && alarm < deltaT)
-		peripheral.testOneInput();
+		peripheral.testOneInput();*/
 
 	    step();		// step deltaT
 	}
@@ -103,7 +110,7 @@ public class  Network extends Base.Network {
     }
 
     public static void main (String[] args) {
-	new SimpleNetwork(false); // Single threaded!
+	new PhaseSegregator.Network(false); // Single threaded!
 	System.exit(0);
     } // end of main ()
 
