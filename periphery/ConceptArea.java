@@ -7,10 +7,10 @@ import java.util.*;
 // $Id$
 /**
  * Artificial area for holding <code>Concept</code>s. Contains a hashtable for associating
- * conjunction of concepts to new concepts.
+ * a set of conjunction of concepts to new concepts.
  *
- * Created: Tue Mar 27 00:47:50 2001
- * Modified: $Date$
+ * <p>Created: Tue Mar 27 00:47:50 2001
+ * <p>Modified: $Date$
  *
  * @author Cengiz Gunay
  * @version $Revision$ for this file
