@@ -1,3 +1,19 @@
+2002-04-24  Cengiz Gunay  <cengiz@ull.edu>
+
+	* utils (Repository): Improved documentation and made major changes in Iteration and 
+	StringTask. This package should be moved out of neuroidnet since they are independent of 
+	the neuroidal simulator.
+
+	* ntr/plots (Repository): Fixed bugs with ranges, etc. Refined plots, enabled multiple 
+	windows. Need to move this package out of neuroidnet.
+
+	* ntr/WeightedPotentialPlot.java (Repository): new plot for potential plot with
+	weight profile.
+
+	* ntr/PotentialPlot.java (Repository): new plot for raw potential plot of a synapse.
+
+	* ntr/MembranePotentialPlot.java (Repository): new plot for total neuroid potential.
+
 2002-04-15  Cengiz Gunay  <cengiz@ull.edu>
 
 	* ntr/plots (Repository): Grapher independent plotting system. Second revision.
