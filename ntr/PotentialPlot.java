@@ -19,7 +19,7 @@ import java.util.*;
  * @version $Revision$ for this file.
  */
 
-public class PotentialPlot extends Plot  {
+public class PotentialPlot extends SimplePlot  {
     SynapseProfile synapseProfile;
 
     public PotentialPlot (String title, Range range, SynapseProfile synapseProfile) {
