@@ -53,16 +53,16 @@ public class Peripheral  {
 
 	Concept(RemoteAreaInt area) {
 	    try {
-		synapses = area.createRandomSynapses(area.getReplication());
+		synapses = area.createArbitrarySynapses(area.getReplication());
 	    } catch (RemoteException e) {
 		e.printStackTrace();
-		throw new RuntimeException("Cannot access area.createRandomSynapses");
+		throw new RuntimeException("Cannot access area.createArbitrarySynapses");
 	    }
 	    // TODO: teach the dest neuroids to memorize this input.
 	}
 
 	Concept(Area area) {
-	    synapses = area.createRandomSynapses(area.getReplication());
+	    synapses = area.createArbitrarySynapses(area.getReplication());
 	}
 
 	void fire() {
