@@ -2,7 +2,7 @@ package neuroidnet.ntr;
 
 import neuroidnet.periphery.*;
 import neuroidnet.remote.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.*;
 
 import java.lang.*;
 import java.util.*;
@@ -17,7 +17,7 @@ import java.io.*;
  * @since 1.0
  */
 
-public class Area implements Runnable, AreaInt, Serializable {
+public class Area implements Runnable, AreaInt, Serializable, Expressive {
 
     /**
      * Name of the <code>Area</code> for identification purposes.
@@ -338,12 +338,12 @@ public class Area implements Runnable, AreaInt, Serializable {
      * the <code>neuroid</code>'s order in the <code>Vector neuroids</code>.
      * if specified in the constructor, a simple lateral circuit is formed. A link from this
      * neuroid to the globally inhibitory neuroid is made. 
-     * @param neuroid a <code>Neuroid</code> value
+     * @param neuroid a <code>Neuroid</code> value to add into this <code>Area</code>
+     * @return the id of the neuroid (i.e. index in <code>neuroids</code>)
      * @see Neuroid#id
      */
-    public void addNeuroid(Neuroid neuroid) {
+    public int addNeuroid(Neuroid neuroid) {
 	neuroids.add(neuroid);
-	neuroid.id = neuroids.indexOf(neuroid);
 
 	Vector axon = new Vector();
 
@@ -364,6 +364,8 @@ public class Area implements Runnable, AreaInt, Serializable {
 	} // end of try-catch
 
 	axons.put(neuroid, axon);
+
+	return neuroids.indexOf(neuroid);
     }
 
     /**
@@ -406,7 +408,7 @@ public class Area implements Runnable, AreaInt, Serializable {
 	    new Synapse(null, null, timeConstantM, timeConstantS, false, delay);
 
 	// Loop for every neuroid in this area and create connection in destination area
-	new Iteration() { 
+	new UninterruptedIteration() { 
 	    public void job(Object o) {
 		Neuroid srcNeuroid = (Neuroid) o;
 
@@ -420,31 +422,6 @@ public class Area implements Runnable, AreaInt, Serializable {
 		    throw new Error("Cannot call remote.Area methods.");
 		}
 	    }}.loop(neuroids);
-
-	/*
-	Object[] p = { destArea,
-		       new Integer(numberOfConnections),
-		       // SRM parameters: timeConstantM = 1, timeConstantS = deltaT, excitatory 
-		       new Synapse(null, null, timeConstantM, timeConstantS,
-				   false, delay)};
-	Iteration.loop(neuroids.iterator(), new TaskWithParam() { 
-		public void job(Object o, Object[] p) {
-		    Neuroid srcNeuroid = (Neuroid) o;
-		    AreaInt _destArea = (AreaInt) p[0];
-		    int _numberOfConnections = ((Integer) p[1]).intValue();
-		    Synapse _synapseTemplate = (Synapse) p[2];
-
-		    try {
-			// Need to be called at the remote area, so that it can generate 
-			// a remote reference to an AxonArbor object 
-			_destArea.addRandomSynapses(_synapseTemplate, srcNeuroid,
-						       _numberOfConnections); 
-
-		    } catch (java.rmi.RemoteException e) {
-			throw new Error("Cannot call remote.Area methods.");
-		    }
-		}}, p);
-	*/
     }
 
     /**
@@ -618,28 +595,37 @@ public class Area implements Runnable, AreaInt, Serializable {
     void fireNeuroid(Neuroid neuroid) {
 	Vector axon = (Vector)axons.get(neuroid);
 	if (axon == null) return;
-	Iteration.loop(axon.iterator(), new Task() {
+	UninterruptedIteration.loop(axon.iterator(), new Task() {
 		public void job(Object o) {
 		    ((Input)o).fire();
 		}});
     }
 
     /**
-     * Method inherited from java.lang.Object to display text about <code>Area</code>.
+     * Identifies are with its name.
      *
      * @return a <code>String</code> value
      */
     public String toString() {
-	return "Area: " + name + " at t=" + Network.numberFormat.format(time);
+	return "Area: " + name;
     }
 
     /**
-     * Describe Area in more detail.
+     * Mentions the time in addition to <code>toString()</code> contents.
      *
      * @return a <code>String</code> value
      */
     public String getStatus() {
-	return this + ", numberOfNeuroids=" + numberOfNeuroids +
+	return this + " at t=" + Network.numberFormat.format(time);
+    }
+
+    /**
+     * Describe <code>Area</code> in more detail, including static properties.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getProperties() {
+	return this.getStatus() + ", numberOfNeuroids=" + numberOfNeuroids +
 	    ", replication=" + replication + ", deltaT=" + deltaT + ", tau_m=" + timeConstantM;
     }
 
@@ -658,7 +644,7 @@ public class Area implements Runnable, AreaInt, Serializable {
 		updateTime();
 		while (true) {
 		    try {
-			Iteration.loop(neuroids.iterator(), new Task() {
+			UninterruptedIteration.loop(neuroids.iterator(), new Task() {
 				public void job(Object o) {
 				    ((Neuroid)o).step();
 				}
