@@ -1,0 +1,68 @@
+// $Id$
+/**
+ * For running the network a number of times (say 100) to get
+ * statistically significant performance results.
+ */
+
+setAccessibility(true);
+
+source("preamble.bsh");
+source("stats.bsh");
+
+correctProfile = new Profile();
+spuriousProfile = new Profile();
+
+maxTrials = 10;
+numberOfMedialAreas = 2;
+numberOfObjects = 5;
+timeConstantS = 7;
+timeConstantM = (numberOfMedialAreas + 1)*timeConstantS;
+delay = 3;
+startTime = System.currentTimeMillis();
+
+for (segregation = timeConstantS;
+     segregation < 2*(timeConstantS + 2*timeConstantM + delay);
+     segregation += timeConstantM) {
+
+    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
+    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
+
+    for (numberOfTrials = 0; numberOfTrials < maxTrials; numberOfTrials++) {
+	runOnce(numberOfObjects, numberOfMedialAreas, Double.NaN, segregation);
+	meanQc += qc;
+	meanQs += qs;
+	minQc = Math.min(minQc, qc);
+	minQs = Math.min(minQs, qs);
+	maxQc = Math.max(maxQc, qc);
+	maxQs = Math.max(maxQs, qs);
+    }
+    meanQc /= maxTrials;
+    meanQs /= maxTrials;
+
+    correctProfile.put(new Double(segregation), new ErrorValue(meanQc, minQc, maxQc));
+    spuriousProfile.put(new Double(segregation), new ErrorValue(meanQs, minQs, maxQs));
+
+     
+} // end of for 
+
+print("correct concept qualities = " + correctProfile);
+print("spurious concept quality = " + spuriousProfile);
+
+if (grapher == null || grapher == void)
+    matlab();
+
+correctData = new Grapher.ErrorData(grapher, "Correct concepts", correctProfile);
+spuriousData = new Grapher.ErrorData(grapher, "Spurious concepts", spuriousProfile);
+
+Grapher.Data[] datas = {correctData, spuriousData};
+
+p = new SuperposedDataPlot(null, datas);
+p.setTitle("Performance with " + numberOfMedialAreas + " Layers over " +
+	   maxTrials + " Trials, " + numberOfObjects + " Objects, and \\tau_m = " +
+	   timeConstantM);
+p.setXLabel("Segregation \\Phi");
+p.setYLabel("Quality");
+
+h = grapher.display(p, null);
+
+print("Elapsed experiment time: " + (System.currentTimeMillis() - startTime) + " msec");

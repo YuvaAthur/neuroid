@@ -1,3 +1,6 @@
+import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.utils.*;
+import neuroidnet.ntr.*;
 
 print(	"NeuroidNetShell by Cengiz Gunay running on BeanShell\n"); 
 
@@ -5,6 +8,7 @@ start() { super.source("start.bsh"); }
 stats() { super.source("stats.bsh"); }
 testCapacity() { super.source("testCapacity.bsh"); }
 testTolerance() { super.source("testTolerance.bsh"); }
+testSegregation() { super.source("testSegregation.bsh"); }
 post() { super.source("postExplore.bsh"); }
 watcheds() { super.source("watcheds.bsh"); }
 prof() { super.network = load("net.withprofile.data"); watcheds(); }
