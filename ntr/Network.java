@@ -4,12 +4,19 @@ import Remote.*;
 import java.util.*;
 import java.io.*;
 import java.text.*;
+import java.lang.*;
+
 //import java.rmi.*;
 import Utils.*;
 // * $Id$
 /**
  * <p>Container for all <code>Area</code>s that hold <code>Neuroid</code>s.
- * Classes extending this one should describe the network architecture and topology. 
+ * Classes extending this one should describe the network architecture and topology.
+ *
+ * <p>Various utility functions to be used from the BeanShell environment are
+ * defined here. Implements <code>Serializable</code> so that instances of this class
+ * (representing the run-time object of the network) can be stored and retrieved as
+ * snapshots.
  *
  * @see Area
  * @see Neuroid
@@ -17,7 +24,7 @@ import Utils.*;
  * @version $Revision$
  * @since 1.0
  */
-abstract public class Network {
+abstract public class Network implements DebuggerInterface, Serializable {
     /**
      * All <code>Area</code>s contained in <code>Network</code>.
      * @see Area
@@ -45,7 +52,7 @@ abstract public class Network {
     /**
      * For formatting real values
      */
-    public static NumberFormat numberFormat = NumberFormat.getInstance();
+    public static NumberFormat numberFormat;
 
 
     /**
@@ -85,7 +92,107 @@ abstract public class Network {
     public void addArea(Area area) {
 	areas.add(area);
     }
+
+    /** class that searches for an area with matching name */
+    public class TaskWPR implements TaskWithReturn {
+	Area area = null;
+	String name;
+	    
+	/**
+	 * Creates a new <code>TaskWPR</code> instance.
+	 *
+	 * @param name Area name to be matched.
+	 */
+	public TaskWPR(String name) { this.name = name; }
+
+	public void job(Object o)  {
+	    Area a = (Area) o;
+	    if (a.getName().equals(name)) 
+		area = a;
+	}
+
+	public Object getValue() { return area; }
+    }
+
+    Vector watchList;
     
+    /**
+     * Get the value of watchList.
+     * @return value of watchList.
+     */
+    public Vector getWatchList() {
+	return watchList;
+    }
+    
+    /**
+     * Set the value of watchList.
+     * @param v  Value to assign to watchList.
+     */
+    public void setWatchList(Vector  v) {
+	this.watchList = v;
+    }
+
+    /**
+     * Returns the <code>Area</code> object given the name. 
+     * Access method for observing network state.
+     *
+     * @param name a <code>String</code> value
+     * @return an <code>Area</code> value
+     */
+    public Area getArea(String name) throws NameNotFoundException {
+
+	TaskWPR nameCompareTask = new TaskWPR(name);
+	Iteration.loop(areas, nameCompareTask);
+
+	Area retval = (Area) nameCompareTask.getValue();
+
+	if (retval == null) 
+	    throw new NameNotFoundException("Error: Cannot find Area with name '" + name + "'");
+
+	return retval;
+    }
+
+
+    /**
+     * Returns the <code>Neuroid</code> object, given the area and id. 
+     * Access method for observing network state.
+     *
+     * @param area <code>Area</code> in which the neuroid resides.
+     * @param neuroidId The id of neuroid in given area.
+     * @return a <code>Neuroid</code> value
+     * @see Neuroid#id
+     * @see Area
+     * @see #getNeuroid(String,int)
+     */
+    public Neuroid getNeuroid(Area area, int neuroidId) {
+	return (Neuroid) area.neuroids.elementAt(neuroidId);
+    }
+
+    /**
+     * Returns the <code>Neuroid</code> object, given the area and id. 
+     * Access method for observing network state.
+     *
+     * @param areaName Name of the <code>Area</code> in which the neuroid resides.
+     * @param neuroidId The id of neuroid in given area.
+     * @return a <code>Neuroid</code> value
+     * @see Neuroid#id
+     * @see Area
+     * @see #getNeuroid(Area,int)
+     */
+    public Neuroid getNeuroid(String areaName, int neuroidId) throws NameNotFoundException {
+	return getNeuroid(getArea(areaName), neuroidId);
+    }
+
+    /**
+     * Sets the watch flag of the neuroid and includes in the list of watched entities.
+     *
+     * @param neuroid a <code>Neuroid</code> value
+     */
+    public void setWatch(Neuroid neuroid) {
+	neuroid.setWatch(true);
+	watchList.add(neuroid);
+    }
+
     /**
      * Updates the state of the <code>Network</code>.
      * Updates all <code>Area</code>s contained within. 
@@ -101,31 +208,33 @@ abstract public class Network {
     }
 
     void pStep() {
-	pT.reset();
-	try {
-	    while (pT.waitcount < areas.size()) {
-		//System.out.println("Waiting for others to wait!");
-		pT.wait(10);
+	synchronized (pT) {
+	    pT.reset();
+	    try {
+		while (pT.waitcount < areas.size()) {
+		    //System.out.println("Waiting for others to wait!");
+		    pT.wait(10);
+		}
+	    } catch (InterruptedException e) {
+		System.out.println("interrupted!!!" + e);
+		e.printStackTrace();
 	    }
-	} catch (InterruptedException e) {
-	    System.out.println("interrupted!!!" + e);
-	    e.printStackTrace();
-	}
 
-	pT.notifyAll();
-	//System.out.println("notified all!");
+	    pT.notifyAll();
+	    //System.out.println("notified all!");
 
-	try {
-	    //System.out.println("Waiting for others to finish!");
-	    //pT.wait();		// Give up lock, become first one in queue!
-
-	    while (pT.runcount > 0) {
+	    try {
 		//System.out.println("Waiting for others to finish!");
-		pT.wait(10);
+		//pT.wait();		// Give up lock, become first one in queue!
+
+		while (pT.runcount > 0) {
+		    //System.out.println("Waiting for others to finish!");
+		    pT.wait(10);
+		}
+	    } catch (InterruptedException e) {
+		System.out.println("interrupted!!!" + e);
+		e.printStackTrace();
 	    }
-	} catch (InterruptedException e) {
-	    System.out.println("interrupted!!!" + e);
-	    e.printStackTrace();
 	}
     }
 
@@ -138,8 +247,10 @@ abstract public class Network {
     /**
      * Runs the simulation on the network.
      * Should be defined in subclasses.
+     * @see #advanceTime
+     * @deprecated See advanceTime
      */
-    protected abstract void simulation();
+    protected/* abstract*/ void simulation() /*;*/ {}
 
 
     /**
@@ -172,10 +283,21 @@ abstract public class Network {
 
 	return retval;
     }
-    
+
+    public void advanceTime(double msecs) {
+	double untilTime = 30.0;
+	//long startTime = System.currentTimeMillis();
+	int steps = (int) (msecs / deltaT);
+	for (int i = 0; i < steps; i++) {
+	    //System.out.println("STEP " + i);
+
+	    peripheral.step();		// step deltaT and initiates peripheral actions
+	}
+	//System.out.println("Elapsed time: " + (System.currentTimeMillis() - startTime) + " milliseconds.");
+    }
 
     /**
-     * Sets deltaT and then calls <code>build()</code> and <code>simulation()</code>
+     * Sets deltaT and then 
      * @see Network#build
      * @see Network#simulation
      * @param deltaT a <code>double</code> value
@@ -184,12 +306,12 @@ abstract public class Network {
 	this.deltaT = deltaT;
 	this.isConcurrent = isConcurrent;
 
-	// Number formatting for text output
-	numberFormat.setMaximumFractionDigits(3);
+	setNumberFormatting();
 
 	conceptArea = new ConceptArea(this);
 	areas.add(conceptArea);
 
+	// the Task object that will run Area.step() for all areas contained
 	stepTask = new Task() {
 		public void job(Object o) {
 		    if (o instanceof Area)
@@ -205,6 +327,42 @@ abstract public class Network {
 		}
 	    };
 
+	// The following are removed for the debug shell version, should be called explicitly 
+	// from any extending class.
+
+	/* run();
+	   finale();*/
+    }
+
+    /**
+     * Number formatting for text numberFormat
+     * @see #numberFormat
+     * @see #Network
+     * @see #readObject
+     */
+    void setNumberFormatting() {
+
+	numberFormat = NumberFormat.getInstance(); // Get NumberFormat instance
+	try {
+	    // Change the infinity symbol from '?' 
+	    DecimalFormatSymbols symbols = ((DecimalFormat)numberFormat).getDecimalFormatSymbols();
+	    symbols.setInfinity("Inf");
+	    ((DecimalFormat)numberFormat).setDecimalFormatSymbols(symbols);
+	} catch (Throwable e) {
+	    System.out.println("Warning: " + e + "\n"
+			       + "Unable to format numbers in current locale...");
+	} finally {
+	    numberFormat.setMaximumFractionDigits(3);
+	} // end of try-catch
+    }
+
+    /**
+     * Build the network (USED TO: and run the simulation.)
+     * Calls <code>build()</code>
+     * @see #build
+     * @see #simulation
+     */
+    public void run () {
 	if (isConcurrent) {
 	    pT = new ParallelTask(areas) {
 		    public void init() {
@@ -215,17 +373,25 @@ abstract public class Network {
 		    }
 		};
 
-	    build();
+	    build();		// creates areas and connections
 	    pT.init();		// create & start threads
-	    synchronized (pT) {
-		simulation();
-	    }
+	    //simulation();
+	    
 	} else {		// Sequential version, single thread
 	    build();
-	    simulation();	    
+	    //simulation();	    
 	} // end of if-else (isConcurrent)
+    }
 
-	System.out.println("Network status: \n" + this);
+    /**
+     * To be called after everthing else is done. Prints out the network status on standard output
+     * and calls conceptArea.dumpData() to create a MatLab script for viewing spike activity.
+     * TODO: should call getStatus instead of toString.
+     * @see Network#toString
+     * @see conceptArea#dumpData
+     */
+    public void finale () {
+	System.out.println("Network status: \n" + this /*.getStatus()*/);
 
 	// Create Matlab script about concept spike activity
 	String scriptname = "spikes.m";
@@ -239,4 +405,20 @@ abstract public class Network {
 
 	System.exit(0);
     }
+
+    /**
+     * Method called when a serialized object is loaded.
+     * Only customization done is to set the <code>static numberFormat</code>
+     * object via a call to <code>setNumberFormatting()</code>.
+     *
+     * @param in a <code>java.io.ObjectInputStream</code> value
+     * @exception IOException if an error occurs
+     * @exception ClassNotFoundException if an error occurs
+     */
+    private void readObject(java.io.ObjectInputStream in)
+	throws IOException, ClassNotFoundException {
+	setNumberFormatting();	// We need to set the static variable numberFormat
+	in.defaultReadObject();	// Real method that does reading
+    }
+
 }
