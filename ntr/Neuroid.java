@@ -6,6 +6,7 @@ import java.util.*;
 //import java.rmi.*;
 import Utils.*;
 
+// $Id$
 /**
  * First attempt to implement the central neuroidal entity with
  * programmability capability, also including simple soma functionality of
@@ -16,10 +17,10 @@ import Utils.*;
  * @see Area
  *
  * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
- * @version 1.0
+ * @version $Revision$ for this file
  * @since 1.0
  */
-public class Neuroid {
+public class Neuroid implements Input {
     /**
      * Membrane potential.
      */
@@ -28,7 +29,7 @@ public class Neuroid {
     /**
      * List of incoming synapses.
      */
-    Vector synapses;
+    Vector synapses = new Vector();
 
     /**
      * Last firing time of this Neuroid.
@@ -57,10 +58,16 @@ public class Neuroid {
     Area area;
 
     /**
+     * Associated concept if neuroid has memorized anything.
+     * @see Concept
+     */
+    Concept concept = null;
+
+    /**
      * OBSOLETE? Good for representation.
      */
-    public int id; // TODO: Override Object.hashCode() and don't pass around this id?!
-    
+/*    public int id; // TODO: Override Object.hashCode() and don't pass around this id?!
+  */  
     /**
      * Represents the state and dynamic parameters of the neuroid.
      */
@@ -76,6 +83,15 @@ public class Neuroid {
      */
     double sumOfCurrentWeights;
 
+
+    /**
+     * Dummy constructor.
+     *
+     */
+    public Neuroid(Area area) {
+	this.area = area;
+    }
+
     /**
      * Sets initial parameters. Calculates <code>sumOfWeights</code> from
      * period length given by the <code>Area</code>.
@@ -85,12 +101,9 @@ public class Neuroid {
      * @param id an <code>int</code> value
      * @param refractoryTimeConstant
      */
-    public Neuroid(Area area, int id, double initialThreshold, double refractoryTimeConstant) {
+    public Neuroid(Area area, double initialThreshold, double refractoryTimeConstant) {
 	this.area = area;
-	this.id = id;
 	this.refractoryTimeConstant = refractoryTimeConstant;
-
-	synapses = new Vector();
 
 	// TODO: get threshold out of mode because it's no longer modifyable by algorithms, or else put everything in Mode.
 	mode = new Mode(Mode.AM, initialThreshold); // Available memory state w/ threshold 
@@ -133,25 +146,25 @@ public class Neuroid {
     
     /**
      * Method of java.lang.Object that return codes for hash table entries.
-     *
+     * OBSOLETE: why do we need this?
      * @return an <code>int</code> value
      */
-    public int hashCode() {
+/*    public int hashCode() {
 	return id;
     }
-
+*/
     /**
      * Method of java.lang.Object that is used in many utils.
-     *
+     * OSOLETE: why do we need this?
      * @param obj Another Neuroid.
      * @see Neuroid
      * @return True if two Neuroids have the same <code>id</code>.
      * @see Neuroid#id
      */
-    public boolean equals(Object obj) {
+/*    public boolean equals(Object obj) {
 	return id == ((Neuroid) obj).id;
     }
-
+*/
     /**
      * Refractory kernel taken from Maass and Bishop 1999, Eq. 1.47 on p.31.
      * Keeps equivalence to integrate and fire model.
@@ -189,7 +202,7 @@ public class Neuroid {
      * Fires the neuroid. Neuroid contact container Area to propagate the spike along its axon.
      * @see Area#fireNeuroid
      */
-    void fire() {
+    public void fire() {
 	System.out.println("Fire " + this);
 	timeLastFired = area.time;
 	area.fireNeuroid(this);
@@ -241,6 +254,7 @@ public class Neuroid {
 		} else { // i.e. if (mode.fitnessCounter >= correctTimesRequired - 1)
 		    mode.setState(Mode.UM); // Memorized!
 		    mode.threshold = mode.suggestedThreshold; // Set threshold
+		    makeConcept();
 		    System.out.println("Into UM mode!; " + this);
 		} // end of else of if (mode.fitnessCounter < correctTimesRequired - 1)
 		
@@ -263,6 +277,50 @@ public class Neuroid {
     }
 
     /**
+     * Iterator task class which scans synapses of the neuroid.
+     * 
+     * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
+     * @version 1.0
+     * @since 1.0
+     * @see Utils.Task
+     */
+    abstract class SynapseActivityTask implements Utils.TaskWithReturn {
+	SynapseActivityTask() {
+	    Iteration.loop(synapses.iterator(), this);	    
+	}
+	/**
+	 * Calls <code>potentiatedSynapse</code> and <code>silentSynapse</code>
+	 * deciding by scanning <code>Synapse</code>s.
+	 *
+	 * @param o an <code>Object</code> value
+	 * @see Synapse
+	 * @see potentiatedSynapse
+	 * @see silentSynapse
+	 */
+	public void job(Object o) {
+	    Synapse s = (Synapse) o;
+	    if (s.isPotentiated())
+		potentiatedSynapse(s);
+	    else 
+		silentSynapse(s);
+	} 
+
+	/**
+	 * Called for each potentiated synapse.
+	 *
+	 * @param s a <code>Synapse</code> value
+	 */
+	abstract void potentiatedSynapse(Synapse s);
+
+	/**
+	 * Called for each non-potentiated synapse.
+	 *
+	 * @param s a <code>Synapse</code> value
+	 */
+	abstract void silentSynapse(Synapse s);
+    }
+
+    /**
      * Updates presynaptic weights according to Winnow learning rule.
      * Normalizes weights to <code>sumOfWeights</code> to keep <code>period</code> fixed.
      * @see Neuroid#period
@@ -271,6 +329,25 @@ public class Neuroid {
     void updateWeights() {
 	sumOfCurrentWeights = 0;
 
+	// Loop over synapses and update weights according to Winnow learning rule
+	new SynapseActivityTask() {
+		public void job(Object o) {
+		    super.job(o);	// main job
+		    Synapse s = (Synapse) o;
+		    sumOfCurrentWeights += s.weight;
+		}
+		void potentiatedSynapse(Synapse s) {
+		    s.weight = s.weight * correctTimesRequired /
+			mode.fitnessCounter;
+		}
+		void silentSynapse(Synapse s) {
+		    s.weight = s.weight * mode.fitnessCounter /
+			correctTimesRequired;
+		}
+		public Object getValue() { return null; } // N/A
+	    };
+
+/*
 	// Loop over synapses and update according to Winnow learning rule
 	Iteration.loop(synapses.iterator(), new Utils.Task() { 
 		public void job(Object o) {
@@ -284,7 +361,7 @@ public class Neuroid {
 
 		    sumOfCurrentWeights += s.weight;
 		}});
-
+*/
 	if (sumOfCurrentWeights == 0) 
 	    return;
 /*	TODO: fix externalCurrent calculation first then enable the following:
@@ -293,6 +370,40 @@ public class Neuroid {
 		void job(Object o) {
 		    o.weight *= sumOfWeights/sumOfCurrentWeights;
 		}});*/
+    }
+
+    /**
+     * Create new concept.
+     * Trace back synapses that made this neuroid go to UM mode to find concept set.
+     * Then look for associated concept in conceptArea,
+     * otherwise create new Concept using this concept set.
+     * <p>TODO: destroy old <code>concept</code> if it exists.
+     * @see ConceptArea
+     * @see Concept
+     */
+    void makeConcept() {
+
+	// Loop over synapses and update according to Winnow learning rule
+	Vector conceptSet = (Vector) new SynapseActivityTask() {
+		Vector conceptSet = new Vector();
+		public void job(Object o) {
+		    super.job(o);	// main job
+		    Synapse s = (Synapse) o;
+		    sumOfCurrentWeights += s.weight;
+		}
+		void potentiatedSynapse(Synapse s) {
+		    conceptSet.add(s.srcNeuroid.concept);
+		}
+		void silentSynapse(Synapse s) { }
+		public Object getValue() { return conceptSet; }
+	    }.getValue();
+
+	try {
+	    concept = (Concept) area.network.conceptArea.get(conceptSet);
+	    concept.equals(concept); // redundant operation to raise exception
+	} catch (NullPointerException e) { 
+	    concept = new ArtificialConcept(area.network, conceptSet);
+	} 
     }
 
     /**
@@ -312,10 +423,10 @@ public class Neuroid {
      * @version 1.0
      * @since 1.0
      */
-    public class Address {
+/*    public class Address {
 	int areaId, neuroidId;
     }
-
+*/
     /**
      * Modes that a neuron can have.
      *
