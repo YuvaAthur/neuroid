@@ -41,7 +41,7 @@ public class Neuroid implements Input {
      * Learning parameter for the Winnow learning algorithm.
      * @see Neuroid#updateWeights
      */
-    double correctTimesRequired = 2;
+    double correctTimesRequired = 3;
 
     /**
      * 
@@ -83,11 +83,6 @@ public class Neuroid implements Input {
      * Internal.
      */
     double sumOfCurrentWeights;
-
-    /**
-     * For formatting real values
-     */
-    NumberFormat numberFormat = NumberFormat.getInstance();
 
     /**
      * Dummy constructor.
@@ -134,7 +129,6 @@ public class Neuroid implements Input {
      */
     final private void init() {
 	area.addNeuroid(this);
-	numberFormat.setMaximumFractionDigits(3);
     }
 
     /**
@@ -272,7 +266,8 @@ public class Neuroid implements Input {
 		    mode.suggestedThreshold = potential;
 		} else { // i.e. if (mode.fitnessCounter >= correctTimesRequired - 1)
 		    mode.setState(Mode.UM); // Memorized!
-		    mode.threshold = mode.suggestedThreshold; // Set threshold
+		    // Set threshold lower than anticipated
+		    mode.threshold = 0.9 * mode.suggestedThreshold; 
 		    makeConcept();
 		    System.out.println("Into UM mode!; " + this);
 		} // end of else of if (mode.fitnessCounter < correctTimesRequired - 1)
@@ -285,7 +280,10 @@ public class Neuroid implements Input {
 	case Mode.UM:
 	    if (potential >= mode.getThreshold()) {
 		fire();
-	    }	    
+	    } /*else if (potential >= 0.5) {
+		System.out.println("Not enough activity in: " + this);
+	    } // end of else
+	    */
 	    break;
 	    
 	default:
@@ -456,7 +454,7 @@ public class Neuroid implements Input {
      */
     public String toString() {
 	return "Neuroid #" + hashCode() + " in " + area + ", u = " +
-	    numberFormat.format(potential) + ", " + mode +
+	    Network.numberFormat.format(potential) + ", " + mode +
 	    (concept != null ? ", " + concept : "");
     }
 
@@ -535,7 +533,8 @@ public class Neuroid implements Input {
 	double sumOfWeights; 
 	
 	public String toString() {
-	    return "state = " + state + ", T = " + threshold + ", sumOW = " + sumOfCurrentWeights;
+	    return "state = " + state + ", T = " + Network.numberFormat.format(threshold) +
+		", sumOW = " + Network.numberFormat.format(sumOfCurrentWeights);
 	}
     }
 }
