@@ -74,7 +74,7 @@ void datasPlot(java.util.List datas, String idString, String xLabel, String yLab
     nsh.plot.p.setFontSize(12);
 
     nsh.plot.h = nsh.grapher.display(nsh.plot.p, null);
-    nsh.plot.h.writeEPS("plot-" + idString + ".eps");
+    nsh.plot.h.writeEPSbw("plot-" + idString + ".eps");
 }
 
 
