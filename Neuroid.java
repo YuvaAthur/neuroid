@@ -187,7 +187,7 @@ public class Neuroid {
      * @see Area#fireNeuroid
      */
     void fire() {
-	//System.out.println("Fire " + this);
+	System.out.println("Fire " + this);
 	timeLastFired = area.time;
 	area.fireNeuroid(this);
     }
