@@ -53,11 +53,8 @@ public class PhaseSegregatorPeripheral extends Peripheral {
 		    if (level == 1) {
 			((Concept) o).fire();
 			System.out.println("Firing random concept...");
-			
-		    } else 
-			return;
-		}
-	    });
+		    } else return;
+		}});
     }
 
 }// MultiConceptPeripheral

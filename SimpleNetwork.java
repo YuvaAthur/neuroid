@@ -22,8 +22,8 @@ public class SimpleNetwork extends Network {
     public void build() {
 	//TO DO: Implement this method.
 	int
-	    numberOfNeuroids = 500,
-	    replication = 5;
+	    numberOfNeuroids = 100,
+	    replication = 15;
 
 	double period = Neuroid.defaultPeriod();
 

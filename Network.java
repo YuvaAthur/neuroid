@@ -116,8 +116,8 @@ abstract public class Network {
 
     /**
      * Sets deltaT and then calls <code>build()</code> and <code>simulation()</code>
-     * @see Network.build
-     * @see Network.simulation
+     * @see Network#build
+     * @see Network#simulation
      * @param deltaT a <code>double</code> value
      */
     public Network(double deltaT, boolean isConcurrent) {
