@@ -38,6 +38,7 @@ public class Network extends neuroidnet.ntr.Network {
 	    timeConstantS = 7,
 	    timeConstantM = 21,	// 3*timeConstantS
 	    refractoryTimeConstant = 10,
+	    segregation = timeConstantS + 2*timeConstantM + delay,
 	    threshold,
 	    nuBoost = 6.0;	// nu parameter to increase probability of connection
 
@@ -81,7 +82,7 @@ public class Network extends neuroidnet.ntr.Network {
 	} // end of for
 
 	peripheral =
-	    new Peripheral(this, inputAreas, numberOfItemsPerArea);
+	    new Peripheral(this, inputAreas, numberOfItemsPerArea, segregation);
     }
 
     /**
