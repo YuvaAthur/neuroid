@@ -55,6 +55,8 @@ public class Peripheral extends Base.Peripheral {
 	// Fire one input in sensory area 1
 	((Neuroid)sensoryAreas[0].neuroids.elementAt(0)).fire(); 
 	((Neuroid)sensoryAreas[0].neuroids.elementAt(1)).fire(); 
+	((Neuroid)sensoryAreas[1].neuroids.elementAt(0)).fire(); 
+	((Neuroid)sensoryAreas[2].neuroids.elementAt(0)).fire(); 
     }
 
 }
