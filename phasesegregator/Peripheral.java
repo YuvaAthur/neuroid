@@ -7,8 +7,8 @@ import java.util.*;
 import Utils.*;
 
 /**
- * 3 <code>SensoryArea</code>s and 3 medial <code>Area</code>s.
- * Inputs are <code>SensoryNeuroid</code>s.
+ * Creates inputs in one <code>SensoryArea</code> that projects to
+ * neuroids in 3 input <code>Area</code>s. Inputs are represented by <code>SensoryNeuroid</code>s.
  * @see SensoryArea
  * @see SensoryNeuroid
  *
@@ -22,8 +22,8 @@ import Utils.*;
 public class Peripheral extends Base.Peripheral {
     Base.Area[] inputAreas;
     int numberOfItemsPerArea;
-    SensoryArea[] sensoryAreas;
-
+    SensoryArea sensoryArea;
+    
     public Peripheral (Base.Network network, Base.Area[] inputAreas,
 		       int numberOfItemsPerArea) {
 	super(network);
@@ -34,16 +34,26 @@ public class Peripheral extends Base.Peripheral {
     }
 
     /**
+     * Calls <code>testOneInput()</code> at time 0.
+     * @see #testOneInput
+     */
+    protected void eventsAtThisTime() {
+	// Fire both inputs initially
+	if (time == 0.00)
+	    testOneInput();
+    }
+
+    /**
      * Creates sensoryAreas that hold sensoryNeuroids.
      * Neuroids can be indirectly reached from the areas.
      */
     void createSensoryInputs() {
-	sensoryAreas = new SensoryArea[inputAreas.length];
+	//sensoryAreas = new SensoryArea[inputAreas.length];
+	sensoryArea/*s[areaNo]*/ = new SensoryArea(network, "sensory-area"/* + (areaNo + 1)*/);
 	for (int areaNo = 0; areaNo < inputAreas.length; areaNo++) {
-	    sensoryAreas[areaNo] = new SensoryArea(network, "sensory-area-" + (areaNo + 1));
 	    String name = "S" + (areaNo + 1);
 	    for (int concept = 0; concept < numberOfItemsPerArea; concept++) 
-		new SensoryNeuroid(sensoryAreas[areaNo], inputAreas[areaNo],
+		new SensoryNeuroid(sensoryArea/*s[areaNo]*/, inputAreas[areaNo],
 				   name + "-" + concept);
 	}
     }
@@ -53,10 +63,10 @@ public class Peripheral extends Base.Peripheral {
 
     public void testOneInput() {
 	// Fire one input in sensory area 1
-	((Neuroid)sensoryAreas[0].neuroids.elementAt(0)).fire(); 
-	((Neuroid)sensoryAreas[0].neuroids.elementAt(1)).fire(); 
-	((Neuroid)sensoryAreas[1].neuroids.elementAt(0)).fire(); 
-	((Neuroid)sensoryAreas[2].neuroids.elementAt(0)).fire(); 
+	((Neuroid)sensoryArea/*s[0]*/.neuroids.elementAt(0)).fire(); 
+	((Neuroid)sensoryArea/*s[0]*/.neuroids.elementAt(1)).fire(); 
+	((Neuroid)sensoryArea/*s[1]*/.neuroids.elementAt(0 + numberOfItemsPerArea)).fire(); 
+	((Neuroid)sensoryArea/*s[2]*/.neuroids.elementAt(0 + numberOfItemsPerArea*2)).fire(); 
     }
 
 }
