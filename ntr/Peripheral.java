@@ -16,11 +16,11 @@ import Utils.*;
  * Created: Mon Nov 20 02:08:10 2000
  *
  * @author Cengiz Gunay
- * @version $Revision$$
+ * @version $Revision$
  */
 
 public class Peripheral  {
-    Network network;
+    protected Network network;
 
     /**
      * Creates a new <code>Peripheral</code> instance.
@@ -55,7 +55,7 @@ public class Peripheral  {
 
 	public Concept(Remote.AreaInt area) {
 	    try {
-		synapses = area.createArbitrarySynapses(area.getReplication());
+		synapses = area.createArbitrarySynapses(null, area.getReplication());
 	    } catch (java.rmi.RemoteException e) {
 		e.printStackTrace();
 		throw new RuntimeException("Cannot access area.createArbitrarySynapses");
@@ -64,7 +64,7 @@ public class Peripheral  {
 	}
 
 	public Concept(Base.Area area) {
-	    synapses = area.createArbitrarySynapses(area.getReplication());
+	    synapses = area.createArbitrarySynapses(null, area.getReplication());
 	}
 
 	public void fire() {
