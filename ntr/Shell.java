@@ -53,8 +53,10 @@ public class Shell {
 	try {
 	    bsh.eval("source(\"" + rcFile + "\");"); 
 	} catch (bsh.EvalError e) {
-	    System.out.println("Warning: Cannot set the NeuroidNet environment for BeanShell.\n" +
-			       "File not found: " + rcFile);
+	    System.out.println("Warning: Cannot set the NeuroidNet environment for BeanShell " +
+			       " because : " + e + "\n" + 
+			       "Maybe file not found: " + rcFile + "\n");
+	    e.printStackTrace();
 	}
     }
 
