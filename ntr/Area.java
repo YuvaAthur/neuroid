@@ -14,7 +14,7 @@ import Utils.*;
  * @since 1.0
  */
 
-public class Area implements Runnable {
+public class Area implements Runnable, Remote.AreaInt {
 
     /**
      * Name of the <code>Area</code> for identification purposes.
@@ -37,7 +37,7 @@ public class Area implements Runnable {
      * Proxy for <code>deltaT</code> in <code>network</code>.
      * @see Network#deltaT
      */
-    double deltaT;
+    public double deltaT;
 
     /**
      * Id tag of the area.
@@ -263,7 +263,7 @@ public class Area implements Runnable {
 
 	    // Add an initial excitory synapse to inhibitoryInterNeuroid from neuroid
 	    Vector oneSynapse = new Vector();
-	    oneSynapse.add(new Synapse(neuroid,inhibitoryInterNeuroid, 1, deltaT, false)); 
+	    oneSynapse.add(new Synapse(neuroid,inhibitoryInterNeuroid, 1, deltaT, false, 0)); // no delay
 	    axons.put(neuroid, oneSynapse);
 
 	    axons.put(inhibitoryInterNeuroid, inhibitorySynapseVector);
@@ -278,21 +278,16 @@ public class Area implements Runnable {
      * @see Neuroid
      * @param destArea the <code>Area</code> to which this one is connected.
      */
-    public void connectToArea(Object destArea, double timeConstantS, double delay) {
+    public void connectToArea(Remote.AreaInt destArea, double timeConstantS, double delay) {
 	// TODO: don't connect inhibitoryInterNeuroid!
 	int destReplication, destNumberOfNeuroids;
 
-	if (destArea instanceof Area) {
-	    destReplication = ((Area)destArea).getReplication();
-	    destNumberOfNeuroids = ((Area)destArea).getNumberOfNeuroids();
-	} else {	
-	    try {
-		destReplication = ((Remote.AreaInt)destArea).getReplication();
-		destNumberOfNeuroids = ((Remote.AreaInt)destArea).getNumberOfNeuroids(); 
-	    } catch (java.rmi.RemoteException e) {
-		throw new Error("Cannot call Remote.Area methods.");
-	    }
-	} // end of else	
+	try {
+	    destReplication = ((Remote.AreaInt)destArea).getReplication();
+	    destNumberOfNeuroids = ((Remote.AreaInt)destArea).getNumberOfNeuroids(); 
+	} catch (java.rmi.RemoteException e) {
+	    throw new Error("Cannot call Remote.Area methods.");
+	}
 	
 	// Valiant's connection probability for random multipartite graphs 
 	double connProb = Math.sqrt((double)destReplication /
@@ -308,29 +303,20 @@ public class Area implements Runnable {
 	Object[] p = { destArea,
 		       new Integer(numberOfConnections),
 		       // SRM parameters: timeConstantM = 1, timeConstantS = deltaT, excitatory 
-		       new Synapse(null, null, destArea.timeConstantM, timeConstantS,
+		       new Synapse(null, null, timeConstantM, timeConstantS,
 				   false, delay)};
 	Iteration.loop(neuroids.iterator(), new Utils.TaskWithParam() { 
 		public void job(Object o, Object[] p) {
 		    Neuroid srcNeuroid = (Neuroid) o;
-		    Object _destArea = p[0];
+		    Remote.AreaInt _destArea = (Remote.AreaInt) p[0];
 		    int _numberOfConnections = ((Integer) p[1]).intValue();
 		    Synapse _synapseTemplate = (Synapse) p[2];
 
-		    AxonArbor axon =
-			new AxonArbor(_synapseTemplate, srcNeuroid, _destArea, numberOfSynapses);
-
 		    try {
-	    
-			Vector synapses = 
-			    (_destArea instanceof Area) ?
-			    ((Area)_destArea).createRandomSynapses(srcNeuroid,
-								   _numberOfConnections,
-								   _synapseTemplate):
-			    ((Remote.AreaInt)_destArea).createRandomSynapses(srcNeuroid,
-									     _numberOfConnections,
-									     _synapseTemplate); 
-			addAxon(srcNeuroid, synapses);
+			AxonArbor axon =
+			    _destArea.createRandomSynapses(_synapseTemplate, srcNeuroid,
+							   _numberOfConnections); 
+			addAxon(srcNeuroid, axon);
 		    } catch (java.rmi.RemoteException e) {
 			throw new Error("Cannot call Remote.Area methods.");
 		    }
@@ -359,6 +345,44 @@ public class Area implements Runnable {
     }
 
     /**
+     * Creates new <code>numberOfSynapses</code> <code>Synapse</code>s for a given 
+     * <code>srcNeuroid</code> to a specified destination <code>destArea</code>.
+     * AxonArbor makes sure to return a set of synapses to distinct neurons (no repetitions!)
+     * <p>TODO: maybe put this method back into <code>Area</code>?
+     * <code>createRandomSynapse</code> should automatically add the synapse?
+     * @param numberOfSynapses an <code>int</code> value
+     * @return a <code>Vector</code> value
+     */
+    public AxonArbor createRandomSynapses(Synapse destSynapseTemplate, Neuroid srcNeuroid,
+					  int numberOfSynapses) {
+	AxonArbor axon =
+	    new AxonArbor(destSynapseTemplate, srcNeuroid, this,
+			  numberOfSynapses);
+
+	for (int index = 0; index < numberOfSynapses; index++) {
+	    int retries = 10, // Retries for coincides with previously allocated synapses
+		retry = retries; 
+
+	    while (retry-- > 0) {
+		try {
+		    axon.addSynapse(axon.createRandomSynapse());
+		    break;	// Success
+		} catch (ResynapseException e) {
+		    // nothing
+		    System.out.println("CLASH! Searching for a new neuron to synapse!");
+		}
+		 
+	    } // end of while (retry-- > 0)
+	    if (retry <= 0) 
+		throw new Error("ERROR: Could not find neuron to synapse in " + retries +
+				"tries."); 
+	    
+	} // end of for (int index = 0; index < numberOfSynapses; index++)
+
+	return axon;
+    }
+
+    /**
      * Hack to arbitrarily choose different neurons for each allocation of concepts.
      * A variable <code>conceptCount</code> is used to interleave the allocated neurons. 
      * Return a <code>Vector</code> of new <code>numberOfSynapses</code> <code>Synapse</code>s.
@@ -368,15 +392,18 @@ public class Area implements Runnable {
      * @param numberOfSynapses an <code>int</code> value
      * @return a <code>Vector</code> value
      */
-    public Vector createArbitrarySynapses(Neuroid srcNeuroid, int numberOfSynapses) {
-	Vector axon = new Vector(numberOfSynapses);
+    public AxonArbor createArbitrarySynapses(Synapse destSynapseTemplate, Neuroid srcNeuroid,
+					     int numberOfSynapses) {
+	AxonArbor axon =
+	    new AxonArbor(destSynapseTemplate, srcNeuroid, this,
+			  numberOfSynapses);
 
 	// Calculate possible number of concepts that'll fit into this area.
 	int maxConcepts = numberOfNeuroids / numberOfSynapses;
 
 	for (int index = 0; index < numberOfSynapses; index++) {
-	    axon.add(createSynapse(srcNeuroid, (Neuroid) neuroids.elementAt(conceptCount +
-									     index*maxConcepts)));
+	    axon.add(axon.createSynapse((Neuroid) neuroids.elementAt(conceptCount +
+								     index*maxConcepts)));
 	} // end of for (int index = 0; index < numberOfSynapses; index++)
 	conceptCount++;		// Increment counter for interleaving next concept
 	return axon;
