@@ -10,15 +10,20 @@ import edu.ull.cgunay.utils.*;
 
 /**
  * Creates inputs in one <code>SensoryArea</code> that projects to
- * neuroids in 3 input <code>Area</code>s. Inputs are represented by <code>SensoryNeuroid</code>s.
- * @see SensoryArea
- * @see SensoryNeuroid
+ * neuroids in 3 input <code>Area</code>s. Inputs are represented by
+ * <code>SensoryNeuroid</code>s.
+ * 
+ * <p>Introduces event hooks to enable inputs to be presented at
+ * predefined times.
  *
  * Created: Mon Dec 11 02:52:07 2000
  * Modified: $Date$
  *
  * @author Cengiz Gunay
  * @version $Revision$ for this file
+ * @see SensoryArea
+ * @see SensoryNeuroid
+ * @see #events
  */
 
 public class Peripheral extends neuroidnet.ntr.Peripheral {
@@ -26,7 +31,13 @@ public class Peripheral extends neuroidnet.ntr.Peripheral {
   int numberOfItemsPerArea;
   SensoryArea sensoryArea;
   double segregation;
-  Map events = new TreeMap();
+
+    /**
+     * Peripheral input events map.
+     *
+     */
+    Map events = new TreeMap();
+
   transient Iterator eventIterator;
   Double nextTime;
     
@@ -40,7 +51,8 @@ public class Peripheral extends neuroidnet.ntr.Peripheral {
 
     createSensoryInputs();
 
-    initEvents();
+    // Removed because of StaticticalInputSequence
+    //initEvents();
   }
 
   /**
@@ -94,6 +106,8 @@ public class Peripheral extends neuroidnet.ntr.Peripheral {
     */
   }
 
+    protected Hashtable percepts = new Hashtable();
+
   /**
    * Creates sensoryAreas that hold sensoryNeuroids.
    * Neuroids can be indirectly reached from the areas.
@@ -103,9 +117,14 @@ public class Peripheral extends neuroidnet.ntr.Peripheral {
     sensoryArea = new SensoryArea(network, "sensory-area"/* + (areaNo + 1)*/);
     for (int areaNo = 0; areaNo < inputAreas.length; areaNo++) {
       String name = "S_" + (areaNo + 1);
-      for (int concept = 0; concept < numberOfItemsPerArea; concept++) 
-	new SensoryNeuroid(sensoryArea, inputAreas[areaNo],
-			   name + "^" + concept);
+      Input[] areaPercepts = new Input[numberOfItemsPerArea];
+      for (int concept = 0; concept < numberOfItemsPerArea; concept++) {
+	  // TODO: remove redundant variable "neuroid"
+	  Neuroid neuroid = new SensoryNeuroid(sensoryArea, inputAreas[areaNo],
+					       name + "^" + concept);
+	  areaPercepts[concept] = neuroid;
+      }
+      percepts.put(inputAreas[areaNo], areaPercepts);
     }
   }
 
@@ -117,6 +136,14 @@ public class Peripheral extends neuroidnet.ntr.Peripheral {
     ((Neuroid)sensoryArea.neuroids.elementAt(0)).fire(); 
   }
 
+    /**
+     * Fires the sensory neuroid attached to the given input area.
+     *
+     * @param inputArea an <code>int</code> value
+     * @param offset an <code>int</code> value
+     * @deprecated See methods in StatisticalInputSequence.java
+     * @see StatisticalInputSequence
+     */
     void fireObjectInArea(int inputArea, int offset) {
 	((Neuroid)sensoryArea.neuroids.elementAt(offset + numberOfItemsPerArea*(inputArea - 1))).fire(); 
     }
