@@ -30,7 +30,8 @@ public class ConceptArea extends Area
      */
     public ConceptArea (Network network) {
 	// threshold 0.9? get it from somewhere? SRM params defined here!!!
-	super(network, "ConceptArea", 0, 1, 0, 0.9, false, 0.001); 
+	// timeConstantM, refractoryTimeConstant << 1
+	super(network, "ConceptArea", 0, 1, 0, 0.9, false, 0.001, 0.001); 
     }
     /*
       int getNewId() {
