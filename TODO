@@ -1,5 +1,7 @@
+- Enable seleciton of dynamic behavior of groups of neurons.
+- use AxonArbor for dist communication improvement.
+- migrate functions into AxonArbor.
 ? do something about too many updates to the algorithm
-- parallelize (RMI)
 - solve problem with constant current
 - enable selection of inhibitory connections and other parameters
 - set global inhibitory connections
@@ -9,3 +11,4 @@
 + determine constants and run test
 + Complete period calculation in Neuroid.updateWeights()
 + add refractory period and reset potential!
++ parallelize (RMI)
