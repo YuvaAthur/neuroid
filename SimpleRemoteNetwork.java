@@ -21,8 +21,8 @@ public class SimpleRemoteNetwork extends SimpleNetwork {
 	RemoteAreaInt inputArea1, inputArea2, circuitArea;
 	try {
 	    inputArea1 = (RemoteAreaInt) Naming.lookup("rmi://grad06.cacs/I1");
-	    inputArea2 = (RemoteAreaInt) Naming.lookup("rmi://swamp08.cacs/I2");
-	    circuitArea = (RemoteAreaInt) Naming.lookup("rmi://swamp04.cacs/C");
+	    inputArea2 = null; //(RemoteAreaInt) Naming.lookup("rmi://swamp08.cacs/I2");
+	    circuitArea = (RemoteAreaInt) Naming.lookup("rmi://swamp10.cacs/C");
 	} catch (RemoteException e) {
 	    System.out.println("Error: " + e);
 	    return;
@@ -35,19 +35,19 @@ public class SimpleRemoteNetwork extends SimpleNetwork {
 	}
 
 	areas.add(inputArea1);
-	areas.add(inputArea2);
+	//areas.add(inputArea2);
 	areas.add(circuitArea);
 
 	try {
 	    inputArea1.connectToArea(circuitArea);
-	    inputArea2.connectToArea(circuitArea);
+	    //inputArea2.connectToArea(circuitArea);
 	} catch (RemoteException e) {
 	    System.out.println("Remote connection to Area failed.");
 	}
 
 	peripheral =
-	    new SimplePeripheral(this, inputArea1, inputArea2, circuitArea);
-	
+	    //new SimplePeripheral(this, inputArea1, inputArea2, circuitArea);
+	    new MultiConceptPeripheral(this, inputArea1, circuitArea);	
     }
 
     public static void main (String[] args) {

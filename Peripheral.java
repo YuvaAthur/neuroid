@@ -63,7 +63,6 @@ public class Peripheral  {
 
 	Concept(Area area) {
 	    synapses = area.createRandomSynapses(area.getReplication());
-	    // TODO: teach the dest neuroids to memorize this input.
 	}
 
 	void fire() {

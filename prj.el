@@ -12,6 +12,7 @@
 
 
 
+
 (jde-set-project-name "default")
 (jde-set-variables 
  '(jde-gen-to-string-method-template (quote ("'&" "\"public String toString() {\" 'n>" "\"return super.toString();\" 'n>" "\"}\" 'n>")))
@@ -62,7 +63,7 @@
  '(jde-run-executable "")
  '(jde-gen-buffer-boilerplate nil)
  '(jde-compile-option-depend-switch (quote ("-Xdepend")))
- '(jde-compile-option-sourcepath (quote ("/home/swamp2/maida/cxg9789/cs555/javacode")))
+ '(jde-compile-option-sourcepath (quote ("/home/swamp2/maida/cxg9789/cs555/Neuroidal")))
  '(jde-run-mode-hook nil)
  '(jde-gen-println (quote ("'&" "\"System.out.println(\" (P \"Print out: \") \");\" 'n>")))
  '(jde-javadoc-exception-tag-template (quote ("* @exception " type " if an error occurs")))

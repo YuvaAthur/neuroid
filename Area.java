@@ -254,7 +254,7 @@ public class Area implements Runnable {
 
     /**
      * Return a <code>Vector</code> of new <code>numberOfSynapses</code> <code>Synapse</code>s.
-     *
+     * TODO: be sure to return a distinct set of synapses (no repetitions!)
      * @param numberOfSynapses an <code>int</code> value
      * @return a <code>Vector</code> value
      */

@@ -16,7 +16,7 @@ public class SimplePeripheral extends Peripheral {
 	super(network);
 	
 	a = new Concept(inputArea1);
-	b = new Concept(inputArea2);
+	b = new Concept(inputArea1);
     }
 
     public SimplePeripheral (Network network, RemoteAreaInt inputArea1, RemoteAreaInt inputArea2,
@@ -24,7 +24,7 @@ public class SimplePeripheral extends Peripheral {
 	super(network);
 	
 	a = new Concept(inputArea1);
-	b = new Concept(inputArea2);
+	b = new Concept(inputArea1);
     }
 
     public void fireInputs() {

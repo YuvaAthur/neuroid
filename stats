@@ -9,10 +9,10 @@
 900 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 28516
 
 500 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 14166, 13844, 22960, 13470, 12401
-500 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, (again) 47755, 46036, 
+500 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, (again) 47755, 46036, 46420(mT), 39666
 500 neuroids in 3 areas noRMI one computer 600 steps, dt=0.01, 2 sync inputs, then 1 input, 34920, 48153, 37894, 11634(?), 24601, 27646, 31191, 24485, 27286, 11611
 
-750 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 72138, 67792, 69025, 70161, 69473, 46420(mT), 39666
+750 neuroids in 3 areas RMI 3 computers 600 steps, dt=0.01, 2 sync inputs, then 1 input, 72138, 67792, 69025, 70161, 69473, 
 750 neuroids in 3 areas noRMI one computer 600 steps, dt=0.01, 2 sync inputs, then 1 input, 79323, 80027, 77219, 77350, 76501, 92729(mT), 75481(sT)
 
 1000 neuroids in 3 areas noRMI, w/ threads one computer 600 steps, dt=0.01, 2 sync inputs, then 1 input, 99323
@@ -24,3 +24,19 @@
 1000 neuroids in 3 areas RMI 3 computers 6000 steps, dt=0.001, 2 sync inputs, then 1 input, 476356
 
 TODO: Use only two areas and create a lot of redundant synapses on input areas to create computations.
+
+Two areas: one input, one circuit, two concepts, 600 steps, dt=0.01, 2 sync inputs, then 1 input:
+------------------------------------------------------------
+750 neuroids/area noRMI one computer (single thread) 48217, 47773, 48286
+750 neuroids/area RMI two computers (multi threads) 43555, 42805
+
+Two areas: one input, one circuit, two concepts, 600 steps, dt=0.01, 2 sync inputs, a lot of random noise  then 1 input:
+------------------------------------------------------------
+500 neuroids/area noRMI one computer (single thread) 266735, 32903, 270968, 31448, 338670, 272912,31942, 272912, 31942, 261051, 31832, 31046, 31052, 31046
+500 neuroids/area RMI two computers (multi threads) 44002, 50703, 33738, 56731
+
+750 neuroids/area noRMI one computer (single thread) 47733, 68571, 284017, 319558, 67539, 53308, 53939, 324261, 189985, 48620, 50206, 242466, 248470, 49180, 49055, 121461, 48819, 52520, 49213
+750 neuroids/area RMI two computers (multi threads) 47231, 254800, 683186, 47497, 44494, 43639, 45351
+
+1000 neuroids/area noRMI one computer (single thread) 495619, 432004, 482252, 73063, 117289, 298610, 433964, 74002, 74676, 424643, 512626
+1000 neuroids/area RMI two computers (multi threads) 66564, 60688, 61801, 375748, 64474, 561246, 296368
