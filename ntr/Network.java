@@ -133,6 +133,39 @@ abstract public class Network {
      */
     protected abstract void simulation();
 
+
+    /**
+     * Return detailed info about network components.
+     *
+     * @return a <code>String</code> value
+     */
+    public String toString() {
+	String retval = new String();
+
+	retval += "Peripheral: " + peripheral + "\n";
+	retval += "ConceptArea: \n" + conceptArea.getStatus();
+
+	Utils.TaskWithReturn areasToStringTask =
+	    new Utils.TaskWithReturn() {
+		String retval = new String();
+		
+		public void job(Object o) {
+		    retval += "" + ((Area)o) + "\n";
+		}
+
+		public Object getValue() {
+		    return retval;
+		}
+	    };
+	
+	Iteration.loop(areas.iterator(), areasToStringTask);
+	
+	retval += (String)areasToStringTask.getValue();
+
+	return retval;
+    }
+    
+
     /**
      * Sets deltaT and then calls <code>build()</code> and <code>simulation()</code>
      * @see Network#build
@@ -180,7 +213,9 @@ abstract public class Network {
 	    build();
 	    simulation();	    
 	} // end of if-else (isConcurrent)
-	
+
+	System.out.println("Network status: \n" + this);
+
 	System.exit(0);
     }
 }
