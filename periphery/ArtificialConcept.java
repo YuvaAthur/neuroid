@@ -1,4 +1,7 @@
 package Base;
+
+import Utils.*;
+
 import java.lang.*;
 import java.util.*;
 
@@ -84,9 +87,9 @@ public class ArtificialConcept extends Neuroid
      * @param neuroid a <code>Neuroid</code> value
      */
     public void attach(Neuroid neuroid) {
-	Synapse synapse = new Synapse(neuroid, this, excitatorySynapse);
+	Synapse synapse = new Synapse(neuroid, this, excitatorySynapse); // adds to synapses
 	Vector synapses = new Vector(1); 
-	synapses.add(synapse);
+	synapses.add(synapse);	// Local variable
 	neuroid.area.addAxon(neuroid, synapses);
     }
 
@@ -116,10 +119,41 @@ public class ArtificialConcept extends Neuroid
 
 
     /**
-     * Dump synaptic activity to output (file?). TO DO: do it!
+     * Dump synaptic activity to output (matlab file?). TO DO: do it!
      *
      */
     public void dumpData() {
+    }
+
+    /**
+     * Describe concept in more detail, including static properties.
+     * TODO: make an interface that requires this method
+     * TODO: this method looks very similar in all, util'ize it?
+     *
+     * @return a <code>String</code> value
+     */
+    public String getStatus() {
+	String retval = this + " {\n";
+	
+	// TODO: make this following class common with the one in Network.toString()
+	Utils.TaskWithReturn toStringTask =
+	    new Utils.TaskWithReturn() {
+		String retval = new String();
+		
+		public void job(Object o) {
+		    retval += "\t" + ((Synapse)o).srcNeuroid + "\n";
+		}
+
+		public Object getValue() {
+		    return retval;
+		}
+	    };
+	
+	Iteration.loop(synapses.iterator(), toStringTask);
+	
+	retval += (String)toStringTask.getValue() + "}\n";
+
+	return retval;
     }
 
     
