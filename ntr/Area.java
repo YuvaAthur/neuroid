@@ -222,12 +222,11 @@ public class Area implements Runnable {
 	    // projects to all. Threshold is fixed to fire above 2*replication inputs
 	    // weights and threshold should *not* be modified? refraction?
 	    inhibitoryInterNeuroid = new Neuroid(this, /*numberOfNeuroids,*/ /*2**/replication*0.9, 1);
-	    neuroids.add(inhibitoryInterNeuroid);
 	} // end of if (inhibInter)
 
 	// Instantiate Neuroids
 	for (int i = 0; i < numberOfNeuroids; i++)  // Enumerate neuroids
-	    addNeuroid(new Neuroid(this, /*i,*/ threshold, 1)); // refractoryTimeConstant=1
+	    new Neuroid(this, /*i,*/ threshold, 1); // refractoryTimeConstant=1
 
 	// Create a thread to do the step()s
 	thread = new Thread(this);
@@ -273,7 +272,7 @@ public class Area implements Runnable {
 	if (destArea instanceof Area) {
 	    destReplication = ((Area)destArea).getReplication();
 	    destNumberOfNeuroids = ((Area)destArea).getNumberOfNeuroids();
-	} else {
+	} else {	
 	    try {
 		destReplication = ((Remote.AreaInt)destArea).getReplication();
 		destNumberOfNeuroids = ((Remote.AreaInt)destArea).getNumberOfNeuroids();	     
