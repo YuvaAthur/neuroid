@@ -1,7 +1,7 @@
 package neuroidnet.ntr;
 
-import neuroidnet.ntr.plots.*;
-import neuroidnet.utils.*;
+import edu.ull.cgunay.utils.plots.*;
+import edu.ull.cgunay.utils.*;
 import neuroidnet.remote.*;
 import java.io.*;
 import java.lang.*;
@@ -17,7 +17,7 @@ import java.util.*;
  * @since 1.0
  */
 
-public class Synapse implements SynapseInt, DumpsData, Serializable {
+public class Synapse implements SynapseInt, DumpsData, Serializable, Expressive {
     /**
      * List of times when spikes are received
      */
@@ -30,7 +30,31 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
     public Vector getSpikeTrain() {
 	return spikeTrain;
     }
-        
+
+    /**
+     * Identifier number of this synapse as index in the list of synapses
+     * at the postsynaptic neuroid, therefore in reference to that neuroid.
+     * @see toString
+     */
+    int id;
+    
+    /**
+     * Get the value of id.
+     * @return value of id.
+     */
+    public int getId() {
+	return id;
+    }
+    
+    /**
+     * Set the value of id.
+     * @param v  Value to assign to id.
+     */
+    public void setId(int  v) {
+	this.id = v;
+    }
+    
+    
     boolean isInhibitory;
 
     /**
@@ -304,19 +328,17 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
 // 	timeConstantM = 1;
 // 	timeConstantS = destNeuroid.area.network.deltaT;
 	if (destNeuroid != null) // not template synapse
-	    destNeuroid.synapses.add(this);
+	    id = destNeuroid.addSynapse(this);
     }
 
     /**
      * Receive a spike at this time instant. Called by the presynaptic <code>Neuroid</code>.
-     * TODO: don't remove old spikes, rather just disregard them in the potential calculation.
-     * on 2nd thought, if not removed takes too much space, -> just keep'em if destneuroid is
-     * being watched
+     * Remove old spikes from <code>spikeTrain</code> unless under watch.
      * @see Neuroid#fire
-     * @see Neuroid#watch
+     * @see #watch
      */
     public void receiveSpike() {
-	/*System.out.println("Received spike at " + this.getStatus() +
+	/*System.out.println("Received spike at " + this.getProperties() +
 			   " connected to " + destNeuroid);*/
 	double time = destNeuroid.area.time;
 	// Add new spike at this time
@@ -388,23 +410,32 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
     }
 
     /**
-     * Method inherited from <code>java.lang.Object</code> to describe this
-     * <code>Synapse</code>.
-     * <p>TODO: get the potential from a variable instead of calling getPotential
+     * Identifies the synapse using <code>id</code> and <code>destNeuroid</code>.
      * @return a <code>String</code> value
      */
     public String toString() {
-	return "Synapse: p=" + Network.numberFormat.format(getPotential()) +
-	    ", w=" + (isInhibitory?"-":"") + Network.numberFormat.format(getWeight());
+	return "Synapse #" + id + " of " + destNeuroid;
     }
 
+    /**
+     * Include output of <code>toString()</code> plus potential and weight.
+     * <p>TODO: get the potential from a variable instead of calling getPotential
+     *
+     * @return a <code>String</code> value
+     */
+    public String getStatus() {
+	return
+	    this + " with p=" + Network.numberFormat.format(getPotential()) +
+	    ", w=" + (isInhibitory?"-":"") + Network.numberFormat.format(getWeight());
+    }
+    
     /**
      * Describe in higher detail.
      *
      * @return a <code>String</code> value
      */
-    public String getStatus() {
-	return this +
+    public String getProperties() {
+	return this.getStatus() +
 	    ", delay=" + Network.numberFormat.format(delay) + 
 	    ", tau_m=" + timeConstantM +
 	    ", tau_s=" + timeConstantS;
@@ -412,17 +443,12 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
 
     /**
      * Dump synaptic activity of concepts contained to output (matlab file?).
-     * <p>TO DO: 
+     * @deprecated Use plots instead.
      */
     public String dumpData() {
-	String retval;
-	
 	while (true) {
 	    try {
-		retval = "";
-
-		// TODO: make this following class common with the one in Network.toString()
-		TaskWithReturn toStringTask = new StringTask() {
+		return new StringTask() {
 			int number = 0;
 		
 			public void job(Object o) {
@@ -430,24 +456,13 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
 			    super.job(o);
 			    this.retval += " "; // spike times separated by space
 			    if ((number % 5) == 0) // limit 5 elements per row for text file 
-				this.retval += "...\n";
+				super.job("...\n");
 			}
-		    };
-	
-		Iteration.loop(spikeTrain.iterator(), toStringTask);
-
-		retval += (String)toStringTask.getValue();
-
-		break;		// out of while
+		    }.getString(spikeTrain);	
 	    } catch (ConcurrentModificationException e) {
 		// do nothing, i.e. restart
 		System.out.println("Concurrent modification in Synapse.dumpData(), repeating...");
 	    }	     
 	} // end of while (true)
-
-	
-
-	return retval;
-	
     }
 }
