@@ -1,3 +1,17 @@
+//trace_2002-11-17_18:16:45
+// --------------------
+//trace_2002-11-17_14:30:47
+// --------------------
+//trace_2002-11-16_18:45:58
+// --------------------
+//trace_2002-11-16_18:08:17
+// --------------------
+//trace_2002-11-15_18:51:11
+// --------------------
+//trace_2002-11-15_18:22:35
+// --------------------
+//trace_2002-10-23_17:12:11
+// --------------------
 //trace_2002-10-22_13:22:13
 // --------------------
 //trace_2002-10-22_12:44:23
@@ -55,9 +69,10 @@ import edu.ull.cgunay.utils.plots.*;
 import edu.ull.cgunay.utils.*;
 import neuroidnet.ntr.*;
 
+setAccessibility(true);
 //reloadClasses();
 
-until = 160;
+until = 10; //160
 
 watchedSet = new java.util.TreeSet();
 //watchedSet.add(new NeuroidName("I1",0));
