@@ -23,7 +23,8 @@ public class Synapse {
 
     /**
      * Synapse constant dynamic properties.
-     * Delay is currently not used due to the existence of natural delay between areas.
+     * Delay is currently not used due to the existence of natural delay between areas. (?)
+     * TODO: <code>delay</code> is required for the <code>PhaseSegregator.Network</code>
      */
     double
 	timeConstantM,
@@ -70,13 +71,37 @@ public class Synapse {
      * @param timeConstantM a <code>double</code> value
      * @param timeConstantS a <code>double</code> value
      */
-    public Synapse(Neuroid destNeuroid, double timeConstantM,
+    public Synapse(Neuroid srcNeuroid, Neuroid destNeuroid, double timeConstantM,
 		   double timeConstantS, boolean isInhibitory) {
 	this.destNeuroid = destNeuroid;
 	this.timeConstantM = timeConstantM;
 	this.timeConstantS = timeConstantS;
 	this.isInhibitory = isInhibitory;
 
+    }
+
+    /**
+     * Creates a new <code>Synapse</code> instance with help of a <code>templateSynapse</code>.
+     * Attaches itself to <code>destNeuroid</code>
+     * @see Neuroid#synapses
+     * @param destNeuroid a <code>Neuroid</code> value
+     * @param templateSynapse a <code>Synapse</code> value
+     */
+    public Synapse(Neuroid srcNeuroid, Neuroid destNeuroid, Synapse templateSynapse) {
+	this.srcNeuroid = srcNeuroid;
+	this.destNeuroid = destNeuroid;
+	this.timeConstantM = templateSynapse.timeConstantM;
+	this.timeConstantS = templateSynapse.timeConstantS;
+	this.isInhibitory = templateSynapse.isInhibitory;
+
+	init();
+    }
+
+    /**
+     * Initialization code called from various contructors.
+     * Init weights and adds <code>Synapse</code> to <code>destNeuroid.synapses</code>
+     */
+    void init() {
 	weight = 1;
 // 	timeConstantM = 1;
 // 	timeConstantS = destNeuroid.area.network.deltaT;
@@ -86,13 +111,14 @@ public class Synapse {
 
     /**
      * Receive a spike at this time instant, called by the presynaptic <code>Neuroid</code>.
+     * TODO: don't remove old spikes, rather just disregard them in the potential calculation.
      * @see Neuroid#fire
      */
     public void receiveSpike() {
 	System.out.println("Received spike at " + this);
 	
 	spikeTrain.add(new Double(destNeuroid.area.time));
-
+	
 	for (Iterator i = spikeTrain.iterator(); i.hasNext();) {
 	    if (((Double)i.next()).doubleValue() < (destNeuroid.area.time - timeConstantM))
 		i.remove();	// Delete expired spikes from start
@@ -103,7 +129,8 @@ public class Synapse {
     }
     
     /**
-     * Synapse effect kernel function taken from Maass and Bishop 1999, Eq 1.49, p.31
+     * Synapse effect kernel function taken from "Pulsed neural networks" of
+     * Maass and Bishop 1999, Eq 1.49, p.31
      * for equivalence to the integrate and fire model and its period calculation.
      *
      * @param time a <code>double</code> value.
