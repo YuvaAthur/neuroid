@@ -24,6 +24,7 @@ public class Area extends Base.Area
 
     /**
      * Overload method in <code>Area</code> to create <code>Remote.Synapse</code> instead.
+     * TODO: fix; original method moved to AxonArbor.
      * @see Area#createRandomSynapse
      * @return a <code>Synapse</code> value
      */
