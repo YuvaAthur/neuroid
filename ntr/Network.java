@@ -2,6 +2,7 @@ package Base;
 import Base.*;
 import Remote.*;
 import java.util.*;
+import java.text.*;
 //import java.rmi.*;
 import Utils.*;
 // * $Id$
@@ -40,6 +41,12 @@ abstract public class Network {
      */
     protected double deltaT;
     
+    /**
+     * For formatting real values
+     */
+    public static NumberFormat numberFormat = NumberFormat.getInstance();
+
+
     /**
      * Get the value of peripheral.
      * @return value of peripheral.
@@ -143,14 +150,14 @@ abstract public class Network {
 	String retval = new String();
 
 	retval += "Peripheral: " + peripheral + "\n";
-	retval += "ConceptArea: \n" + conceptArea.getStatus();
+	//retval += "ConceptArea: \n" + conceptArea.getStatus();
 
 	Utils.TaskWithReturn areasToStringTask =
 	    new Utils.TaskWithReturn() {
 		String retval = new String();
 		
 		public void job(Object o) {
-		    retval += "" + ((Area)o) + "\n";
+		    retval += "" + ((Area)o).getStatus() + "\n";
 		}
 
 		public Object getValue() {
@@ -175,6 +182,9 @@ abstract public class Network {
     public Network(double deltaT, boolean isConcurrent) {
 	this.deltaT = deltaT;
 	this.isConcurrent = isConcurrent;
+
+	// Number formatting for text output
+	numberFormat.setMaximumFractionDigits(3);
 
 	conceptArea = new ConceptArea(this);
 	areas.add(conceptArea);
