@@ -39,23 +39,22 @@ public class Peripheral extends Base.Peripheral {
      */
     void createSensoryInputs() {
 	sensoryAreas = new SensoryArea[inputAreas.length];
-	for (int area = 0; area < inputAreas.length; area++) {
-	    sensoryAreas[area] = new SensoryArea(network, "sensory-area-" + (area + 1));
-	    String name = "S" + (area + 1);
+	for (int areaNo = 0; areaNo < inputAreas.length; areaNo++) {
+	    sensoryAreas[areaNo] = new SensoryArea(network, "sensory-area-" + (areaNo + 1));
+	    String name = "S" + (areaNo + 1);
 	    for (int concept = 0; concept < numberOfItemsPerArea; concept++) 
-		sensoryAreas[area].addNeuroid(new SensoryNeuroid(sensoryAreas[area],
-								 inputAreas[area],
-								 name + "-" + concept));
+		new SensoryNeuroid(sensoryAreas[areaNo], inputAreas[areaNo],
+				   name + "-" + concept);
 	}
     }
 
     public void fireInputs() {
-	// Fire one input in sensory area 1
-	((Neuroid)sensoryAreas[0].neuroids.elementAt(0)).fire(); 
     }
 
     public void testOneInput() {
-	//	a.fire();
+	// Fire one input in sensory area 1
+	((Neuroid)sensoryAreas[0].neuroids.elementAt(0)).fire(); 
+	((Neuroid)sensoryAreas[0].neuroids.elementAt(1)).fire(); 
     }
 
-}// MultiConceptPeripheral
+}
