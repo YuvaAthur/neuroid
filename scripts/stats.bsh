@@ -13,7 +13,9 @@ void runOnce(testObject) {
 	network.timeConstantM = testObject.timeConstantM; 
     if (!new Double(testObject.segregation).isNaN())
 	network.segregation = testObject.segregation; 
-    //print("\tau_m = " + network.timeConstantM);
+    if (testObject.threshold != void && testObject.threshold != null)
+	network.threshold = testObject.threshold;
+    print("threshold = " + network.threshold + ", " + testObject.threshold);
 
     network.run();
     peripheral = new neuroidnet.phasesegregator.StatisticalInputSequence(network);
@@ -89,12 +91,26 @@ void combinedProfilePlot(testObject) {
 	new Grapher.ErrorData(nsh.grapher, "Correct concepts", testObject.correctProfile);
     spuriousData =
 	new Grapher.ErrorData(nsh.grapher, "Spurious concepts", testObject.spuriousProfile);
-    correctRatioData =
-	new Grapher.ErrorData(nsh.grapher, "Recruited ratio", testObject.correctRatioProfile);
+    //correctRatioData =
+    // new Grapher.ErrorData(nsh.grapher, "Recruited ratio", testObject.correctRatioProfile);
 
     Grapher.Data[] datas = {correctData, spuriousData}; // removed: correctRatioData (see above)
 
     testObject.createPlot(new Vector(Arrays.asList(datas)));
+}
+
+double getTimeConstantM(testObject) {
+    return testObject.gamma + testObject.timeConstantS;
+}
+
+double getSegregation(testObject) {
+    return testObject.gamma + 2 * testObject.timeConstantM;
+}
+
+double getMaxEPSP(testObject) {
+    return Math.exp((double)-testObject.timeConstantS *
+		    Math.log((double)testObject.timeConstantS / testObject.timeConstantM) /
+		    (testObject.timeConstantS - testObject.timeConstantM));
 }
 
 void initProfile(list) {

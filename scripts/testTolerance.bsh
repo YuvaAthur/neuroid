@@ -10,18 +10,19 @@ testTolerance() {
 
 	startTime = System.currentTimeMillis();
 
-	for (timeConstantM = fromTimeConstantM;
-	     timeConstantM < toTimeConstantM;
-	     timeConstantM += (toTimeConstantM - fromTimeConstantM) / dataPoints ) {
+	for (super.timeConstantM = fromTimeConstantM;
+	     super.timeConstantM < toTimeConstantM;
+	     super.timeConstantM += (toTimeConstantM - fromTimeConstantM) / dataPoints ) {
 
 	    // Calculated according to timeConstantM
-	    super.segregation = timeConstantS + 2*(timeConstantM - timeConstantS);
+	    super.segregation = getSegregation(super);
+	    super.threshold = 2 * getMaxEPSP(super);
 
 	    meanQc = 0; minQc = Double.MAX_VALUE; maxQc = Double.MIN_VALUE;
 	    meanQs = 0; minQs = Double.MAX_VALUE; maxQs = Double.MIN_VALUE;
 
 	    for (numberOfTrials = 0; numberOfTrials < maxTrials; numberOfTrials++) {
-		runOnce(numberOfObjects, numberOfMedialAreas, timeConstantM, segregation);
+		runOnce(super);
 		meanQc += qc;
 		meanQs += qs;
 		minQc = Math.min(minQc, qc);
@@ -62,7 +63,7 @@ testTolerance() {
     void batch() {
 	startTime = System.currentTimeMillis();
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 	    super.numberOfMedialAreas = 2 + i;
 	    super.maxTrials = 10;
 	    run();
@@ -76,8 +77,8 @@ testTolerance() {
 	super.correctProfile = new Profile();
 	super.spuriousProfile = new Profile();
 
-	super.calcTimeConstantM = (numberOfMedialAreas) * timeConstantS;
-
+	super.gamma = (numberOfMedialAreas - 1) * timeConstantS;
+	super.calcTimeConstantM = getTimeConstantM(super);
 
 	super.fromTimeConstantM = calcTimeConstantM - timeConstantS;
 	super.toTimeConstantM = 2 * calcTimeConstantM;

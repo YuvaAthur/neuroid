@@ -39,7 +39,7 @@ public class Network extends neuroidnet.ntr.Network {
 	timeConstantM = Double.NaN,
 	refractoryTimeConstant = 10,
 	segregation = Double.NaN,
-	threshold,
+	threshold = Double.NaN,
 	nuBoost = 6.0;	// nu parameter to increase probability of connection
 
 
@@ -73,6 +73,11 @@ public class Network extends neuroidnet.ntr.Network {
 	if (new Double(segregation).isNaN()) 
 	    segregation = timeConstantS + 2*timeConstantM + delay;
 
+	if (new Double(threshold).isNaN()) 
+	    // lowered because of long timeConstantS (TODO: may need
+	    // to change according to topology?!)
+	    threshold = 2 * 0.6; 
+
 	System.out.println("Segregation parameter=" + segregation);
 	System.out.println("timeConstantM parameter=" + timeConstantM);
 	
@@ -85,7 +90,7 @@ public class Network extends neuroidnet.ntr.Network {
 
 	inputAreas = new Area[numberOfMedialAreas];
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
-	    threshold = 0.9;
+	    double threshold = 0.9; // sensory threshold is always constant
 	    inputAreas[medialArea] =
 		new Area(this, "I"+(medialArea+1), numberOfNeuroids, replication,
 			 period, threshold, timeConstantM, refractoryTimeConstant,
@@ -95,7 +100,6 @@ public class Network extends neuroidnet.ntr.Network {
 
 	medialAreas = new Area[numberOfMedialAreas];
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
-	    threshold = 2 * 0.6; // lowered because of long timeConstantS
 	    medialAreas[medialArea] =
 		new Area(this, "M"+(medialArea+1), numberOfNeuroids,
 			 replication, period, threshold, timeConstantM, refractoryTimeConstant,

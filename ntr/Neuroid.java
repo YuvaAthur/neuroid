@@ -296,7 +296,12 @@ abstract public class Neuroid implements Simulation, Input, Expressive {
 		    System.out.println("Mode of " + this +
 				       " not initialized yet, waiting some msecs... (" +
 				       countdown + ")");
-		    wait(100);
+		    try {
+			wait(100);			 
+		    } catch (InterruptedException e) {
+			throw new Error(e);
+		    } // end of try-catch
+
 		} // end of while (true)
 	    }
 	} // end of else
