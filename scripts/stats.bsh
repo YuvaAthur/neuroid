@@ -40,6 +40,8 @@ void runOnce(int numberOfObjects, int numberOfMedialAreas,
     //print(sc);
     this.caller.qs = peripheral.qualityOfConcepts(this.caller.sc);
     print(this.caller.sc.size() + " spurious concepts, quality = " + this.caller.qs);
+
+    network.stop();		// Release threads
 }
 
 void combinedProfilePlot(String xlabel, String titleExtra) {
