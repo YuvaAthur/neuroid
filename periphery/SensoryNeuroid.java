@@ -15,17 +15,20 @@ import Base.*;
  * <p>Created: Sat Mar 31 20:35:53 2001
  * <p>Modified: $Date$
  * 
- * @author Cengiz Gunay
+ * @author <a href="mailto:">Cengiz Gunay</a>
  * @version $Revision$ for this file.
  */
 
 public class SensoryNeuroid extends Base.Neuroid {
     /**
      * Create neuroid and associate a new <code>SensoryConcept</code> with it.
-     * Sesn
+     * Connects <em>arbitrarily</em> to a number of neuroids at the destination area.
+     * 
      * @see SensoryConcept
-     * @param sensoryArea an <code>Area</code> value
-     * @param conceptName a <code>String</code> value
+     * @see Base.Area#createArbitrarySynapses
+     * @param sensoryArea Where to put this neuroid.
+     * @param conceptName Name.
+     * @param destArea the destination area to project axons.
      */
     public SensoryNeuroid(Base.Area sensoryArea, Base.Area destArea, String conceptName) {
 	super(sensoryArea); 
@@ -37,7 +40,7 @@ public class SensoryNeuroid extends Base.Neuroid {
 	mode.setState(Mode.UM);
 
 	// Create connections to destArea
-	Vector synapses;
+	AxonArbor synapses;
 	Synapse synapseTemplate = // TODO: Fix timeConstantS??
 	    new Synapse(null, null, area.timeConstantM, area.deltaT, false, 0);
 	synapses = destArea.createArbitrarySynapses(synapseTemplate, this,
