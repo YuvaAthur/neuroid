@@ -73,11 +73,13 @@ public class Synapse {
      */
     public Synapse(Neuroid srcNeuroid, Neuroid destNeuroid, double timeConstantM,
 		   double timeConstantS, boolean isInhibitory) {
+	this.srcNeuroid = srcNeuroid;
 	this.destNeuroid = destNeuroid;
 	this.timeConstantM = timeConstantM;
 	this.timeConstantS = timeConstantS;
 	this.isInhibitory = isInhibitory;
 
+	init();
     }
 
     /**
@@ -101,12 +103,13 @@ public class Synapse {
      * Initialization code called from various contructors.
      * Init weights and adds <code>Synapse</code> to <code>destNeuroid.synapses</code>
      */
-    void init() {
+    final private void init() {
 	weight = 1;
 // 	timeConstantM = 1;
 // 	timeConstantS = destNeuroid.area.network.deltaT;
 	spikeTrain = new Vector();
-	destNeuroid.synapses.add(this);
+	if (destNeuroid != null) // not template synapse
+	    destNeuroid.synapses.add(this);
     }
 
     /**
