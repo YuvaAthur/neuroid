@@ -3,6 +3,7 @@ import Base.*;
 //import Remote.*;
 import java.lang.*;
 import java.util.*;
+import java.text.*;
 //import java.rmi.*;
 import Utils.*;
 
@@ -71,7 +72,7 @@ public class Neuroid implements Input {
     /**
      * Represents the state and dynamic parameters of the neuroid.
      */
-    protected Mode mode;
+    public Mode mode;
 
     /**
      * Internal.
@@ -83,6 +84,10 @@ public class Neuroid implements Input {
      */
     double sumOfCurrentWeights;
 
+    /**
+     * For formatting real values
+     */
+    NumberFormat numberFormat = NumberFormat.getInstance();
 
     /**
      * Dummy constructor.
@@ -90,6 +95,10 @@ public class Neuroid implements Input {
      */
     public Neuroid(Area area) {
 	this.area = area;
+
+	mode = new Mode(Mode.AM, Double.POSITIVE_INFINITY); // Available memory state w/ threshold 
+
+	init();
     }
 
     /**
@@ -116,6 +125,16 @@ public class Neuroid implements Input {
 	mode.sumOfWeights =
 	    -externalCurrent * ( externalCurrent - mode.threshold ) *
 	    Math.exp( -area.period );
+
+	init();
+    }
+
+    /**
+     * Called by all constructors.
+     */
+    final private void init() {
+	area.addNeuroid(this);
+	numberFormat.setMaximumFractionDigits(3);
     }
 
     /**
@@ -285,9 +304,18 @@ public class Neuroid implements Input {
      * @see Utils.Task
      */
     abstract class SynapseActivityTask implements Utils.TaskWithReturn {
-	SynapseActivityTask() {
-	    Iteration.loop(synapses.iterator(), this);	    
+	Neuroid toplevel = Neuroid.this;
+
+	SynapseActivityTask() {	}
+
+	/**
+	 * Initiates the iteration over synapses of the enclosing Neuroid.
+	 *
+	 */
+	public void iterate() {
+	    Iteration.loop(synapses.iterator(), this); 
 	}
+
 	/**
 	 * Calls <code>potentiatedSynapse</code> and <code>silentSynapse</code>
 	 * deciding by scanning <code>Synapse</code>s.
@@ -334,18 +362,18 @@ public class Neuroid implements Input {
 		public void job(Object o) {
 		    super.job(o);	// main job
 		    Synapse s = (Synapse) o;
-		    sumOfCurrentWeights += s.weight;
+		    toplevel.sumOfCurrentWeights += s.weight;
 		}
 		void potentiatedSynapse(Synapse s) {
-		    s.weight = s.weight * correctTimesRequired /
-			mode.fitnessCounter;
+		    s.weight = s.weight * toplevel.correctTimesRequired /
+			toplevel.mode.fitnessCounter;
 		}
 		void silentSynapse(Synapse s) {
-		    s.weight = s.weight * mode.fitnessCounter /
-			correctTimesRequired;
+		    s.weight = s.weight * toplevel.mode.fitnessCounter /
+			toplevel.correctTimesRequired;
 		}
 		public Object getValue() { return null; } // N/A
-	    };
+	    }.iterate();
 
 /*
 	// Loop over synapses and update according to Winnow learning rule
@@ -384,19 +412,33 @@ public class Neuroid implements Input {
     void makeConcept() {
 
 	// Loop over synapses and update according to Winnow learning rule
-	Vector conceptSet = (Vector) new SynapseActivityTask() {
-		Vector conceptSet = new Vector();
+	SynapseActivityTask synapseIterator = new SynapseActivityTask() {
+		HashSet conceptSet;
+
+		public void iterate() {
+		    conceptSet = new HashSet();
+		    super.iterate();
+		}
+
 		public void job(Object o) {
 		    super.job(o);	// main job
 		    Synapse s = (Synapse) o;
-		    sumOfCurrentWeights += s.weight;
+		    toplevel.sumOfCurrentWeights += s.weight;
 		}
+
 		void potentiatedSynapse(Synapse s) {
 		    conceptSet.add(s.srcNeuroid.concept);
 		}
+
 		void silentSynapse(Synapse s) { }
+
 		public Object getValue() { return conceptSet; }
-	    }.getValue();
+	    };
+
+	synapseIterator.iterate();
+
+	// Collect the result of the iteration over the synapses.
+	HashSet conceptSet = (HashSet) synapseIterator.getValue();
 
 	try {
 	    concept = (Concept) area.network.conceptArea.get(conceptSet);
@@ -412,7 +454,9 @@ public class Neuroid implements Input {
      * @return a <code>String</code> value
      */
     public String toString() {
-	return "Neuroid #" + hashCode() + " in " + area + ", u = " + potential + ", " + mode;
+	return "Neuroid #" + hashCode() + " in " + area + ", u = " +
+	    numberFormat.format(potential) + ", " + mode +
+	    (concept != null ? ", concept: " + concept : "");
     }
 
     /**
