@@ -34,7 +34,8 @@ public class Area implements Runnable {
 
     /**
      * Increment of time for algorithms.
-     * TODO: Put it elsewhere; too far to reach!
+     * Proxy for <code>deltaT</code> in <code>network</code>.
+     * @see Network#deltaT
      */
     double deltaT;
 
@@ -45,6 +46,8 @@ public class Area implements Runnable {
 
     /**
      * Number of <code>Neuroid</code>s contained in <code>Area</code>.
+     * TODO: should be obsolete, redundant info with size of <code>neuroids</code> vector.
+     * @see #neuroids
      * @see Neuroid
      */
     int numberOfNeuroids;
@@ -102,7 +105,7 @@ public class Area implements Runnable {
      * @see Synapse
      * @see Neuroid
      */
-    Hashtable axons;
+    Hashtable axons = new Hashtable();
 
     /**
      * Lock variable showing the thread is busy doing the calculations.
@@ -132,51 +135,108 @@ public class Area implements Runnable {
     int conceptCount = 0;
 
     /**
+     * The concept that this neuroid belongs to.
+     * @see Concept
+     */
+    Concept concept;
+
+    /**
+     * Pointer to parent network
+     */
+    Network network;
+
+    /**
+     * Constructor for plain Area (no inhibitory interneuron). Calls <code>init()</code>.
+     * @see #init()
+     * @param network a <code>Network</code> value
+     * @param name a <code>String</code> value
+     * @param numberOfNeuroids an <code>int</code> value
+     * @param replication an <code>int</code> value
+     * @param deltaT a <code>double</code> value
+     * @param period a <code>double</code> value
+     * @param threshold a <code>double</code> value
+     */
+    public Area(Network network, String name, int numberOfNeuroids,
+		int replication, double period, double threshold) {
+	init(network, name, numberOfNeuroids, replication, period, threshold, false);
+    }
+
+    /**
+     * Constructor with option to add inhibitory inter-neuron. Calls <code>init()</code>.
+     * @see #init()
+     *
+     * @param network a <code>Network</code> value
+     * @param name a <code>String</code> value
+     * @param numberOfNeuroids an <code>int</code> value
+     * @param replication an <code>int</code> value
+     * @param deltaT a <code>double</code> value
+     * @param period a <code>double</code> value
+     * @param threshold a <code>double</code> value
+     * @param inhibInter a <code>boolean</code> value
+     */
+    public Area(Network network, String name, int numberOfNeuroids, int replication,
+		double period, double threshold, boolean inhibInter) {
+	init(network, name, numberOfNeuroids, replication, period, threshold, inhibInter);
+    }
+
+    /**
+     * Called by constructors.
      * Creates a new <code>Area</code> instance with <code>numberOfNeuroids</code> of
      * <code>Neuroids</code>.
      * <p>TODO: If a allocate-on-demand approach is used for Neuroids none
      * should be allocated at this time.
      * @see Neuroid
      *
-     * @param numberOfNeuroids 
-     * @param the replication factor 
+     * @param network a <code>Network</code> value
+     * @param name a <code>String</code> value
+     * @param numberOfNeuroids an <code>int</code> value
+     * @param replication an <code>int</code> value
+     * @param deltaT a <code>double</code> value
+     * @param period a <code>double</code> value
+     * @param threshold a <code>double</code> value
+     * @param inhibInter a <code>boolean</code> value
      */
-    public Area(String name, int numberOfNeuroids,
-		int replication, double deltaT, double period, double threshold) {
+    void init(Network network, String name, int numberOfNeuroids, int replication,
+	      double period, double threshold, boolean inhibInter) {
 	this.numberOfNeuroids = numberOfNeuroids;
 	this.replication = replication;
-	this.deltaT = deltaT;
+	this.deltaT = network.deltaT;
 	this.period = period;
 	this.name = name;
+	this.network = network;
 
-	// Outgoing connections of neuroids held here
-	axons = new Hashtable();
+	// Neuroids in Area (one for the inhib. inter-neuron)
+	neuroids = new Vector(numberOfNeuroids+(inhibInter?1:0)); 
 
-	// Neuroids in Area
-	neuroids = new Vector(numberOfNeuroids+1); // one for the inhib. inter-neuron
+	if (inhibInter) {
+	    // Add inhibitory inter-neuron: one neuron that takes input from all neuroids and
+	    // projects to all. Threshold is fixed to fire above 2*replication inputs
+	    // weights and threshold should *not* be modified? refraction?
+	    inhibitoryInterNeuroid = new Neuroid(this, numberOfNeuroids, /*2**/replication*0.9, 1);
+	    neuroids.add(inhibitoryInterNeuroid);
+	} // end of if (inhibInter)
 
-	// Add inhibitory inter-neuron: one neuron that takes input from all neuroids and
-	// projects to all. Threshold is fixed to fire above 2*replication inputs
-	// weights and threshold should *not* be modified? refraction?
-	inhibitoryInterNeuroid = new Neuroid(this, numberOfNeuroids, /*2**/replication*0.9, 1);
-	neuroids.add(inhibitoryInterNeuroid);
-	Vector inhibitorySynapseVector = new Vector();
+	Vector inhibitorySynapseVector = new Vector();	
 
 	// Instantiate Neuroids
 	for (int i = 0; i < numberOfNeuroids; i++) { // Enumerate neuroids
 	    Neuroid neuroid = new Neuroid(this, i, threshold, 1);
 	    neuroids.add(neuroid); // refractoryTimeConstant=1
 
-	    // Add inhibitory synapse to neuroid from inhibitoryInterNeuroid
-	    inhibitorySynapseVector.add(new Synapse(neuroid, 1, deltaT, true)); 
+	    if (inhibInter) {
+		// Add inhibitory synapse to neuroid from inhibitoryInterNeuroid
+		inhibitorySynapseVector.add(new Synapse(inhibitoryInterNeuroid, neuroid,
+							1, deltaT, true)); 
 
-	    // Add an initial excitory synapse to inhibitoryInterNeuroid from neuroid
-	    Vector oneSynapse = new Vector();
-	    oneSynapse.add(new Synapse(inhibitoryInterNeuroid, 1, deltaT, false)); 
-	    axons.put(neuroid, oneSynapse);
+		// Add an initial excitory synapse to inhibitoryInterNeuroid from neuroid
+		Vector oneSynapse = new Vector();
+		oneSynapse.add(new Synapse(neuroid,inhibitoryInterNeuroid, 1, deltaT, false)); 
+		axons.put(neuroid, oneSynapse);
+	    } // end of if (inhibInter)
 	}
 
-	axons.put(inhibitoryInterNeuroid, inhibitorySynapseVector);
+	if (inhibInter) 
+	    axons.put(inhibitoryInterNeuroid, inhibitorySynapseVector);
 
 	// Create a thread to do the step()s
 	thread = new Thread(this);
@@ -228,16 +288,11 @@ public class Area implements Runnable {
 	    
 			Vector synapses = 
 			    (_destArea instanceof Area) ?
-			    ((Area)_destArea).createRandomSynapses(_numberOfConnections):
-			    ((Remote.AreaInt)_destArea).createRandomSynapses(_numberOfConnections); 
-
-			// Add to existing Vector in hash if connections already exist 
-			Vector existingSynapses = (Vector) axons.get(fromNeuroid);
-			if (existingSynapses == null)
-			    axons.put(fromNeuroid, synapses); // Create new
-			else 
-			    existingSynapses.addAll(synapses); // Add to existing
-			
+			    ((Area)_destArea).createRandomSynapses(fromNeuroid,
+								   _numberOfConnections):
+			    ((Remote.AreaInt)_destArea).createRandomSynapses(fromNeuroid,
+									     _numberOfConnections); 
+			addAxon(fromNeuroid, synapses);
 		    } catch (java.rmi.RemoteException e) {
 			System.out.println("Cannot call Remote.Area methods.");
 		    }
@@ -254,18 +309,36 @@ public class Area implements Runnable {
     }
 
     /**
+     * Adds the synapses to the outgoing synapse record of the <code>Area</code>.
+     * If synapses associated with <code>fromNeuroid</code> exist,
+     * new synapses are just added to them.
+     * TO DO: get a remote reference to an AxonArbor in the RemoteArea and put it in hash.
+     * @param fromNeuroid the presynaptic <code>Neuroid</code> in this <code>Area</code>.
+     * @param synapses the <code>Vector</code> to be associated with <code>fromNeuroid</code>
+     */
+    void addAxon(Neuroid fromNeuroid, Vector synapses) {
+	// Add to existing Vector in hash if connections already exist 
+	Vector existingSynapses = (Vector) axons.get(fromNeuroid);
+	if (existingSynapses == null)
+	    axons.put(fromNeuroid, synapses); // Create new
+	else 
+	    existingSynapses.addAll(synapses); // Add to existing
+    }
+
+    /**
      * Return a <code>Vector</code> of new <code>numberOfSynapses</code> <code>Synapse</code>s.
      * AxonArbor makes sure to return a set of synapses to distinct neurons (no repetitions!)
+     * TODO: maybe put these methods into <code>AxonArbor</code>.
      * @param numberOfSynapses an <code>int</code> value
      * @return a <code>Vector</code> value
      */
-    public Vector createRandomSynapses(int numberOfSynapses) {
+    public Vector createRandomSynapses(Neuroid fromNeuroid, int numberOfSynapses) {
 	AxonArbor axon = new AxonArbor(numberOfSynapses);
 	for (int index = 0; index < numberOfSynapses; index++) {
 	    int retry = 10; // Retries for coincides with previously allocated synapses
 	    while (retry-- > 0) {
 		try {
-		    axon.addSynapse(createRandomSynapse());
+		    axon.addSynapse(createRandomSynapse(fromNeuroid));
 		    retry = 0;	// Success
 		} catch (ResynapseException e) {
 		    // nothing
@@ -282,20 +355,21 @@ public class Area implements Runnable {
      * Hack to arbitrarily choose different neurons for each allocation of concepts.
      * A variable <code>conceptCount</code> is used to interleave the allocated neurons. 
      * Return a <code>Vector</code> of new <code>numberOfSynapses</code> <code>Synapse</code>s.
-     * AxonArbor makes sure to return a set of synapses to distinct neurons (no repetitions!)
+     * <code>AxonArbor</code> makes sure to return a set of synapses to distinct neurons
+     * (no repetitions!)
      * @see #conceptCount
      * @param numberOfSynapses an <code>int</code> value
      * @return a <code>Vector</code> value
      */
-    public Vector createArbitrarySynapses(int numberOfSynapses) {
+    public Vector createArbitrarySynapses(Neuroid fromNeuroid, int numberOfSynapses) {
 	Vector axon = new Vector(numberOfSynapses);
 
 	// Calculate possible number of concepts that'll fit into this area.
 	int maxConcepts = numberOfNeuroids / numberOfSynapses;
 
 	for (int index = 0; index < numberOfSynapses; index++) {
-	    axon.add(createSynapse((Neuroid) neuroids.elementAt(conceptCount +
-								index*maxConcepts)));
+	    axon.add(createSynapse(fromNeuroid, (Neuroid) neuroids.elementAt(conceptCount +
+									     index*maxConcepts)));
 	} // end of for (int index = 0; index < numberOfSynapses; index++)
 	conceptCount++;		// Increment counter for interleaving next concept
 	return axon;
@@ -303,10 +377,12 @@ public class Area implements Runnable {
 
     /**
      * Creates a new synapse connected to a random member of the <code>Area</code>.
-     * SRM parameters: timeConstantM = 1, timeConstantS = deltaT, excitory 
+     * SRM parameters: timeConstantM = 1, timeConstantS = deltaT, excitatory 
      * @see deltaT
      * @return a <code>Synapse</code> value */
-    public Synapse createRandomSynapse() { return createSynapse(getRandomNeuroid()); }
+    public Synapse createRandomSynapse(Neuroid fromNeuroid) {
+	return createSynapse(fromNeuroid, getRandomNeuroid());
+    }
 
     /**
      * Create a synapse with predefined characteristics.
@@ -315,16 +391,17 @@ public class Area implements Runnable {
      * @param neuroid a <code>Neuroid</code> value
      * @return a <code>Synapse</code> value
      */
-    public Synapse createSynapse(Neuroid neuroid) {
-	return new Synapse(neuroid, 1, deltaT, false);
+    public Synapse createSynapse(Neuroid fromNeuroid, Neuroid toNeuroid) {
+	return new Synapse(fromNeuroid, toNeuroid, 1, deltaT, false);
     }
 
     /**
      * Returns a <code>Neuroid</code> which is a random member of the <code>Area</code>.
-     * <p>TODO: one might might pseudo-random (organized) behavior in selecting destinations.
+     * <p>TODO: one might might pseudo-random (organized) behavior in selecting destinations
+     * (like createArbitrarySynapses).
      * <p>TODO: If a allocate-on-demand approach is used for neuroids,
      * in case of finding a non-existing neuroid should result in its creation.
-     *
+     * @see #createArbitrarySynapses
      * @return a <code>Neuroid</code> value
      */
     public Neuroid getRandomNeuroid() {
@@ -333,6 +410,7 @@ public class Area implements Runnable {
 
     /**
      * Public method to receive spikes from other areas.
+     * TO DO: get an AxonArbor and process synapses in the local area.
      * OBSOLETE: redundant, instead use <code>Synapse.receiveSpike()</code> directly.
      * @see Synapse
      * @param synapse Synapse to spike.
