@@ -26,7 +26,7 @@ public class  Network extends Base.Network {
     public void build() {
 	//TO DO: Implement this method.
 	int
-	    numberOfNeuroids = 100,
+	    numberOfNeuroids = 300,
 	    replication = 10;
 
 	double
@@ -34,6 +34,7 @@ public class  Network extends Base.Network {
 	    delay = 3,
 	    timeConstantS = 7,
 	    timeConstantM = 10,
+	    refractoryTimeConstant = 10,
 	    threshold;
 	int numberOfMedialAreas = 3,
 	    numberOfItemsPerArea = 3,
@@ -47,17 +48,18 @@ public class  Network extends Base.Network {
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
 	    threshold = 0.9;
 	    inputAreas[medialArea] =
-		new Area(this, "I"+(medialArea+1), numberOfNeuroids,
-			 replication, period, threshold, timeConstantM);
+		new Area(this, "I"+(medialArea+1), numberOfNeuroids, replication,
+			 period, threshold, timeConstantM, refractoryTimeConstant);
 	    areas.add(inputAreas[medialArea]);
 	} // end of for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++)
 
 	Area[] medialAreas = new Area[numberOfMedialAreas];
 	for (int medialArea = 0; medialArea < numberOfMedialAreas; medialArea++) {
-	    threshold = 2 * 0.35; // lowered because of long timeConstantS
+	    threshold = 2 * 0.6; // lowered because of long timeConstantS
 	    medialAreas[medialArea] =
 		new Area(this, "M"+(medialArea+1), numberOfNeuroids,
-			 replication, period, threshold, timeConstantM);
+			 replication,	// OBS: Boosted replication due to failure to recruit
+			 period, threshold, timeConstantM, refractoryTimeConstant);
 	    areas.add(medialAreas[medialArea]);
 	    
 	    // Direct connections from input areas
@@ -86,7 +88,7 @@ public class  Network extends Base.Network {
     public void simulation() {
 
 	// Step 
-	double untilTime = 20.0;
+	double untilTime = 30.0;
 	long startTime = System.currentTimeMillis();
 	for (int i = 0; i < untilTime/deltaT; i++) {
 	    //System.out.println("STEP " + i);
