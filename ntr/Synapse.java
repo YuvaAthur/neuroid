@@ -1,10 +1,12 @@
 package neuroidnet.ntr;
-import neuroidnet.ntr.*;
+
+import neuroidnet.ntr.plots.*;
 import neuroidnet.utils.*;
 import neuroidnet.remote.*;
 import java.io.*;
 import java.lang.*;
 import java.util.*;
+
 // $Id$ 
 /** 
  * <p>Presynaptic connection to a Neuroid.
@@ -20,6 +22,23 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
      * List of times when spikes are received
      */
     Vector spikeTrain; // TODO: make time a class?
+    
+    /**
+     * Get the value of spikeTrain.
+     * @return value of spikeTrain.
+     */
+    public Vector getSpikeTrain() {
+	return spikeTrain;
+    }
+    
+    /**
+     * Set the value of spikeTrain.
+     * @param v  Value to assign to spikeTrain.
+     */
+    public void setSpikeTrain(Vector  v) {
+	this.spikeTrain = v;
+    }
+    
     boolean isInhibitory;
 
     /**
@@ -43,21 +62,46 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
     /**
      * Incoming weight.
      */
-    double weight;
+    public Weight weight = new Weight(); 
+
+    class Weight extends Profilable implements Serializable {
+	double value;
+
+	/**
+	 * Get the value.
+	 * @return value
+	 */
+	public double getValue() {return value;}
+    
+	/**
+	 * Set the value of weight. Maximum allowed value is determined by
+	 * constant <code>maxWeight</code>.
+	 * @param v  Value to assign to weight.
+	 * @see #maxWeight
+	 */
+	public void setValue(double  v) {
+	    this.value = Math.min(maxWeight, v);
+	    setChanged();		// Observable element has changed
+	}
+    }
 
     /**
-       * Get the value of weight.
-       * @return value of weight.
-       */
-    public double getWeight() {return weight;}
+     * Get the value from <code>weight</code>.
+     * @see #weight
+     * @return value of weight.
+     */
+    public double getWeight() {
+	return weight.getValue();
+    }
     
     /**
-       * Set the value of weight. Maximum allowed value is determined by
-       * constant <code>maxWeight</code>.
-       * @param v  Value to assign to weight.
-       * @see #maxWeight
-       */
-    public void setWeight(double  v) {this.weight = Math.max(maxWeight, v);}
+     * Set the value of <code>weight</code>.
+     * @see #weight
+     * @param v  Value to assign to weight.
+     */
+    public void setWeight(double  v) {
+	this.weight.setValue(v);
+    }
     
     /**
      * Presynaptic neuroid.
@@ -162,7 +206,7 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
      * @see ntr.Neuroid#synapses
      */
     final private void init() {
-	weight = 1;
+	setWeight(1.0);
 // 	timeConstantM = 1;
 // 	timeConstantS = destNeuroid.area.network.deltaT;
 	spikeTrain = new Vector();
@@ -186,7 +230,7 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
 	spikeTrain.add(new Double(time));
 	
 	// If the destneuroid isn't being watched, forget spikes received earlier
-	// than 2 timeConstantMs ago.
+	// than 2 timeConstantMs ago. TODO: or maybe this synapse should be watched separately?
 	if (!destNeuroid.watch) {
 	    for (Iterator i = spikeTrain.iterator(); i.hasNext();) {
 		if (((Double)i.next()).doubleValue() < (time - 2*timeConstantM))
@@ -237,7 +281,7 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
 	    }	     
 	} // end of while (true)
 	
-	return weight * potential;
+	return getWeight() * potential;
     }
 
     /**
@@ -247,7 +291,7 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
      * above an arbitrary value (0.1)
      */
     boolean isPotentiated() {
-	return ( getPotential()/weight > 0.1);
+	return ( getPotential()/getWeight() > 0.1);
     }
 
     /**
@@ -258,7 +302,7 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
      */
     public String toString() {
 	return "Synapse: p=" + Network.numberFormat.format(getPotential()) +
-	    ", w=" + (isInhibitory?"-":"") + Network.numberFormat.format(weight);
+	    ", w=" + (isInhibitory?"-":"") + Network.numberFormat.format(getWeight());
     }
 
     /**
@@ -278,26 +322,22 @@ public class Synapse implements SynapseInt, DumpsData, Serializable {
      * <p>TO DO: 
      */
     public String dumpData() {
-	String retval = "";
+	String retval;
 	
 	while (true) {
 	    try {
+		retval = "";
+
 		// TODO: make this following class common with the one in Network.toString()
-		TaskWithReturn toStringTask =
-		    new TaskWithReturn() {
-			String retval = new String();
+		TaskWithReturn toStringTask = new StringTask() {
 			int number = 0;
-		    
 		
 			public void job(Object o) {
 			    number++;
-			    retval += ((Double)o) + " "; // spike times separated by space
+			    super.job(o);
+			    this.retval += " "; // spike times separated by space
 			    if ((number % 5) == 0) // limit 5 elements per row for text file 
-				retval += "...\n";
-			}
-
-			public Object getValue() {
-			    return retval;
+				this.retval += "...\n";
 			}
 		    };
 	

@@ -1,6 +1,6 @@
 package neuroidnet.ntr;
 
-import neuroidnet.ntr.*;
+import neuroidnet.ntr.plots.*;
 import neuroidnet.periphery.*;
 import neuroidnet.utils.*;
 //import neuroidnet.remote.*;
@@ -15,10 +15,10 @@ import java.io.*;
 // $Id$
 /**
  * First attempt to implement the central neuroidal entity with
- * programmability capability, also including simple soma functionality of
- * the spiking neuron model, specifically the spike response model as
+ * programmability capability. Also includes simple soma functionality of
+ * a spiking neuron model, specifically the spike response model as
  * defined in Maass and Bishop 1999.
- * Instances are contained in Areas.
+ * Instances are contained in <code>Area</code>s.
  * 
  * @see Area
  *
@@ -96,7 +96,27 @@ public class Neuroid implements Input, Serializable {
     /**
      * Represents the state and dynamic parameters of the neuroid.
      */
-    public Mode mode;
+    protected Mode mode;
+    
+    /**
+     * Get the value of mode.
+     * @return value of mode.
+     */
+    public Mode getMode() {
+	return mode;
+    }
+    
+    /**
+     * Set the value of mode and connects any profilers if watched.
+     * @param v  Value to assign to mode.
+     */
+    public void setMode(Mode  v) {
+	this.mode = v;
+	try {
+	    neuroidProfile.getModeProfile().connectTo(mode, new Double(area.time)); 
+	} catch (NullPointerException e) { } // it's ok, then don't do it.
+    }
+    
 
     /**
      * Internal.
@@ -129,20 +149,61 @@ public class Neuroid implements Input, Serializable {
     }
     
     /**
-     * Set the value of watch.
+     * Set the value of watch. if watched, create a <code>NeuroidProfile</code>
+     * object.
      * @param v  Value to assign to watch.
      */
     public void setWatch(boolean  v) {
 	this.watch = v;
+	if (watch) 
+	    neuroidProfile = new NeuroidProfile(this);
+    }
+
+    NeuroidProfile neuroidProfile;
+    
+    /**
+     * Get the value of neuroidProfile.
+     * @return value of neuroidProfile.
+     */
+    public NeuroidProfile getNeuroidProfile() {
+	return neuroidProfile;
     }
     
+    /**
+     * Set the value of neuroidProfile.
+     * @param v  Value to assign to neuroidProfile.
+     */
+    public void setNeuroidProfile(NeuroidProfile  v) {
+	this.neuroidProfile = v;
+    }
 
     /**
      * List of times that the neuroid fired.
      * Redundant with the <code>spikeTrain</code> defined in <code>Synapse</code>.
      * @see Synapse#spikeTrain
      */
-    Vector spikeTrain; // TODO: make time a class?
+    Vector spikeTrain = new Vector(); // TODO: make time a class?
+    
+    /**
+     * Get the value of spikeTrain.
+     * @return value of spikeTrain.
+     */
+    public Vector getSpikeTrain() {
+	return spikeTrain;
+    }
+    
+    /**
+     * Set the value of spikeTrain.
+     * @param v  Value to assign to spikeTrain.
+     */
+    public void setSpikeTrain(Vector  v) {
+	this.spikeTrain = v;
+    }
+
+    /**
+     * Keeps track of mode changes, instances of mode object and time pairs
+     */
+    Profile modeChanges;
 
     /**
      * Dummy constructor.
@@ -151,7 +212,8 @@ public class Neuroid implements Input, Serializable {
     public Neuroid(Area area) {
 	this.area = area;
 
-	mode = new Mode(Mode.AM, Double.POSITIVE_INFINITY); // Available memory state w/ threshold 
+	// Available memory state w/ threshold 
+	setMode(new Mode(Mode.AM, Double.POSITIVE_INFINITY)); 
 
 	init();
     }
@@ -170,14 +232,14 @@ public class Neuroid implements Input, Serializable {
 	this.refractoryTimeConstant = refractoryTimeConstant;
 
 	// TODO: get threshold out of mode because it's no longer modifyable by algorithms, or else put everything in Mode.
-	mode = new Mode(Mode.AM, initialThreshold); // Available memory state w/ threshold 
+	setMode(new Mode(Mode.AM, initialThreshold)); // Available memory state w/ threshold 
 	
 	// Set spiking neuron parameters
 	externalCurrent = 2;
 	timeLastFired = - 1000;	// Initially fired a long time ago
 
 	// Find sumOfWeights from given period value of the Area (DISCONTINUED)
-	mode.sumOfWeights = 0;
+	mode.setSumOfWeights(0.0);
 /*	    -externalCurrent * ( externalCurrent - mode.threshold ) *
 	    Math.exp( -area.period );*/
 
@@ -246,7 +308,7 @@ public class Neuroid implements Input, Serializable {
      * @return a <code>double</code> potential value
      */
     double refractoriness(double time) {
-	return (time > 0) ? - mode.threshold * Math.exp(-time/refractoryTimeConstant) : 0;
+	return (time > 0) ? - mode.getThreshold() * Math.exp(-time/refractoryTimeConstant) : 0;
     }
 
     /**
@@ -288,14 +350,18 @@ public class Neuroid implements Input, Serializable {
 	System.out.println("Fire " + this);
 	timeLastFired = area.time;
 	area.fireNeuroid(this);
-	if (watch) 
-	    spikeTrain.add(new Double(timeLastFired));	     
+	if (watch) {
+	    // REDUNDANT, remove one! See note above in calculatePotential
+	    spikeTrain.add(new Double(timeLastFired)); 
+	    neuroidProfile.spikesEmitted.add(new Double(timeLastFired)); 
+	}
     }
 
     /**
      * Update state of the <code>Neuroid</code>.
      * Use the UMT algorithm by default, though behavior will depend
      * on <code>Synapse</code> parameters.
+
      * @see Synapse
      */
     public void step() {
@@ -310,15 +376,15 @@ public class Neuroid implements Input, Serializable {
 	case Mode.AM:
 	    if (potential >= mode.getThreshold()) {
 		mode.setState(Mode.AM1);
-		mode.fitnessCounter++;
+		mode.setFitnessCounter(mode.getFitnessCounter()+1);
 		updateWeights();
 		calculatePotential();
-		mode.suggestedThreshold = potential;
+		mode.setSuggestedThreshold(potential);
 	    }	     
 	    break;
 	    
 	case Mode.AM1:
-	    if (potential < mode.suggestedThreshold) {
+	    if (potential < mode.getSuggestedThreshold()) {
 		// if any presynaptic neuroid has fired in this period
 		hasFired = false;
 		Iteration.loop(synapses.iterator(), new Task() {
@@ -327,29 +393,29 @@ public class Neuroid implements Input, Serializable {
 			    hasFired = true;
 		    }});
 		if (hasFired) {
-		    mode.fitnessCounter--; // Correct behavior
+		    mode.setFitnessCounter(mode.getFitnessCounter() - 1); // Correct behavior
 		    // NO: If fitnessCounter<=1 go back to AM (no other change in mode)
-		    if (mode.fitnessCounter <= 1) {
-			mode.fitnessCounter = 1;
+		    if (mode.getFitnessCounter() <= 1) {
+			mode.setFitnessCounter(1);
 			//mode.setState(Mode.AM);
 			//break;
 		    } // end of if (mode.fitnessCounter <= 0)
 		    updateWeights();
 		    calculatePotential();
-		    mode.suggestedThreshold = potential;
+		    mode.setSuggestedThreshold(potential);
 		} // end of if (hasFired)
 	    } else { // i.e. if (potential >= mode.suggestedThreshold)
-		if (mode.fitnessCounter < correctTimesRequired - 1) {
-		    mode.fitnessCounter++;
+		if (mode.getFitnessCounter() < correctTimesRequired - 1) {
+		    mode.setFitnessCounter(mode.getFitnessCounter() + 1);
 		    updateWeights();
 		    calculatePotential();
-		    mode.suggestedThreshold = potential;
+		    mode.setSuggestedThreshold(potential);
 		} else { // i.e. if (mode.fitnessCounter >= correctTimesRequired - 1)
 		    try {
 			makeConcept(); // Throws the exception
 			mode.setState(Mode.UM); // Memorized!
 			// Set threshold lower than anticipated
-			mode.threshold = 0.9 * mode.suggestedThreshold; 
+			mode.setThreshold(0.9 * mode.getSuggestedThreshold()); 
 			System.out.println("Into UM mode!; " + this);
 		    } catch (ConceptSaturatedException e) {
 			// Reset neuroid back to AM mode
@@ -368,9 +434,9 @@ public class Neuroid implements Input, Serializable {
 	case Mode.UM:
 	    if (potential >= mode.getThreshold()) {
 		fire();
-	    } /*else if (potential >= 0.5) {
+	    } else if (debug && potential >= 0.5) {
 		System.out.println("Not enough activity in: " + this);
-	    }*/ // end of else
+	    } // end of else
 	    
 	    break;
 	    
@@ -379,6 +445,7 @@ public class Neuroid implements Input, Serializable {
 	} // end of switch (mode.getState())
 
 	//System.out.println("In step of " + this);
+	mode.notifyObservers(new Double(area.time));	// if changed, notify observers of mode
     }
 
     /**
@@ -387,7 +454,7 @@ public class Neuroid implements Input, Serializable {
      * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
      * @version 1.0
      * @since 1.0
-     * @see utils.Task
+     * @see neuroidnet.utils.Task
      */
     abstract class SynapseActivityTask implements neuroidnet.utils.TaskWithReturn {
 	Neuroid toplevel = Neuroid.this;
@@ -435,52 +502,42 @@ public class Neuroid implements Input, Serializable {
     }
 
     /**
-     * Updates presynaptic weights according to Winnow learning rule.
-     * Normalizes weights to <code>sumOfWeights</code> to keep <code>period</code> fixed.
+     * Updates presynaptic weights according to a variant of Winnow learning rule.
+     * <!--Normalizes weights to <code>sumOfWeights</code> to keep <code>period</code> fixed.-->
      * @see Neuroid#period
      * @see Neuroid#sumOfWeights
      */
     void updateWeights() {
 	if (debug) 
-	     System.out.println("updateWeights: " + this + "{");
+	    System.out.println("updateWeights: " + this + "{");
 	
 	sumOfCurrentWeights = 0; // currently not used
 
 	// Loop over synapses and update weights according to Winnow learning rule
 	new SynapseActivityTask() {
-		public void job(Object o) {
-		    Synapse s = (Synapse) o;
-		    if (debug)
-			System.out.println("\t" + s + " from " + s.srcNeuroid);
-		    super.job(o);	// main job
-		    toplevel.sumOfCurrentWeights += s.weight;
-		}
-		void potentiatedSynapse(Synapse s) {
-		    s.weight = s.weight * toplevel.correctTimesRequired /
-			toplevel.mode.fitnessCounter;
-		}
-		void silentSynapse(Synapse s) {
-		    s.weight = s.weight * toplevel.mode.fitnessCounter /
-			toplevel.correctTimesRequired;
-		}
-		public Object getValue() { return null; } // N/A
-	    }.iterate();
+	    double weight;
+	    public void job(Object o) {
+		Synapse s = (Synapse) o;
+		if (debug)
+		    System.out.println("\t" + s + " from " + s.srcNeuroid);
+		weight = s.getWeight();
+		super.job(s);	// main job
+		toplevel.sumOfCurrentWeights += weight;
+		s.weight.notifyObservers(new Double(area.time));
+	    }
+	    // TODO: needs saturation mechanism
+	    void potentiatedSynapse(Synapse s) {
+		s.setWeight( weight * toplevel.correctTimesRequired /
+			     toplevel.mode.fitnessCounter);
+	    }
+	    // TODO: needs saturation mechanism
+	    void silentSynapse(Synapse s) {
+		s.setWeight( weight * toplevel.mode.fitnessCounter /
+			     toplevel.correctTimesRequired);
+	    }
+	    public Object getValue() { return null; } // N/A
+	}.iterate();
 
-/*
-	// Loop over synapses and update according to Winnow learning rule
-	Iteration.loop(synapses.iterator(), new Task() { 
-		public void job(Object o) {
-		    Synapse s = (Synapse) o;
-		    if (s.isPotentiated()) 
-			s.weight = s.weight * correctTimesRequired /
-			    mode.fitnessCounter;
-		    else 
-			s.weight = s.weight * mode.fitnessCounter /
-			    correctTimesRequired;
-
-		    sumOfCurrentWeights += s.weight;
-		}});
-*/
 	if (debug) 
 	    System.out.println("}");
 
@@ -499,8 +556,9 @@ public class Neuroid implements Input, Serializable {
      * Trace back synapses that made this neuroid go to UM mode to find concept set.
      * Then look for associated concept in conceptArea,
      * otherwise create new Concept using this concept set.
-     * In case concept is saturated, then the neuroid is reset() 
+     * <!-- In case concept is saturated, then the neuroid is reset() -->
      * <p>TODO: destroy old <code>concept</code> if it exists.
+     * @exception ConceptSaturatedException 
      * @see ConceptArea
      * @see Concept
      * @see ConceptSaturatedException
@@ -572,7 +630,7 @@ public class Neuroid implements Input, Serializable {
 	
 	// Available memory state
 	// AM -> AM1 threshold
-	mode = new Mode(Mode.AM, area.getActivationThreshold());
+	setMode(new Mode(Mode.AM, area.getActivationThreshold()));
 
 	// Iterate over synapses and set weights to 1
 	Iteration.loop(synapses.iterator(),
@@ -602,14 +660,10 @@ public class Neuroid implements Input, Serializable {
      */
     public String getStatus() {
 
-	TaskWithReturn synapseIterator = new TaskWithReturn() {
-		String retval = " {\n";
-
+	TaskWithReturn synapseIterator = new StringTask(" {\n") {
 		public void job(Object o) {
 		    retval += "\t" + o + " from " + ((Synapse)o).srcNeuroid + "\n";
 		}
-
-		public Object getValue() { return retval; }
 	    };
  
 	Iteration.loop(synapses.iterator(), synapseIterator);
@@ -623,6 +677,25 @@ public class Neuroid implements Input, Serializable {
      * @see ConceptArea#dumpData
      */
     public String dumpData() {
+
+	String retval = "";
+	
+	TaskWithReturn toStringTask = new StringTask() {
+		// spike lists from different synapses separated by space
+		public void job(Object o) {
+		    this.retval += ((Synapse)o).dumpData() + " "; 
+		}
+	    };
+	
+	Iteration.loop(synapses.iterator(), toStringTask);
+	
+	retval += (String)toStringTask.getValue();
+
+	//id++;
+	return retval;	
+    }
+
+    /*public String dumpData() {
 
 	String retval = "";
 	
@@ -647,7 +720,7 @@ public class Neuroid implements Input, Serializable {
 
 	//id++;
 	return retval;	
-    }
+    }*/
 
     /**
      * Address of a neuroid, conjunction of container area id and
@@ -663,12 +736,13 @@ public class Neuroid implements Input, Serializable {
 */
     /**
      * Modes that a neuron can have.
+     * <p>TODO: Make this a hierarchy of classes in a subpackage called umt
      *
      * @author <a href="mailto:cengiz@ull.edu">Cengiz Gunay</a>
      * @version 1.0
      * @since 1.0
      */
-    protected class Mode implements Serializable {
+    protected class Mode extends Profilable implements Serializable {
 	// The following lists should be consistent with each other.
 	public final static int
 	    AM = 0, 
@@ -677,7 +751,42 @@ public class Neuroid implements Input, Serializable {
 	//public final static String stateList[] = { "AM", "UM", "AM1"};
 
 	int fitnessCounter = 1;
+	
+	/**
+	 * Get the value of fitnessCounter.
+	 * @return value of fitnessCounter.
+	 */
+	public int getFitnessCounter() {
+	    return fitnessCounter;
+	}
+	
+	/**
+	 * Set the value of fitnessCounter.
+	 * @param v  Value to assign to fitnessCounter.
+	 */
+	public void setFitnessCounter(int  v) {
+	    this.fitnessCounter = v;
+	    setChanged();
+	}
+
 	double suggestedThreshold;
+	
+	/**
+	 * Get the value of suggestedThreshold.
+	 * @return value of suggestedThreshold.
+	 */
+	public double getSuggestedThreshold() {
+	    return suggestedThreshold;
+	}
+	
+	/**
+	 * Set the value of suggestedThreshold.
+	 * @param v  Value to assign to suggestedThreshold.
+	 */
+	public void setSuggestedThreshold(double  v) {
+	    this.suggestedThreshold = v;
+	    setChanged();
+	}
 
 	Mode(int state, double threshold) {
 	    this.state = state;
@@ -723,7 +832,23 @@ public class Neuroid implements Input, Serializable {
 	 * The total sum of incoming weights to a Neuroid should be fixed. (Why?)
 	 * @see Neuroid#Neuroid
 	 */
-	double sumOfWeights; 
+	double sumOfWeights;
+	
+	/**
+	 * Get the value of sumOfWeights.
+	 * @return value of sumOfWeights.
+	 */
+	public double getSumOfWeights() {
+	    return sumOfWeights;
+	}
+	
+	/**
+	 * Set the value of sumOfWeights.
+	 * @param v  Value to assign to sumOfWeights.
+	 */
+	public void setSumOfWeights(double  v) {
+	    this.sumOfWeights = v;
+	}
 	
 	public String toString() {
 	    return "state = " + /*stateList[*/ state /*]*/ +
