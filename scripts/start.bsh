@@ -1,7 +1,13 @@
 source("preamble.bsh");
 
 network = new neuroidnet.phasesegregator.Network(false);
+//network.nuBoost = 0.3;
 network.run();
+
+peripheral = new neuroidnet.phasesegregator.StatisticalInputSequence(network);
+peripheral.numberOfObjects = 1;	// Only for testing
+peripheral.build();
+
 save(network, "net.data");
 
 // do an exploratory run
