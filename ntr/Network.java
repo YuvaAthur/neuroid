@@ -134,7 +134,7 @@ abstract public class Network implements DebuggerInterface, Serializable {
 	public Object getValue() { return area; }
     }
 
-    Vector watchList;
+    Vector watchList = new Vector();
     
     /**
      * Get the value of watchList.
@@ -274,26 +274,29 @@ abstract public class Network implements DebuggerInterface, Serializable {
 
 
     /**
-     * Return detailed info about network components.
+     * Return brief info about the <code>network</code>.
      *
      * @return a <code>String</code> value
      */
     public String toString() {
+	return getClass().getName();
+    }
+
+    /**
+     * Return detailed info about network components.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getStatus() {
 	String retval = new String();
 
 	retval += "Peripheral: " + peripheral + "\n";
 	//retval += "ConceptArea: \n" + conceptArea.getStatus();
 
 	TaskWithReturn areasToStringTask =
-	    new TaskWithReturn() {
-		String retval = new String();
-		
+	    new StringTask() {
 		public void job(Object o) {
-		    retval += "" + ((Area)o).getStatus() + "\n";
-		}
-
-		public Object getValue() {
-		    return retval;
+		    this.retval += "" + ((Area)o).getStatus() + "\n";
 		}
 	    };
 	
@@ -306,14 +309,15 @@ abstract public class Network implements DebuggerInterface, Serializable {
 
     public void advanceTime(double msecs) {
 	double untilTime = 30.0;
-	//long startTime = System.currentTimeMillis();
+	long startTime = System.currentTimeMillis();
 	int steps = (int) (msecs / deltaT);
 	for (int i = 0; i < steps; i++) {
 	    //System.out.println("STEP " + i);
 
 	    peripheral.step();		// step deltaT and initiates peripheral actions
 	}
-	//System.out.println("Elapsed time: " + (System.currentTimeMillis() - startTime) + " milliseconds.");
+	double elapsed = System.currentTimeMillis() - startTime;
+	System.out.println("Elapsed time: " + elapsed + " msecs (1 simulation msec = " + elapsed/msecs + " msecs).");
     }
 
     /**
