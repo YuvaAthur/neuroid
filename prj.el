@@ -24,6 +24,21 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 (jde-set-project-name "default")
 (jde-set-variables 
  '(jde-gen-to-string-method-template (quote ("'&" "\"public String toString() {\" 'n>" "\"return super.toString();\" 'n>" "\"}\" 'n>")))
@@ -42,7 +57,7 @@
  '(jde-gen-jfc-app-buffer-template (quote ("(funcall jde-gen-boilerplate-function) 'n" "\"import java.awt.Dimension;\" 'n" "\"import java.awt.Graphics;\" 'n" "\"import java.awt.Graphics2D;\" 'n" "\"import java.awt.Color;\" 'n" "\"import java.awt.geom.Ellipse2D;\" 'n" "\"import java.awt.event.WindowAdapter;\" 'n" "\"import java.awt.event.WindowEvent;\" 'n" "\"import javax.swing.JFrame;\" 'n" "\"import javax.swing.JPanel;\" 'n" "\"import javax.swing.JScrollPane;\" 'n" "\"import javax.swing.JMenuBar;\" 'n" "\"import javax.swing.JMenu;\" 'n" "\"import java.awt.event.ActionEvent;\" 'n" "\"import javax.swing.AbstractAction;\" 'n 'n" "\"/**\" 'n" "\" * \"" "(file-name-nondirectory buffer-file-name) 'n" "\" *\" 'n" "\" *\" 'n" "\" * Created: \" (current-time-string) 'n" "\" *\" 'n" "\" * @author \" (user-full-name) 'n" "\" * @version\" 'n" "\" */\" 'n>" "'n>" "\"public class \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "\" extends JFrame\"" "\" {\"  'n>" "" "\"class Canvas extends JPanel\"" "\" {\"  'n>" "" "\"public Canvas () \"" "\" {\"  'n>" "" "\"setSize(getPreferredSize());\" 'n>" "\"Canvas.this.setBackground(Color.white);\" 'n>" "\"}\" 'n> 'n>" "\"public Dimension getPreferredSize() \"" "\" {\"  'n>" "" "\"return new Dimension(600, 600);\" 'n>" "\"}\" 'n> 'n>" "\"public void paintComponent(Graphics g) \"" "\" {\"  'n>" "" "\"super.paintComponent(g);\" 'n>" "\"Graphics2D g2d = (Graphics2D) g;\" 'n>" "\"Ellipse2D circle = new Ellipse2D.Double(0d, 0d, 100d, 100d);\" 'n>" "\"g2d.setColor(Color.red);\" 'n>" "\"g2d.translate(10, 10);\" 'n>" "\"g2d.draw(circle);\" 'n>" "\"g2d.fill(circle);\" 'n>" "\"}\" 'n> 'n>" "\"}\" 'n> 'n>" "\"public \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "\"()\"" "\" {\"  'n>" "" "\"super(\\\"\" (P \"Enter app title: \") \"\\\");\" 'n>" "\"setSize(300, 300);\" 'n>" "\"addWindowListener(new WindowAdapter() \"" "\" {\"  'n>" "" "\"public void windowClosing(WindowEvent e) {System.exit(0);}\" 'n>" "\"public void windowOpened(WindowEvent e) {}\" 'n>" "\"});\" 'n>" "\"setJMenuBar(createMenu());\" 'n>" "\"getContentPane().add(new JScrollPane(new Canvas()));\" 'n>" "\"}\" 'n>" "'n>" "\"public static void main(String[] args) \"" "\" {\"  'n>" "" "'n>" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "\" f = new \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "\"();\" 'n>" "\"f.show();\" 'n>" "'p 'n>" "\"}\" 'n> 'n>" "\"protected JMenuBar createMenu() \"" "\" {\"  'n>" "" "\"JMenuBar mb = new JMenuBar();\" 'n>" "\"JMenu menu = new JMenu(\\\"File\\\");\" 'n>" "\"menu.add(new AbstractAction(\\\"Exit\\\") \"" "\" {\"  'n>" "" "\"public void actionPerformed(ActionEvent e) \"" "\" {\"  'n>" "" "\"System.exit(0);\" 'n>" "\"}\" 'n>" "\"});\" 'n>" "\"mb.add(menu);\" 'n>" "\"return mb;\" 'n>" "\"}\" 'n> 'n>" "\"} // \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "'n>")))
  '(jde-gen-cflow-while (quote ("(if (jde-parse-comment-or-quoted-p)" "'(l \"while\")" "'(l > \"while (\" (p \"while-clause: \" clause) \") \"" "\"{\" > n> r n" "\"} // end of while (\" (s clause) \")\" > n>)" ")")))
  '(jde-bug-breakpoint-marker-colors (quote ("red" . "yellow")))
- '(jde-db-source-directories (quote ("~/cs555/javacode/")))
+ '(jde-db-source-directories (quote ("/home/swamp2/maida/cxg9789/cs555/Neuroidal/")))
  '(jde-db-debugger (quote ("Other" "jdb" . "Executable")))
  '(jde-db-marker-regexp "^Breakpoint hit: .*(\\([^$]*\\).*:\\([0-9]*\\))")
  '(jde-compile-option-deprecation nil)
@@ -62,7 +77,7 @@
  '(jde-gen-action-listener-template (quote ("'& (P \"Component name: \")" "\".addActionListener(new ActionListener() {\" 'n>" "\"public void actionPerformed(ActionEvent e) {\" 'n>" "\"}});\" 'n>")))
  '(jde-gen-class-buffer-template (quote ("(funcall jde-gen-boilerplate-function) 'n" "\"// $\" \"Id$\" 'n" "\"/**\" 'n" "\" * \"" "(file-name-nondirectory buffer-file-name) 'n" "\" *\" 'n" "\" *\" 'n" "\" * <p>Created: \" (current-time-string) 'n" "\" * <p>Modified: $\" \"Date$\" 'n" "\" *\" 'n" "\" * @author \" (user-full-name) 'n" "\" * @version $\" \"Revision$ for this file.\" 'n" "\" */\" 'n>" "'n>" "\"public class \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "\" \" (jde-gen-get-super-class)" "\" {\"  'n>" "" "\"public \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "\" ()\"" "\" {\"  'n>" "" "'p 'n>" "\"}\">" "'n>" "'n>" "\"}\">" "\"// \"" "(file-name-sans-extension (file-name-nondirectory buffer-file-name))" "'n>")))
  '(jde-gen-boilerplate-function (quote jde-gen-create-buffer-boilerplate))
- '(jde-compile-option-classpath nil)
+ '(jde-compile-option-classpath (quote ("../javarun")))
  '(jde-gen-code-templates (quote (("Get Set Pair" . jde-gen-get-set) ("toString method" . jde-gen-to-string-method) ("Action Listener" . jde-gen-action-listener) ("Window Listener" . jde-gen-window-listener) ("Mouse Listener" . jde-gen-mouse-listener) ("Mouse Motion Listener" . jde-gen-mouse-motion-listener) ("Inner Class" . jde-gen-inner-class) ("println" . jde-gen-println) ("property change support" . jde-gen-property-change-support) ("EJB Entity Bean" . jde-gen-entity-bean) ("EJB Session Bean" . jde-gen-session-bean))))
  '(jde-mode-abbreviations (quote (("ab" . "abstract") ("bo" . "boolean") ("br" . "break") ("by" . "byte") ("byv" . "byvalue") ("cas" . "cast") ("ca" . "catch") ("ch" . "char") ("cl" . "class") ("co" . "const") ("con" . "continue") ("de" . "default") ("dou" . "double") ("el" . "else") ("ex" . "extends") ("fa" . "false") ("fi" . "final") ("fin" . "finally") ("fl" . "float") ("fo" . "for") ("fu" . "future") ("ge" . "generic") ("go" . "goto") ("impl" . "implements") ("impo" . "import") ("ins" . "instanceof") ("in" . "int") ("inte" . "interface") ("lo" . "long") ("na" . "native") ("ne" . "new") ("nu" . "null") ("pa" . "package") ("pri" . "private") ("pro" . "protected") ("pu" . "public") ("re" . "return") ("sh" . "short") ("st" . "static") ("su" . "super") ("sw" . "switch") ("sy" . "synchronized") ("th" . "this") ("thr" . "throw") ("throw" . "throws") ("tra" . "transient") ("tr" . "true") ("vo" . "void") ("vol" . "volatile") ("wh" . "while"))))
  '(jde-compile-option-command-line-args "")
@@ -119,7 +134,7 @@ RemoteException {\"" "'n>\"}\"'n 'n" "'> \"public void unsetEntityContext() thro
  '(jde-read-compile-args nil)
  '(jde-db-read-app-args nil)
  '(jde-compile-option-vm-args (quote ("-mx48m")))
- '(jde-compile-option-depend t)
+ '(jde-compile-option-depend nil)
  '(jde-gen-cflow-switch (quote ("(if (jde-parse-comment-or-quoted-p)" "'(l \"switch\")" "'(l > \"switch (\" (p \"switch-condition: \" clause) \") \"" "\"{\" > n" "\"case \" (p \"first value: \") \":\" > n> p n" "\"break;\" > n> p n" "\"default:\" > n> p n" "\"break;\" > n" "\"} // end of switch (\" (s clause) \")\" > n>)" ")")))
  '(jde-compile-option-nowarn nil)
  '(jde-bug-raise-frame-p t)
@@ -138,7 +153,7 @@ RemoteException {\"" "'n>\"}\"'n 'n" "'> \"public void unsetEntityContext() thro
  '(jde-global-classpath (quote ("/home/swamp2/maida/cxg9789/cs555/javarun")))
  '(jde-bug-vm-includes-jpda-p nil)
  '(jde-javadoc-describe-class-template (quote ("* Describe class " (jde-javadoc-code name) " here.")))
- '(jde-run-application-class "Simple.Network")
+ '(jde-run-application-class "PhaseSegregator.Network")
  '(jde-gen-cflow-else (quote ("(if (jde-parse-comment-or-quoted-p)" "'(l \"else\")" "'(l > \"else \"" "\"{\" > n> r n" "\"} // end of else\" > n>)" ")")))
  '(jde-compile-option-target (quote ("1.2")))
  '(jde-imenu-enable t)
@@ -152,9 +167,9 @@ RemoteException {\"" "'n>\"}\"'n 'n" "'> \"public void unsetEntityContext() thro
  '(jde-javadoc-author-tag-template (quote ("* @author <a href=\"mailto:" user-mail-address "\">" user-full-name "</a>")))
  '(jde-bug-debugger-command-timeout 10)
  '(jde-run-read-app-args nil)
- '(jde-run-option-heap-size (quote ((1 . "megabytes") (48 . "megabytes"))))
+ '(jde-run-option-heap-size (quote ((1 . "megabytes") (60 . "megabytes"))))
  '(jde-db-option-verbose (quote (nil nil nil)))
- '(jde-compile-option-debug (quote ("selected" (t nil nil))))
+ '(jde-compile-option-debug (quote ("all" (t t t))))
  '(jde-javadoc-return-tag-template (quote ("* @return " (jde-javadoc-a type) " " (jde-javadoc-code type) " value")))
  '(jde-run-working-directory "~/cs555/javarun")
  '(jde-compile-option-bootclasspath nil)
