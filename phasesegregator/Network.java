@@ -1,5 +1,7 @@
 package neuroidnet.phasesegregator;
+
 import neuroidnet.ntr.*;
+import neuroidnet.ntr.plots.*;
 import neuroidnet.periphery.*;
 //import remote.*;
 
@@ -116,9 +118,30 @@ public class Network extends neuroidnet.ntr.Network {
     public static void main (String[] args) {
 	neuroidnet.ntr.Network network = new Network(false); // Single threaded!
 	network.run();
-	network.advanceTime(5.00); // Run net for 30 msecs
-	network.finale();
-	System.exit(0);
+
+	try {
+	    // TODO: Add 10 neuroids from M1
+	    Neuroid n = network.getNeuroid("M1", 1);
+	    network.addWatch(n);
+
+	    network.advanceTime(15.00); // Run net 
+
+	    Grapher grapher = new GNUPlot();
+	    Plot plot = n.getNeuroidProfile().neuroidFirePlot(grapher);
+
+	    System.out.println("Grapher response: " + grapher.display(plot));
+
+	    network.finale();
+	    System.exit(0);
+	     
+	} catch (NameNotFoundException e) {
+	    throw new Error("Fatal, cannot get neuroid reference");
+	} // end of try-catch
+	catch (GrapherNotAvailableException e) {
+	    throw new Error("Unable to initialize gnuplot..");
+	} // end of catch
+	
+
     } // end of main ()
 
     
