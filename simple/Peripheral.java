@@ -3,6 +3,7 @@ import Base.*;
 import Remote.*;
 
 /**
+ * OBSOLETE: first trial, is not up-to-date
  * SimplePeripheral.java
  * Simple peripheral for demonstration purposes.
  *
@@ -10,6 +11,7 @@ import Remote.*;
  *
  * @author Cengiz Gunay
  * @version
+ * @deprecated 
  */
 
 public class Peripheral extends Base.Peripheral {
