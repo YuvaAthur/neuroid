@@ -1,1 +1,5 @@
-javadoc -d ~/public_html/neuroidal_doc/ -author -use -windowtitle "Neuroidal Network in Java" Utils Base Remote PhaseSegregator Simple *.java 
+javadoc -d ~/public_html/neuroidal_doc/ \
+	-private -version -author -use \
+	-windowtitle "Neuroidal Network in Java" \
+	-overview overview.html \
+	Utils Base Remote PhaseSegregator Simple periphery *.java 
