@@ -24,6 +24,33 @@ TAGS			Emacs tags file.
 TODO			List of things to do.
 traces/			Simulation traces (including the results in the dissertation)
 
+Requirements:
+--------------------
+
+I'm including a few compilation instructions to help you:
+
+1) It will save you a lot of time if you install the Apache Ant
+   compilation tool (http://ant.apache.org/). Neuroidnet comes with a
+   build.xml file for Ant.
+
+2) You'll need to install the BeanShell framework (http://beanshell.org/)
+   source code to compile and run the Neuroidal Network simulator. It may
+   also require minor modification of the BeanShell code: making the
+   bsh.CommandLineReader class public. Make them accessible using the CLASSPATH
+   variable.
+
+3) Install my JavaUtils package (http://cengique.2y.net/~cengiz/javautils.jar) 
+   and make it accessible on the Java CLASSPATH, or simply copy it to the 
+   classes/ subdirectory within this package.
+	       
+Compiling and building distributions:
+-------------------------------------
+Run "ant -projecthelp" to see available build targets.
+
+* Running "ant" alone or with "ant build" would compile the Neuroidnet simulator.
+* Running "ant dist" first builds and then creates a class Jar file.
+* Running the "./makedoc" script creates the html documentation 
+   (need to change the parameters before running)
 
 Quick start guide:
 --------------------

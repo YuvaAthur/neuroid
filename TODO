@@ -1,4 +1,10 @@
 - general:
+	- change directory hierarchy, put src/. Integrate javadoc into build.xml
+		test build.xml for generating src-dist package.
+	- get latest version of bsh and recompile code and update instructions
+	- add license statement
+	- these people asked for the code:
+		- 24 Apr 2007 12:56:07 +1000 Greg Smith <gsmi5619@usyd.edu.au>, Sydney, Australia
 	- adopt ant
 	- create a versioning scheme to be put in manifest files of jars
 	- make all bsh commands as functions in files that are sourced automatically (like bsh commands)
