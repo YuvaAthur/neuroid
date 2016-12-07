@@ -18,7 +18,7 @@
 <copy file="${ant.project.name}.jar" todir="${user-class-dir}"/>
 </target>
 
-<target name="srcdist" depends="build" description="creates JAR files with source and compiled classes">
+<target name="srcdist" description="creates a JAR file with source and extra files">
 <jar jarfile="${ant.project.name}-src.jar" basedir="." 
      excludes="traces/**,classes/**,**/CVS/**" />
 </target>
